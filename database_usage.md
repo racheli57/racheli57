@@ -46,3 +46,15 @@ python generate_policy_docx.py --from-db --limit 10
 ```bash
 python generate_policy_docx.py --from-db --limit 10 --output-dir demo1
 ```
+
+## 连接失败排查说明
+
+如果本地 cpolar 窗口显示 `Tunnel Status online`，但脚本仍连接失败，通常不是政策脚本本身的问题，而是执行脚本的机器到 cpolar 公网域名之间存在网络或依赖限制。可按下面顺序排查：
+
+1. **确认脚本运行环境能解析 cpolar 域名**：在运行脚本的同一台机器上执行 `ping 19.tcp.vip.cpolar.cn` 或 `nslookup 19.tcp.vip.cpolar.cn`。如果解析失败，说明该环境 DNS 访问不到 cpolar 域名。
+2. **确认端口能连通**：执行 `telnet 19.tcp.vip.cpolar.cn 12732`，或用 MySQL 客户端直接连接。如果端口不通，检查 cpolar 隧道是否仍是同一个公网地址和端口。免费版 cpolar 重新启动后，公网端口可能变化。
+3. **确认 Python 依赖已安装**：数据库模式需要 `PyMySQL`，先执行 `python -m pip install PyMySQL`。如果安装失败，需要换到能访问 PyPI 的网络，或配置公司内网可用的 pip 镜像源。
+4. **确认 MySQL 允许本地转发连接**：截图中的转发目标是 `127.0.0.1:3307`，请确认本机 MySQL 实际监听该端口，且 `root` 用户允许通过该连接方式访问 `subsidy` 数据库。
+5. **确认 Windows 防火墙/安全软件未拦截**：虽然 cpolar 显示在线，但本机安全策略仍可能拦截到 MySQL 端口的本地转发访问。
+
+我这边的远程执行容器与您的 Windows 电脑不是同一台机器；即使您本地 cpolar 显示在线，远程容器仍可能因为 DNS、代理或出网规则无法访问 `19.tcp.vip.cpolar.cn:12732`。建议在您本地项目目录运行数据库模式命令，这样脚本与 cpolar/MySQL 处在您可控的网络环境中。
