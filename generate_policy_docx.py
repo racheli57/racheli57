@@ -1,10 +1,14 @@
 # -*- coding: utf-8 -*-
 from __future__ import annotations
 
-from html import escape
+import argparse
+import importlib.util
+import os
+import re
+from html import escape, unescape
+from html.parser import HTMLParser
 from pathlib import Path
 from zipfile import ZIP_DEFLATED, ZipFile
-import re
 
 OUTPUT_DIR = Path.cwd()
 CTA = "可关注公众号「金赋补贴宝」，通过公众号访问补贴平台，进行企业资质评估和政策匹配，获取更适合自身情况的补贴推荐清单。"
@@ -110,6 +114,144 @@ POLICY_ARTICLES = [
 ]
 
 
+class HTMLTextExtractor(HTMLParser):
+    def __init__(self) -> None:
+        super().__init__()
+        self.parts: list[str] = []
+
+    def handle_data(self, data: str) -> None:
+        text = data.strip()
+        if text:
+            self.parts.append(text)
+
+    def get_text(self) -> str:
+        return re.sub(r"\s+", " ", " ".join(self.parts)).strip()
+
+
+def strip_html(raw_html: str) -> str:
+    parser = HTMLTextExtractor()
+    parser.feed(unescape(raw_html or ""))
+    return parser.get_text()
+
+
+def format_period(start: object, end: object) -> str:
+    start_text = str(start or "").strip()
+    end_text = str(end or "").strip()
+    if start_text and end_text:
+        return f"{start_text}至{end_text}"
+    return start_text or end_text or "以申报指南为准"
+
+
+def format_amount(max_amount: object) -> str:
+    amount = str(max_amount or "").strip()
+    if not amount:
+        return "以申报指南为准"
+    if "万" in amount or "元" in amount:
+        return amount
+    return f"最高{amount}万元"
+
+
+def choose_article_angle(title: str) -> tuple[str, str, str]:
+    if "训力券" in title or "算力" in title:
+        return (
+            "AI企业如何把算力投入变成政策机会？",
+            "这类政策通常适合大模型训练、算法研发、智能制造、自动驾驶、具身智能、AI医药、AI设计、AI质检等方向。企业判断申报价值时，不能只看是否采购了算力，还要看训练任务是否与研发项目直接相关，合同、发票、支付凭证、算力使用记录、项目技术说明和成果产出是否能够形成完整证据链。",
+            "深圳金赋本身以人工智能和数据应用为技术核心，长期运营补贴数据平台和补贴平台，更理解AI企业在算力、模型、研发和应用示范之间的政策组合关系。平台可帮助企业把算力投入拆解成研发项目、费用台账、申报窗口、材料清单和风险提示，减少因材料口径不一致导致的补正成本。",
+        )
+    if "会展" in title or "展会" in title:
+        return (
+            "展会主办方如何提高申报准备效率？",
+            "会展类政策的难点在于材料复合度高，既要证明展会真实举办，也要说明专业观众、参展企业、产业带动、宣传效果和费用支出的合理性。主办方需要提前整理合同、发票、付款凭证、现场照片、宣传报道、参展商清单、观众数据和项目总结，避免临近截止才发现证据不足。",
+            "深圳金赋可将政策条款拆成可执行清单，帮助会展企业对照申报条件建立费用台账、参展商台账、宣传台账和成果转化台账。依托补贴数据平台，企业还可以继续跟踪商务、文旅、促消费、招商和产业集群类政策，把一次展会补贴申报延伸为长期品牌资产管理。",
+        )
+    if "专精特新" in title or "企业培育" in title or "单项冠军" in title:
+        return (
+            "专精特新和成长型企业如何提前布局？",
+            "企业培育类政策往往与专精特新、小巨人、单项冠军、高新技术企业、研发投入、知识产权和主导产品市场表现紧密相关。即便部分项目采用免申即享，企业也不能等政策上门，而要提前把研发台账、财务数据、知识产权、质量管理、客户案例和荣誉资质做扎实。",
+            "深圳金赋服务企业政策匹配时，会把当下可申报补贴和未来资质培育路径一起看。补贴数据平台可按区域、行业、营收、研发投入、知识产权、社保人数和资质进度进行标签匹配，补贴平台则帮助企业生成年度申报地图，识别先补哪些短板、先准备哪些材料、哪些时间节点必须跟进。",
+        )
+    return (
+        "企业如何快速判断申报价值？",
+        "企业面对一条新政策时，首先要判断政策对象、区域范围、申报时间、资助标准、费用范围、材料要求和不重复享受限制。只看最高金额容易误判，真正影响申报结果的是企业资质、项目周期、费用凭证、绩效目标和材料一致性。",
+        "深圳金赋科技有限公司依托补贴数据平台沉淀1100万条全国四级公开政策数据，并通过补贴平台提供政策匹配、资质测评、申报清单和节点提醒，帮助企业把政策原文转化为可执行的申报计划。",
+    )
+
+
+def build_article_from_policy(row: dict[str, object]) -> dict[str, object]:
+    title = str(row.get("title") or "未命名政策")
+    source = str(row.get("from_bm") or row.get("department") or "政策发布部门")
+    valid_period = format_period(row.get("declare_start_time") or row.get("start_time"), row.get("declare_end_time") or row.get("end_time"))
+    max_amount = format_amount(row.get("max_amount"))
+    policy_text = strip_html(str(row.get("content") or ""))
+    article_suffix, target_guidance, jinfu_guidance = choose_article_angle(title)
+    article_title = f"{title[:24]}：{article_suffix}"
+    summary = policy_text[:220] if policy_text else f"{source}发布相关扶持政策，企业可结合自身资质和项目阶段关注申报机会。"
+    paragraphs = [
+        f"{title}已经发布，政策来源为{source}，申报或有效周期为{valid_period}，资助亮点为{max_amount}。从政策原文看，核心信息可以概括为：{summary}。对企业来说，这类政策不只是新闻信息，更应该转化为年度经营、研发、人才、市场或产业项目规划中的具体动作。",
+        target_guidance,
+        "很多企业错过补贴，不是因为完全不符合条件，而是没有在政策窗口期前完成资质判断和材料整理。建议企业先核验注册地、行业方向、项目实施地、营收规模、研发投入、知识产权、合同发票、付款凭证、项目成果、信用记录等关键要素，再决定是否投入申报。对于需要审计、专家评审、现场核查或纸质材料提交的项目，更要提前建立资料台账。",
+        jinfu_guidance,
+        f"如果你希望直接从企业自身情况出发，判断这条政策是否值得申报，并同步发现其他可叠加关注的区级、市级、省级和国家级补贴机会，{CTA}",
+    ]
+    return {
+        "title": title,
+        "source": source,
+        "valid_period": valid_period,
+        "max_amount": max_amount,
+        "article_title": article_title,
+        "paragraphs": paragraphs,
+    }
+
+
+def parse_ids(raw_ids: str) -> list[str]:
+    return [item.strip() for item in re.split(r"[,，\s]+", raw_ids or "") if item.strip()]
+
+
+def require_env(name: str) -> str:
+    value = os.environ.get(name, "").strip()
+    if not value:
+        raise RuntimeError(f"Missing required environment variable: {name}")
+    return value
+
+
+def load_policies_from_mysql(policy_ids: list[str], limit: int) -> list[dict[str, object]]:
+    if importlib.util.find_spec("pymysql") is None:
+        raise RuntimeError("PyMySQL is required for --from-db. Install it with: python -m pip install PyMySQL")
+    import pymysql
+
+    connection = pymysql.connect(
+        host=require_env("MYSQL_HOST"),
+        user=require_env("MYSQL_USER"),
+        password=require_env("MYSQL_PASSWORD"),
+        database=require_env("MYSQL_DBNAME"),
+        port=int(os.environ.get("MYSQL_PORT", "3306")),
+        charset=os.environ.get("MYSQL_CHARSET", "utf8mb4"),
+        cursorclass=pymysql.cursors.DictCursor,
+    )
+    try:
+        with connection.cursor() as cursor:
+            columns = "id, api_id, title, start_time, end_time, declare_start_time, declare_end_time, max_amount, content, from_bm, department, from_url, region"
+            if policy_ids:
+                placeholders = ", ".join(["%s"] * len(policy_ids))
+                sql = f"SELECT {columns} FROM policy_info WHERE id IN ({placeholders}) OR api_id IN ({placeholders}) ORDER BY update_time DESC, create_time DESC"
+                cursor.execute(sql, [*policy_ids, *policy_ids])
+            else:
+                sql = f"SELECT {columns} FROM policy_info ORDER BY update_time DESC, create_time DESC LIMIT %s"
+                cursor.execute(sql, (limit,))
+            return list(cursor.fetchall())
+    finally:
+        connection.close()
+
+
+def resolve_articles(from_db: bool, ids: str, limit: int) -> list[dict[str, object]]:
+    if not from_db:
+        return POLICY_ARTICLES
+    rows = load_policies_from_mysql(parse_ids(ids), limit)
+    if not rows:
+        raise RuntimeError("No policy rows found from MySQL with the provided filters.")
+    return [build_article_from_policy(row) for row in rows]
+
+
 def sanitize_windows_filename(name: str) -> str:
     cleaned = re.sub(r'[<>:"/\\|?*\x00-\x1f]', '', name).strip().rstrip('.')
     return cleaned[:180] or "policy_article"
@@ -147,10 +289,21 @@ def article_markdown(article: dict[str, object]) -> str:
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser(description="Generate promotional policy articles as DOCX files and Markdown.")
+    parser.add_argument("--from-db", action="store_true", help="Read policy rows from MySQL using MYSQL_* environment variables.")
+    parser.add_argument("--ids", default="", help="Comma/space separated policy id or api_id values to fetch when --from-db is used.")
+    parser.add_argument("--limit", type=int, default=10, help="Number of latest MySQL rows to fetch when --from-db is used without --ids.")
+    parser.add_argument("--output-dir", default=str(OUTPUT_DIR), help="Directory for generated DOCX files.")
+    args = parser.parse_args()
+
+    output_dir = Path(args.output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    articles = resolve_articles(args.from_db, args.ids, args.limit)
+
     generated_docs = []
-    for article in POLICY_ARTICLES:
+    for article in articles:
         output_name = sanitize_windows_filename(str(article["title"])) + ".docx"
-        output_path = OUTPUT_DIR / output_name
+        output_path = output_dir / output_name
         create_docx(output_path, str(article["article_title"]), article["paragraphs"])
         generated_docs.append((output_name, article))
 
@@ -168,7 +321,7 @@ def main() -> None:
         )
 
     joined_article_sections = "\n\n".join(article_sections)
-    Path("generated_documents.md").write_text(
+    (output_dir / "generated_documents.md").write_text(
         "# 生成的Word文档列表\n\n"
         f"{doc_list}\n\n"
         "# 推广文章内容\n\n"
@@ -176,7 +329,7 @@ def main() -> None:
         encoding="utf-8",
     )
     for output_name, _ in generated_docs:
-        print(OUTPUT_DIR / output_name)
+        print(output_dir / output_name)
 
 
 if __name__ == "__main__":
