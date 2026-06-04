@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
 from pathlib import Path
 from zipfile import ZipFile, ZIP_DEFLATED
 from html import escape
