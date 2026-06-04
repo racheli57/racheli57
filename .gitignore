@@ -1,0 +1,5 @@
+# Generated Word documents are binary artifacts; keep them out of PR diffs.
+*.docx
+
+# Python cache files
+__pycache__/
