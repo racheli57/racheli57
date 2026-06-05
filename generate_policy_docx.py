@@ -156,8 +156,58 @@ def strip_html(raw_html: str) -> str:
     return parser.get_text()
 
 
+BOILERPLATE_KEYWORDS = (
+    "无障碍",
+    "长者助手",
+    "我的收藏",
+    "政府信息公开",
+    "规章库",
+    "高级搜索",
+    "搜索位置",
+    "排序方式",
+    "按相关度",
+    "文件状态",
+    "现行有效",
+    "已失效",
+)
+
+
 def remove_urls(text: str) -> str:
     return re.sub(r"https?://\S+", "", text or "").strip()
+
+
+def has_boilerplate(text: str) -> bool:
+    return sum(1 for keyword in BOILERPLATE_KEYWORDS if keyword in text) >= 2
+
+
+def clean_policy_text(text: str) -> str:
+    cleaned = remove_urls(re.sub(r"\s+", " ", text or "")).strip()
+    for keyword in BOILERPLATE_KEYWORDS:
+        cleaned = cleaned.replace(keyword, " ")
+    cleaned = re.sub(r"[]+", " ", cleaned)
+    return re.sub(r"\s+", " ", cleaned).strip()
+
+
+def policy_summary(text: str, limit: int = 180) -> str:
+    cleaned = remove_urls(re.sub(r"\s+", " ", text or "")).strip()
+    cut_points = [cleaned.find(keyword) for keyword in BOILERPLATE_KEYWORDS if cleaned.find(keyword) > 0]
+    if cut_points:
+        cleaned = cleaned[: min(cut_points)].strip()
+    cleaned = clean_policy_text(cleaned)
+    if not cleaned or has_boilerplate(cleaned):
+        return ""
+    sentences = [part.strip() for part in re.split(r"(?<=[。！？；])", cleaned) if part.strip()]
+    summary = ""
+    for sentence in sentences:
+        if has_boilerplate(sentence):
+            continue
+        if len(summary) + len(sentence) > limit and summary:
+            break
+        summary += sentence
+        if len(summary) >= 80:
+            break
+    summary = summary or cleaned[:limit]
+    return summary[:limit].strip(" ，。；：")
 
 
 def fetch_url_text(url: str) -> tuple[str, str]:
@@ -168,7 +218,7 @@ def fetch_url_text(url: str) -> tuple[str, str]:
     html = raw.decode(charset, errors="replace")
     title_match = re.search(r"<title[^>]*>(.*?)</title>", html, flags=re.I | re.S)
     title = strip_html(title_match.group(1)) if title_match else ""
-    text = remove_urls(strip_html(html))
+    text = clean_policy_text(strip_html(html))
     return title, text
 
 
@@ -248,8 +298,8 @@ def build_article_from_url(url: str, index: int) -> dict[str, object]:
     policy_title = clean_fetched_title(fetched_title)
     title = policy_title or article_title
     policy_name = f"《{policy_title}》" if policy_title else "这项政策"
-    if fetched_text:
-        summary = remove_urls(fetched_text[:220])
+    summary = policy_summary(fetched_text)
+    if summary:
         opening_options = [
             f"{policy_name}已经发布，政策来源为{source}。围绕“{article_title}”，企业先别急着问能拿多少钱，而要从原文里抓住政策对象、申报条件、支持方式和办理节奏：{summary}。把这些信息转成内部任务，才是拿补贴的第一步。",
             f"{source}发布的{policy_name}，对{audience}来说值得重点关注。原文中最需要先看的不是宣传口径，而是与申报直接相关的对象、条件、材料和流程：{summary}。只要这些要素能对应到企业现有项目，就有必要进入补贴评估。",
