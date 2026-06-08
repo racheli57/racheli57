@@ -195,6 +195,21 @@ BOILERPLATE_KEYWORDS = (
     "下载文字版",
     "下载图片版",
     "索引号",
+    "字体",
+    "大 中 小",
+    "大中小",
+    "打印",
+    "分享",
+    "发布日期",
+    "发布时间",
+    "信息来源",
+    "稿件来源",
+    "附件",
+    "首页",
+    "工业和信息化局",
+    "信息公开",
+    "办公室",
+    "印发",
 )
 
 
@@ -307,7 +322,7 @@ def topic_for_source(source: str, url: str) -> tuple[str, str, str]:
 
 def clean_fetched_title(title: str) -> str:
     raw_title = remove_urls(re.sub(r"\s+", " ", title or "")).strip(" -_|")
-    if has_boilerplate(raw_title):
+    if any(keyword in raw_title for keyword in BOILERPLATE_KEYWORDS):
         return ""
     title = clean_policy_text(raw_title)
     if not title or "$" in title or "function" in title.lower() or len(title) > 80:
@@ -321,28 +336,16 @@ def build_article_from_url(url: str, index: int) -> dict[str, object]:
     source = source_from_url(url)
     plan = PROMOTION_PLANS[index - 1] if index - 1 < len(PROMOTION_PLANS) else PROMOTION_PLANS[-1]
     article_title, audience, policy_focus, proof_materials = plan
-    fetched_title = ""
-    fetched_text = ""
-    try:
-        fetched_title, fetched_text = fetch_url_text(url)
-    except (HTTPError, URLError, TimeoutError, OSError, UnicodeError):
-        pass
-    policy_title = clean_fetched_title(fetched_title)
-    title = policy_title or article_title
-    policy_name = f"《{policy_title}》" if policy_title else "这项政策"
-    summary = policy_summary(fetched_text)
-    if summary:
-        opening_options = [
-            f"{policy_name}已经发布，政策来源为{source}。围绕“{article_title}”，企业先别急着问能拿多少钱，而要从原文里抓住适用范围、补贴亮点和企业机会：{summary}。把这些信息转成内部任务，才是拿补贴的第一步。",
-            f"{source}发布的{policy_name}，对{audience}来说值得重点关注。原文中最需要先看的不是宣传口径，而是与申报直接相关的对象、补贴亮点和材料基础：{summary}。只要这些要素能对应到企业现有项目，就有必要进入补贴评估。",
-            f"看到{policy_name}后，企业要做的不是简单保存通知，而是马上判断它和自身业务的关系。原文释放的关键信息包括：{summary}。如果这些内容与企业近期投入、项目成果或资质建设有关，就应尽快纳入补贴申报计划。",
-        ]
-    else:
-        opening_options = [
-            f"{policy_name}已经发布，政策来源为{source}。围绕“{article_title}”，企业先别急着问能拿多少钱，而要核验适用范围、补贴价值、项目关联和材料基础。把这些信息转成内部任务，才是拿补贴的第一步。",
-            f"{source}发布的{policy_name}，对{audience}来说值得重点关注。企业应按政策原文要求先排查对象、条件、材料和补贴价值。只要这些要素能对应到企业现有项目，就有必要进入补贴评估。",
-            f"看到{policy_name}后，企业要做的不是简单保存通知，而是马上围绕“{article_title}”判断它和自身业务的关系。建议先看企业所在区域、业务类型、项目投入和手头证据。如果这些内容与企业近期投入、项目成果或资质建设有关，就应尽快纳入补贴申报计划。",
-        ]
+    # URL pages often include navigation, breadcrumbs, toolbar labels and other page chrome.
+    # To keep promotional copy clean, URL mode uses the curated article title and plan
+    # instead of embedding scraped page snippets or fetched webpage titles.
+    title = article_title
+    policy_name = "这项政策"
+    opening_options = [
+        f"{policy_name}已经发布，政策来源为{source}。围绕“{article_title}”，企业先别急着问能拿多少钱，而要核验适用范围、补贴价值、项目关联和材料基础。把这些信息转成内部任务，才是拿补贴的第一步。",
+        f"{source}发布的{policy_name}，对{audience}来说值得重点关注。企业应按政策原文要求先排查对象、条件、材料和补贴价值。只要这些要素能对应到企业现有项目，就有必要进入补贴评估。",
+        f"看到{policy_name}后，企业要做的不是简单保存通知，而是马上围绕“{article_title}”判断它和自身业务的关系。建议先看企业所在区域、业务类型、项目投入和手头证据。如果这些内容与企业近期投入、项目成果或资质建设有关，就应尽快纳入补贴申报计划。",
+    ]
     match_options = [
         f"适合重点关注这类机会的主体包括{audience}。建议把{policy_focus}拆成几个判断题：是否符合企业主体，项目是否在规定周期内，费用是否能归集，成果是否可量化，是否存在重复申报限制。这样做能在申报前先判断成功概率。",
         f"从企业匹配角度看，{audience}不能只看政策名称，而要逐项核对{policy_focus}。如果项目投入、业务成果和政策要求之间缺少对应关系，即使材料很多也未必有效；反过来，平时留痕清楚的企业往往能更快形成申报方案。",
