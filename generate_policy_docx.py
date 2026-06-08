@@ -98,7 +98,7 @@ PROMOTION_PLANS = [
     ('中小企业梯度培育，不能等拿到称号才开始准备', '中小企业、创新型企业、专精特新培育企业和服务机构', '企业规模、成长性、研发投入、知识产权、融资情况、管理能力和认定进度', '营业数据、审计报告、研发费用、专利软著、社保人数、荣誉资质和申报计划'),
     ('营商环境政策也能变红利，企业诉求要会整理', '在深经营企业、招商项目、总部企业、创新创业团队和服务机构', '审批便利、服务保障、政策兑现、要素支持、融资服务和企业诉求', '企业基础资料、项目计划、投资证明、经营数据、诉求清单和政策匹配报告'),
     ('政府动态里也有信号，企业要提前捕捉下一轮申报窗口', '科技企业、制造业、服务业、外贸企业和创业团队', '部门工作重点、资金方向、产业导向、申报节奏和企业服务安排', '企业画像、资质清单、项目储备、费用台账、政策关注清单和内部责任分工'),
-    ('申报时间越短，越考验企业平时有没有材料库', '近期有项目投入、资质认定、资金申报或政策兑现需求的企业', '受理时间、申报入口、材料要求、审核流程、资金拨付和公示安排', '申请书、营业执照、财务资料、合同发票、付款凭证、项目报告和承诺书'),
+    ('申报时间越短，越考验企业平时有没有材料库', '近期有项目投入、资质认定、资金申报或政策兑现需求的企业', '受理时间、申报入口、材料要求、审核路径、资金拨付和公示安排', '申请书、营业执照、财务资料、合同发票、付款凭证、项目报告和承诺书'),
     ('龙岗企业做资质升级，区级奖励要和市级认定联动', '龙岗区制造业、软件信息、科技服务、专精特新和成长型企业', '区级扶持、企业培育、产业空间、研发投入、技术改造和资质认定', '注册地址证明、营收数据、研发台账、知识产权、项目合同、区级申报材料和市级认定材料'),
     ('产业项目从立项开始，就该考虑未来能申报什么', '工业企业、软件企业、智能制造企业、数字化服务商和产业链企业', '项目建设期、投入金额、设备软件、研发成果、应用场景和产业带动', '立项资料、采购合同、发票付款、设备清单、系统截图、验收报告和绩效证明'),
     ('空间、用地、项目合规做好了，也能提高政策匹配度', '园区运营、制造业项目、城市更新、产业空间和工程建设主体', '空间用途、规划许可、土地房产、项目选址、建设合规和产业承载', '权属文件、租赁合同、规划资料、项目方案、工程材料和产业落地证明'),
@@ -162,6 +162,20 @@ BOILERPLATE_KEYWORDS = (
     "我的收藏",
     "收藏",
     "政府信息公开",
+    "政策文件",
+    "宝安区人民政府门户网站",
+    "进入关怀版",
+    "关怀版",
+    "繁體版",
+    "简体版",
+    "政务公开",
+    "网站首页",
+    "政务服务",
+    "政民互动",
+    "美丽宝安",
+    "当前位置",
+    "履职依据",
+    "科技创新局",
     "规章库",
     "规章",
     "高级搜索",
@@ -194,18 +208,21 @@ def has_boilerplate(text: str) -> bool:
 
 def clean_policy_text(text: str) -> str:
     cleaned = remove_urls(re.sub(r"\s+", " ", text or "")).strip()
-    for keyword in BOILERPLATE_KEYWORDS:
+    cleaned = re.sub(r"[|>]+", " ", cleaned)
+    cleaned = re.sub(r"\bEN\b", " ", cleaned)
+    for keyword in sorted(BOILERPLATE_KEYWORDS, key=len, reverse=True):
         cleaned = cleaned.replace(keyword, " ")
-    cleaned = re.sub(r"[]+", " ", cleaned)
-    return re.sub(r"\s+", " ", cleaned).strip()
+    return re.sub(r"\s+", " ", cleaned).strip(" -_|：:，。 ")
 
 
 def policy_summary(text: str, limit: int = 180) -> str:
-    cleaned = remove_urls(re.sub(r"\s+", " ", text or "")).strip()
-    cut_points = [cleaned.find(keyword) for keyword in BOILERPLATE_KEYWORDS if cleaned.find(keyword) > 0]
-    if cut_points:
-        cleaned = cleaned[: min(cut_points)].strip()
-    cleaned = clean_policy_text(cleaned)
+    raw = remove_urls(re.sub(r"\s+", " ", text or "")).strip()
+    positions = [raw.find(keyword) for keyword in BOILERPLATE_KEYWORDS if raw.find(keyword) >= 0]
+    if positions and min(positions) < 80:
+        return ""
+    if positions:
+        raw = raw[: min(positions)].strip()
+    cleaned = clean_policy_text(raw)
     if not cleaned or has_boilerplate(cleaned):
         return ""
     sentences = [part.strip() for part in re.split(r"(?<=[。！？；])", cleaned) if part.strip()]
@@ -261,7 +278,7 @@ def topic_for_source(source: str, url: str) -> tuple[str, str, str]:
     if "市场监督" in source:
         return (
             "质量标准补贴机会：企业如何把合规能力变成资金机会？",
-            "市场监管类政策原文通常围绕质量提升、标准建设、知识产权、品牌培育、食品安全、计量认证、检验检测、质量奖项或专项资金管理展开。企业需要重点看申报主体、资质证书、项目投入、标准文本、检测报告、专利商标、认证证明、合同发票、付款凭证、项目成果和信用记录等要求。对食品、消费品、制造业、检测机构和平台型企业来说，日常合规资料越完整，后续申报成功率越高。",
+            "市场监管类政策原文通常围绕质量提升、标准建设、知识产权、品牌培育、食品安全、计量认证、检验检测、质量奖项或专项资金管理展开。企业需要重点看企业主体、资质证书、项目投入、标准文本、检测报告、专利商标、认证证明、合同发票、付款凭证、项目成果和信用记录等要求。对食品、消费品、制造业、检测机构和平台型企业来说，日常合规资料越完整，后续申报成功率越高。",
             "深圳金赋会把市场监管政策与企业的质量管理、品牌建设、知识产权、标准化、食品安全和检测认证台账结合起来。补贴平台可帮助企业识别适合申报的质量提升、标准研制、知识产权保护、品牌培育和安全追溯类项目，并提醒企业提前补齐证明材料、费用归集和成果说明，让合规投入不只是成本，也能转化为政策资金和品牌背书。",
         )
     if "住房" in source:
@@ -289,7 +306,10 @@ def topic_for_source(source: str, url: str) -> tuple[str, str, str]:
     )
 
 def clean_fetched_title(title: str) -> str:
-    title = remove_urls(re.sub(r"\s+", " ", title or "")).strip(" -_|")
+    raw_title = remove_urls(re.sub(r"\s+", " ", title or "")).strip(" -_|")
+    if has_boilerplate(raw_title):
+        return ""
+    title = clean_policy_text(raw_title)
     if not title or "$" in title or "function" in title.lower() or len(title) > 80:
         return ""
     for suffix in ("_深圳政府在线", "-深圳政府在线", "_深圳市人民政府门户网站", "-深圳市人民政府门户网站"):
@@ -313,8 +333,8 @@ def build_article_from_url(url: str, index: int) -> dict[str, object]:
     summary = policy_summary(fetched_text)
     if summary:
         opening_options = [
-            f"{policy_name}已经发布，政策来源为{source}。围绕“{article_title}”，企业先别急着问能拿多少钱，而要从原文里抓住政策对象、申报条件、支持方式和办理节奏：{summary}。把这些信息转成内部任务，才是拿补贴的第一步。",
-            f"{source}发布的{policy_name}，对{audience}来说值得重点关注。原文中最需要先看的不是宣传口径，而是与申报直接相关的对象、条件、材料和流程：{summary}。只要这些要素能对应到企业现有项目，就有必要进入补贴评估。",
+            f"{policy_name}已经发布，政策来源为{source}。围绕“{article_title}”，企业先别急着问能拿多少钱，而要从原文里抓住适用范围、补贴亮点和企业机会：{summary}。把这些信息转成内部任务，才是拿补贴的第一步。",
+            f"{source}发布的{policy_name}，对{audience}来说值得重点关注。原文中最需要先看的不是宣传口径，而是与申报直接相关的对象、补贴亮点和材料基础：{summary}。只要这些要素能对应到企业现有项目，就有必要进入补贴评估。",
             f"看到{policy_name}后，企业要做的不是简单保存通知，而是马上判断它和自身业务的关系。原文释放的关键信息包括：{summary}。如果这些内容与企业近期投入、项目成果或资质建设有关，就应尽快纳入补贴申报计划。",
         ]
     else:
@@ -324,7 +344,7 @@ def build_article_from_url(url: str, index: int) -> dict[str, object]:
             f"看到{policy_name}后，企业要做的不是简单保存通知，而是马上围绕“{article_title}”判断它和自身业务的关系。建议先看企业所在区域、业务类型、项目投入和手头证据。如果这些内容与企业近期投入、项目成果或资质建设有关，就应尽快纳入补贴申报计划。",
         ]
     match_options = [
-        f"适合重点关注这类机会的主体包括{audience}。建议把{policy_focus}拆成几个判断题：是否符合申报主体，项目是否在规定周期内，费用是否能归集，成果是否可量化，是否存在重复申报限制。这样做能在申报前先判断成功概率。",
+        f"适合重点关注这类机会的主体包括{audience}。建议把{policy_focus}拆成几个判断题：是否符合企业主体，项目是否在规定周期内，费用是否能归集，成果是否可量化，是否存在重复申报限制。这样做能在申报前先判断成功概率。",
         f"从企业匹配角度看，{audience}不能只看政策名称，而要逐项核对{policy_focus}。如果项目投入、业务成果和政策要求之间缺少对应关系，即使材料很多也未必有效；反过来，平时留痕清楚的企业往往能更快形成申报方案。",
         f"这类政策最怕“看起来相关、申报时对不上”。{audience}应围绕{policy_focus}建立自查表，把企业已有条件、待补材料和风险点分开标注。先完成自查，再决定是否进入正式申报，会比临近截止时仓促准备更稳。",
         f"对{audience}来说，政策价值往往藏在细节里。企业要把{policy_focus}对应到真实业务场景，看看哪些投入已经发生、哪些成果可以证明、哪些资质还需要补强。判断清楚后，后续材料准备才不会偏题。",
@@ -371,7 +391,7 @@ def build_article_from_url(url: str, index: int) -> dict[str, object]:
         f"建议{audience}先做一次“政策—项目—材料”三列表：左边放政策条件，中间放企业对应项目，右边放现有证明。三列能够对应上的，优先推进；对应不上的，先判断是否值得补齐，而不是盲目准备全套材料。",
         f"企业内部可以指定一名政策负责人，把{audience}相关项目按月更新到补贴平台。只要新增资质、新增费用、新增成果，就及时刷新匹配结果，避免等到申报期才发现材料跨部门、数据找不到。",
         f"如果企业已经有多个项目同时推进，{audience}要特别注意不重复享受和费用边界。哪些发票只能用于一个项目，哪些成果可以作为辅助证明，哪些费用不能重复计算，都应在申报前先做标注。",
-        f"对刚开始做政策管理的{audience}，不必一次追求所有补贴都覆盖。可以先选一两个匹配度高、材料成熟度高的项目练手，建立流程后，再逐步扩展到资质培育、项目资金和区级配套。",
+        f"对刚开始做政策管理的{audience}，不必一次追求所有补贴都覆盖。可以先选一两个匹配度高、材料成熟度高的项目练手，建立路径后，再逐步扩展到资质培育、项目资金和区级配套。",
     ]
     review_options = [
         f"同时，企业还应把“{article_title}”放进年度补贴日历，标注预计申报时间、牵头部门、配合部门和关键材料负责人。只要政策一启动，就能按清单推进，而不是临时翻聊天记录找资料。",
@@ -474,7 +494,7 @@ def build_article_from_url(url: str, index: int) -> dict[str, object]:
             f"问二：我的项目能证明吗？答案要看{proof_materials}是否齐全，是否能支撑费用、过程和成果。{material_options[variant % len(material_options)]}",
             f"问三：现在申报划算吗？如果材料成熟、金额清晰、成果可量化，就值得推进；如果短板明显，可以先进入培育。{service_options[(variant + 1) % len(service_options)]}",
             f"问四：还有没有其他政策能一起看？{value_options[(variant + 2) % len(value_options)]}",
-            f"补贴平台可以把这些问题变成线上评估流程，帮助企业快速得到匹配结果和材料建议。{company_options[(variant + 3) % len(company_options)]}",
+            f"补贴平台可以把这些问题变成线上评估路径，帮助企业快速得到匹配结果和材料建议。{company_options[(variant + 3) % len(company_options)]}",
             next_step_options[(variant + 4) % len(next_step_options)],
             closing_options[(variant + 5) % len(closing_options)],
         ]
