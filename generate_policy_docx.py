@@ -342,7 +342,7 @@ def build_article_from_url(url: str, index: int) -> dict[str, object]:
     title = article_title
     policy_name = "这项政策"
     opening_options = [
-        f"{policy_name}已经发布，政策来源为{source}。围绕“{article_title}”，企业先别急着问能拿多少钱，而要核验适用范围、补贴价值、项目关联和材料基础。把这些信息转成内部任务，才是拿补贴的第一步。",
+        f"{policy_name}已经发布，政策来源为{source}。围绕“{article_title}”，企业先别急着问能拿多少钱，而要核验适用范围、补贴价值、项目关联和材料基础。把这些信息先转成企业自己的机会清单，后面判断补贴就更有方向。",
         f"{source}发布的{policy_name}，对{audience}来说值得重点关注。企业应按政策原文要求先排查对象、条件、材料和补贴价值。只要这些要素能对应到企业现有项目，就有必要进入补贴评估。",
         f"看到{policy_name}后，企业要做的不是简单保存通知，而是马上围绕“{article_title}”判断它和自身业务的关系。建议先看企业所在区域、业务类型、项目投入和手头证据。如果这些内容与企业近期投入、项目成果或资质建设有关，就应尽快纳入补贴申报计划。",
     ]
@@ -430,88 +430,89 @@ def build_article_from_url(url: str, index: int) -> dict[str, object]:
     style = variant % 8
     if style == 0:
         paragraphs = [
-            f"先说结论：{article_title}。{opening_options[variant % len(opening_options)]}",
-            match_options[(variant + 1) % len(match_options)],
-            material_options[(variant + 2) % len(material_options)],
+            f"说白了，“{article_title}”不是让企业多看一条通知，而是提醒企业看看手上的项目能不能变成补贴机会。{opening_options[variant % len(opening_options)]}",
+            f"对{audience}来说，重点不是把政策读得多细，而是把{policy_focus}和真实业务对上号。能对上的地方，就是值得优先评估的机会；对不上的地方，也能反过来提醒企业补短板。",
+            f"材料也不用一开始就想得很复杂，可以先把{proof_materials}集中到一个项目资料夹里。合同、票据、照片、数据、成果说明放在一起，后面不管是评估还是申报，都会轻松很多。",
             company_options[(variant + 3) % len(company_options)],
-            value_options[(variant + 4) % len(value_options)],
-            next_step_options[(variant + 5) % len(next_step_options)],
+            f"这类政策真正的价值，不只是当下有没有补贴，而是帮企业养成项目留痕的习惯。{value_options[(variant + 4) % len(value_options)]}",
             service_options[(variant + 7) % len(service_options)],
             closing_options[(variant + 8) % len(closing_options)],
         ]
     elif style == 1:
         paragraphs = [
-            f"给{audience}的三个提醒：{article_title}。{opening_options[(variant + 1) % len(opening_options)]}",
-            f"第一，先看自己是不是政策对象。{match_options[(variant + 2) % len(match_options)]}",
-            f"第二，别把材料准备当成最后一步。{material_options[(variant + 3) % len(material_options)]}",
-            f"第三，要把单条政策放进年度规划。{value_options[(variant + 4) % len(value_options)]}",
-            f"深圳金赋能做的，是把这些提醒落到补贴平台里的企业画像、政策匹配、材料缺口和申报节点上。{company_options[(variant + 5) % len(company_options)]}",
-            review_options[(variant + 6) % len(review_options)],
+            f"这篇更适合给{audience}做一次轻量提醒：{article_title}。{opening_options[(variant + 1) % len(opening_options)]}",
+            f"先别急着问“能补多少”，更应该先问“我有没有类似项目”。如果企业正在做{policy_focus}相关工作，那就值得把项目投入、成果和证明材料先盘一遍。",
+            f"再看材料是不是拿得出来。{proof_materials}这些内容，平时看起来只是日常资料，放到政策场景里就可能变成判断企业能不能拿补贴的关键证据。",
+            f"深圳金赋想帮企业解决的，正是“政策很多但不知道哪条适合我”的问题。{company_options[(variant + 5) % len(company_options)]}",
+            f"所以，这类政策可以当成一次经营提醒：项目要留痕，费用要规范，成果要能讲清楚。{review_options[(variant + 6) % len(review_options)]}",
             closing_options[(variant + 7) % len(closing_options)],
         ]
     elif style == 2:
         paragraphs = [
-            f"从老板视角看，“{article_title}”不是一条普通通知，而是一道经营管理题。{opening_options[(variant + 2) % len(opening_options)]}",
-            f"老板最需要确认的是：这项政策和企业当前收入、项目、费用、资质有没有关系。{match_options[(variant + 3) % len(match_options)]}",
-            f"财务负责人要同步介入，因为补贴申报最终会落到合同、发票、付款、审计和费用归集上。{material_options[(variant + 4) % len(material_options)]}",
-            f"项目负责人则要补齐过程证据，证明项目不是临时包装出来的，而是已经真实实施并形成成效。{review_options[(variant + 5) % len(review_options)]}",
-            f"深圳金赋补贴平台适合先做一轮筛查，看看哪些项目值得申报，哪些需要继续培育。{service_options[(variant + 6) % len(service_options)]}",
+            f"从老板视角看，“{article_title}”其实是一道投入产出题。{opening_options[(variant + 2) % len(opening_options)]}",
+            f"老板关心的是：企业已经花出去的钱、已经做完的项目、已经沉淀的资质，有没有可能换回政策资金。围绕{policy_focus}，只要能找到业务事实和证明材料，就有进一步评估的价值。",
+            f"财务这边也很关键。合同、发票、付款、费用归集和项目名称如果前后不一致，再好的项目也容易卡住。{material_options[(variant + 4) % len(material_options)]}",
+            f"项目负责人则要把过程讲清楚：为什么做、怎么做、做出什么效果。说到底，补贴不是“写出来”的，而是靠真实投入和可验证成果支撑出来的。",
+            f"补贴平台适合先做一轮筛查，看看哪些项目值得申，哪些项目还需要养一养。{service_options[(variant + 6) % len(service_options)]}",
             next_step_options[(variant + 7) % len(next_step_options)],
             closing_options[(variant + 8) % len(closing_options)],
         ]
     elif style == 3:
         paragraphs = [
-            f"如果把“{article_title}”做成一张申报作战表，可以分成四栏：对象、项目、材料、时间。{opening_options[variant % len(opening_options)]}",
-            f"对象栏写清楚{audience}是否符合要求，重点核对{policy_focus}。不符合的条件不要硬凑，能补强的短板要尽快安排负责人。",
-            f"项目栏记录企业已经发生或计划开展的项目，尤其要说明项目目标、投入内容、执行周期和可量化成果。{match_options[(variant + 4) % len(match_options)]}",
-            f"材料栏优先放入{proof_materials}，并标注材料来源、金额、日期和对应项目。{material_options[(variant + 5) % len(material_options)]}",
-            f"时间栏则要写清楚内部准备节点、预计申报节点、审核配合节点和资金跟进节点。{next_step_options[(variant + 6) % len(next_step_options)]}",
-            f"补贴平台可以把这张作战表变成动态清单，让企业随时查看哪些政策匹配、哪些材料还缺、哪些窗口快到。{company_options[(variant + 7) % len(company_options)]}",
+            f"可以把“{article_title}”想成一张项目便签：这条政策适合谁、看什么项目、需要什么证据、现在要不要行动。{opening_options[variant % len(opening_options)]}",
+            f"适合谁？主要看{audience}能不能和政策方向对上。尤其是{policy_focus}这些点，越贴近企业真实业务，后续越值得跟进。",
+            f"看什么项目？看已经发生的投入，也看接下来准备推进的计划。项目目标、投入内容、执行周期、成果数据越清楚，补贴评估越有底。{match_options[(variant + 4) % len(match_options)]}",
+            f"需要什么证据？先把{proof_materials}放进同一个资料夹，别让项目资料散落在不同同事手里。{material_options[(variant + 5) % len(material_options)]}",
+            f"现在要不要行动？如果材料已经七八成齐，就可以进入评估；如果还差不少，也可以先放进培育清单。补贴平台能把这些状态动态记录下来，避免企业错过窗口。",
+            company_options[(variant + 7) % len(company_options)],
             closing_options[(variant + 8) % len(closing_options)],
         ]
     elif style == 4:
         paragraphs = [
-            f"这类政策最容易踩的坑，不是没看到通知，而是看到后没有及时排除风险。{opening_options[(variant + 1) % len(opening_options)]}",
-            f"风险一：主体不匹配。{audience}要先核对注册地、行业属性、资质状态和项目周期，不能只因为名称相关就投入申报。{match_options[(variant + 5) % len(match_options)]}",
-            f"风险二：材料不成链。只有{proof_materials}还不够，还要能说明项目逻辑、费用逻辑和成果逻辑。{material_options[(variant + 6) % len(material_options)]}",
-            f"风险三：同一费用重复使用。企业如果同时申报多个政策，要提前标注费用边界，避免后续审计或核查时解释不清。{next_step_options[(variant + 7) % len(next_step_options)]}",
-            f"风险四：临近截止才启动。{review_options[variant % len(review_options)]}",
-            f"深圳金赋补贴平台的作用，是把这些风险前置到匹配和评估阶段。{company_options[(variant + 1) % len(company_options)]}",
+            f"这类政策最怕的不是看不懂，而是觉得“好像和我有关”，结果真准备时发现证据不够。{opening_options[(variant + 1) % len(opening_options)]}",
+            f"别只看名称相关。{audience}要先确认业务方向、项目周期和投入内容是否能对应{policy_focus}，否则很容易花了时间却发现匹配度不高。",
+            f"也别只堆材料。{proof_materials}要能串成一个完整故事：企业为什么做这个项目，钱花在哪里，最后形成了什么效果。{material_options[(variant + 6) % len(material_options)]}",
+            f"还有一个常见情况：多个政策看起来都能申，但同一笔费用不能反复用。企业最好提前把费用边界标清楚，后面沟通会省很多事。{next_step_options[(variant + 7) % len(next_step_options)]}",
+            f"深圳金赋补贴平台的作用，就是把这些问题提前暴露出来。{company_options[(variant + 1) % len(company_options)]}",
             service_options[(variant + 2) % len(service_options)],
             closing_options[(variant + 3) % len(closing_options)],
         ]
     elif style == 5:
         paragraphs = [
-            f"假设企业已经做完一个项目，现在回头看“{article_title}”，第一步不是写申报书，而是复盘项目全过程。{opening_options[(variant + 2) % len(opening_options)]}",
-            f"立项阶段，要能说明为什么做、谁来做、预算从哪里来、目标是什么；执行阶段，要能证明项目真实发生。{match_options[(variant + 6) % len(match_options)]}",
-            f"付款阶段，要把合同、发票、付款凭证和费用明细对齐；结项阶段，要用数据、照片、报告、客户反馈或验收材料证明成效。{material_options[(variant + 7) % len(material_options)]}",
-            f"如果复盘后发现资料缺口，企业要尽快补说明、补统计、补成果，而不是等申报系统开放后再追材料。{review_options[(variant + 1) % len(review_options)]}",
+            f"假设你们刚做完一个项目，现在看到“{article_title}”，可以先别急着写申报材料，先把项目复盘一遍。{opening_options[(variant + 2) % len(opening_options)]}",
+            f"复盘时可以聊得很直白：这个项目为什么做？花了多少钱？谁参与？有没有数据？有没有客户、用户或现场成果？这些问题如果答得清楚，补贴评估就有基础。",
+            f"再把资料找出来。{proof_materials}不只是普通资料，更像是项目的证据包。证据包越完整，后面政策匹配和申报判断就越快。",
+            f"如果发现资料缺口，也没关系，早点发现反而是好事。能补说明的补说明，能补数据的补数据，能补成果的补成果，别等到窗口快关了才着急。",
             f"深圳金赋会把复盘结果放进补贴平台，形成企业自己的政策资产库。{company_options[(variant + 2) % len(company_options)]}",
-            f"后续同类政策出现时，企业就能直接调用项目资料，不必每次重新找合同、问财务、翻聊天记录。{value_options[(variant + 3) % len(value_options)]}",
+            f"以后同类政策再出现时，企业就不用从零开始翻资料。{value_options[(variant + 3) % len(value_options)]}",
             closing_options[(variant + 4) % len(closing_options)],
         ]
     elif style == 6:
         paragraphs = [
-            f"很多企业会问：这条政策和我有什么关系？围绕“{article_title}”，可以先用一套顾问式问答来判断。{opening_options[variant % len(opening_options)]}",
-            f"问一：我的企业类型对吗？答案要回到{audience}以及政策原文中的对象范围。{match_options[(variant + 7) % len(match_options)]}",
-            f"问二：我的项目能证明吗？答案要看{proof_materials}是否齐全，是否能支撑费用、过程和成果。{material_options[variant % len(material_options)]}",
-            f"问三：现在申报划算吗？如果材料成熟、金额清晰、成果可量化，就值得推进；如果短板明显，可以先进入培育。{service_options[(variant + 1) % len(service_options)]}",
-            f"问四：还有没有其他政策能一起看？{value_options[(variant + 2) % len(value_options)]}",
-            f"补贴平台可以把这些问题变成线上评估路径，帮助企业快速得到匹配结果和材料建议。{company_options[(variant + 3) % len(company_options)]}",
-            next_step_options[(variant + 4) % len(next_step_options)],
+            f"很多企业会问：这条政策到底和我有什么关系？围绕“{article_title}”，可以用几个很接地气的问题来判断。{opening_options[variant % len(opening_options)]}",
+            f"我的企业类型对吗？答案要回到{audience}以及政策面向的业务方向。{match_options[(variant + 7) % len(match_options)]}",
+            f"我的项目能证明吗？答案要看{proof_materials}是否能支撑费用、过程和成果。如果只能口头说明，没有证据，那就还需要再补一补。",
+            f"现在值得推进吗？如果材料成熟、金额清晰、成果可量化，就值得让补贴平台先做评估；如果短板明显，可以先进入政策培育。{service_options[(variant + 1) % len(service_options)]}",
+            f"还有没有别的政策能一起看？{value_options[(variant + 2) % len(value_options)]}",
+            f"补贴平台可以把这些问题变成线上评估，让企业先看到匹配结果和材料建议，再决定要不要继续投入精力。{company_options[(variant + 3) % len(company_options)]}",
             closing_options[(variant + 5) % len(closing_options)],
         ]
     else:
         paragraphs = [
             f"把“{article_title}”放进年度补贴规划里看，企业会更容易找到节奏。{opening_options[(variant + 1) % len(opening_options)]}",
-            f"第一阶段是筛选：围绕{policy_focus}判断企业有没有资格、项目有没有基础、材料有没有雏形。{match_options[variant % len(match_options)]}",
-            f"第二阶段是补材料：把{proof_materials}按项目归档，统一命名、统一口径、统一负责人。{material_options[(variant + 1) % len(material_options)]}",
-            f"第三阶段是定优先级：不是所有政策都要同时申报，企业要先做匹配度高、材料成熟、资金价值明确的项目。{value_options[(variant + 2) % len(value_options)]}",
-            f"第四阶段是跟进执行：{next_step_options[(variant + 3) % len(next_step_options)]}",
+            f"先筛一遍：围绕{policy_focus}判断企业有没有机会、项目有没有基础、材料有没有雏形。{match_options[variant % len(match_options)]}",
+            f"再补一补：把{proof_materials}按项目归档，统一命名、统一口径、统一负责人。{material_options[(variant + 1) % len(material_options)]}",
+            f"然后定优先级：不是所有政策都要追，企业要先看匹配度、材料成熟度和资金价值。{value_options[(variant + 2) % len(value_options)]}",
+            f"最后持续跟进：{next_step_options[(variant + 3) % len(next_step_options)]}",
             f"深圳金赋补贴平台可以把筛选、材料、优先级和提醒串起来，让{audience}从被动找政策变成主动管政策。{service_options[(variant + 4) % len(service_options)]}",
-            review_options[(variant + 5) % len(review_options)],
             closing_options[(variant + 6) % len(closing_options)],
         ]
+    article_chars = sum(len(paragraph) for paragraph in paragraphs)
+    if article_chars < 900:
+        paragraphs.insert(
+            -1,
+            f"再说得实际一点，{audience}平时不一定有专人盯政策，但项目投入、客户案例、合同票据和经营成果每天都在发生。围绕“{article_title}”，企业可以先把已有项目放进补贴平台做一次匹配，把能冲刺的机会、需要培育的条件和暂时不适合的项目分开看。这样不会把政策当成临时任务，而是变成一套能持续复用的补贴管理方法。",
+        )
     return {
         "title": title,
         "source": source,
