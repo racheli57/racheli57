@@ -366,6 +366,91 @@ def topic_for_source(source: str, url: str) -> tuple[str, str, str]:
         "深圳金赋科技有限公司依托补贴平台沉淀1100万条全国四级公开政策数据，并通过补贴平台提供政策匹配、资质测评、申报清单和节点提醒。企业可以先做一次政策体检，判断这条政策与自身行业、规模、项目阶段和材料基础是否匹配，再决定是否进入正式申报准备，避免盲目投入时间和成本。",
     )
 
+
+TITLE_NOISE_WORDS = (
+    "深圳政府在线",
+    "深圳市人民政府门户网站",
+    "宝安区人民政府门户网站",
+    "政府在线",
+    "信息公开",
+    "政务公开",
+    "网站首页",
+    "当前位置",
+    "政策文件",
+    "政策法规",
+    "通知公告",
+)
+
+
+def clean_policy_title(title: str) -> str:
+    raw = remove_urls(re.sub(r"\s+", " ", title or "")).strip(" -_|：:，。")
+    if not raw or "$" in raw or "function" in raw.lower():
+        return ""
+    raw = re.split(r"[|_]+", raw)[0].strip(" -—_|")
+    for suffix in ("-深圳政府在线", "_深圳政府在线", "-深圳市人民政府门户网站", "_深圳市人民政府门户网站"):
+        raw = raw.replace(suffix, "")
+    for word in TITLE_NOISE_WORDS:
+        raw = raw.replace(word, " ")
+    raw = re.sub(r"\s+", " ", raw).strip(" -—_|")
+    if len(raw) < 6 or len(raw) > 120:
+        return ""
+    if has_boilerplate(raw) and not any(token in raw for token in ("通知", "办法", "措施", "规定", "方案", "细则", "指南")):
+        return ""
+    return raw[:90]
+
+
+def short_policy_subject(policy_title: str) -> str:
+    if not policy_title:
+        return ""
+    quoted = re.search(r"《([^》]{4,38})》", policy_title)
+    if quoted:
+        return quoted.group(1).strip()
+    subject = policy_title
+    subject = re.sub(r"^(深圳市|深圳|福田区|南山区|龙华区|盐田区|大鹏新区|前海|国家税务总局深圳市税务局)", "", subject)
+    subject = re.sub(r".*?关于", "", subject)
+    subject = re.sub(r"(的通知|通知|办法|规定|措施|细则|方案|指南)$", "", subject)
+    subject = re.sub(r"[\s,，。；;：:]+", "", subject)
+    return subject[:24]
+
+
+def policy_excerpt(text: str, limit: int = 220) -> str:
+    cleaned = clean_policy_text(text)
+    if not cleaned:
+        return ""
+    sentences = [part.strip(" ，。；：") for part in re.split(r"(?<=[。！？；])", cleaned) if part.strip()]
+    keywords = ("扶持", "支持", "资助", "补贴", "奖励", "申报", "企业", "项目", "资金", "产业", "人才", "金融", "税", "住房", "商务", "创新")
+    selected: list[str] = []
+    for sentence in sentences:
+        if has_boilerplate(sentence) or len(sentence) < 22 or len(sentence) > 180:
+            continue
+        if any(keyword in sentence for keyword in keywords):
+            selected.append(sentence)
+        if len(selected) >= 2:
+            break
+    if not selected:
+        for sentence in sentences:
+            if not has_boilerplate(sentence) and 22 <= len(sentence) <= 180:
+                selected.append(sentence)
+            if len(selected) >= 2:
+                break
+    excerpt = "".join(selected)[:limit]
+    return excerpt.strip(" ，。；：")
+
+
+def make_article_title(plan_title: str, policy_title: str, index: int) -> str:
+    subject = short_policy_subject(policy_title)
+    if not subject or len(subject) < 4:
+        return plan_title
+    templates = [
+        f"{subject}背后，企业要看到补贴线索",
+        f"{subject}来了，别只收藏文件",
+        f"读懂{subject}，先看企业能不能匹配",
+        f"{subject}不只是通知，也是项目提醒",
+        f"围绕{subject}，企业要提前整理证据",
+    ]
+    title = templates[(index - 1) % len(templates)]
+    return title if len(title) <= 34 else plan_title
+
 def clean_fetched_title(title: str) -> str:
     raw_title = remove_urls(re.sub(r"\s+", " ", title or "")).strip(" -_|")
     if any(keyword in raw_title for keyword in BOILERPLATE_KEYWORDS):
@@ -381,16 +466,27 @@ def clean_fetched_title(title: str) -> str:
 def build_article_from_url(url: str, index: int) -> dict[str, object]:
     source = source_from_url(url)
     plan = PROMOTION_PLANS[index - 1] if index - 1 < len(PROMOTION_PLANS) else PROMOTION_PLANS[-1]
-    article_title, audience, policy_focus, proof_materials = plan
-    # URL pages often include navigation, breadcrumbs, toolbar labels and other page chrome.
-    # To keep promotional copy clean, URL mode uses the curated article title and plan
-    # instead of embedding scraped page snippets or fetched webpage titles.
-    title = article_title
-    policy_name = "这项政策"
+    planned_title, audience, policy_focus, proof_materials = plan
+    fetched_title = ""
+    fetched_text = ""
+    try:
+        fetched_title, fetched_text = fetch_url_text(url)
+    except (HTTPError, URLError, TimeoutError, OSError):
+        fetched_title, fetched_text = "", ""
+    policy_title = clean_policy_title(fetched_title)
+    policy_signal = policy_excerpt(fetched_text)
+    article_title = make_article_title(planned_title, policy_title, index)
+    title = policy_title or planned_title
+    policy_name = f"《{policy_title}》" if policy_title else "这项政策"
+    original_signal_options = [
+        f"从政策原文看，{policy_signal}。" if policy_signal else f"从政策原文看，企业要回到原文里的支持对象、项目条件、费用口径和材料要求来判断匹配度。",
+        f"这次政策原文标题是{policy_name}，真正值得企业抓住的不是文件名称，而是里面的对象、项目、资金和材料边界。" if policy_title else f"这次要回到政策原文里的对象、项目、资金和材料边界，别只凭页面标题判断有没有机会。",
+        f"如果把原文拆开看，{policy_name}至少提醒企业关注{policy_focus}，这些内容能不能落到自身项目上，决定了后续有没有申报价值。" if policy_title else f"如果把原文拆开看，企业至少要关注{policy_focus}，这些内容能不能落到自身项目上，决定了后续有没有申报价值。",
+    ]
     opening_options = [
-        f"{policy_name}已经发布，政策来源为{source}。围绕“{article_title}”，企业先别急着问能拿多少钱，而要核验适用范围、补贴价值、项目关联和材料基础。把这些信息先转成企业自己的机会清单，后面判断补贴就更有方向。",
-        f"{source}发布的{policy_name}，对{audience}来说值得重点关注。企业应按政策原文要求先排查对象、条件、材料和补贴价值。只要这些要素能对应到企业现有项目，就有必要进入补贴评估。",
-        f"看到{policy_name}后，企业要做的不是简单保存通知，而是马上围绕“{article_title}”判断它和自身业务的关系。建议先看企业所在区域、业务类型、项目投入和手头证据。如果这些内容与企业近期投入、项目成果或资质建设有关，就应尽快纳入补贴申报计划。",
+        f"{policy_name}已经发布，政策来源为{source}。{original_signal_options[0]}围绕“{article_title}”，企业先别急着问能拿多少钱，而要核验适用范围、补贴价值、项目关联和材料基础。",
+        f"{source}发布的{policy_name}，对{audience}来说值得重点关注。{original_signal_options[1]}只要这些要素能对应到企业现有项目，就有必要进入补贴评估。",
+        f"看到{policy_name}后，企业要做的不是简单保存通知，而是马上围绕“{article_title}”判断它和自身业务的关系。{original_signal_options[2]}",
     ]
     match_options = [
         f"适合重点关注这类机会的主体包括{audience}。建议把{policy_focus}拆成几个判断题：是否符合企业主体，项目是否在规定周期内，费用是否能归集，成果是否可量化，是否存在重复申报限制。这样做能在申报前先判断成功概率。",
