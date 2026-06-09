@@ -437,6 +437,25 @@ def policy_excerpt(text: str, limit: int = 220) -> str:
     return excerpt.strip(" ，。；：")
 
 
+def subsidy_highlight(text: str, limit: int = 150) -> str:
+    cleaned = clean_policy_text(text)
+    if not cleaned:
+        return ""
+    sentences = [part.strip(" ，。；：") for part in re.split(r"(?<=[。！？；])", cleaned) if part.strip()]
+    money_pattern = re.compile(r"(最高|不超过|给予|资助|补贴|奖励|贴息|扶持)[^。！？；]{0,55}?(万元|元|%|％)")
+    support_words = ("资助", "补贴", "奖励", "扶持", "贴息", "资金", "补助")
+    for sentence in sentences:
+        if has_boilerplate(sentence) or len(sentence) > 180:
+            continue
+        if any(word in sentence for word in support_words) and money_pattern.search(sentence):
+            return sentence[:limit].strip(" ，。；：")
+    for sentence in sentences:
+        if has_boilerplate(sentence) or len(sentence) > 180:
+            continue
+        if any(word in sentence for word in support_words):
+            return sentence[:limit].strip(" ，。；：")
+    return ""
+
 def make_article_title(plan_title: str, policy_title: str, index: int) -> str:
     subject = short_policy_subject(policy_title)
     if not subject or len(subject) < 4:
@@ -475,18 +494,22 @@ def build_article_from_url(url: str, index: int) -> dict[str, object]:
         fetched_title, fetched_text = "", ""
     policy_title = clean_policy_title(fetched_title)
     policy_signal = policy_excerpt(fetched_text)
+    money_signal = subsidy_highlight(fetched_text)
     article_title = make_article_title(planned_title, policy_title, index)
     title = policy_title or planned_title
-    policy_name = f"《{policy_title}》" if policy_title else "这项政策"
+    policy_subject = short_policy_subject(policy_title) or planned_title
+    short_topic = re.split(r"[，,：:？?]", policy_subject)[0].strip()[:18] or "这类政策"
+    policy_name = "这份政策原文"
+    subsidy_sentence = f"原文中和补贴最相关的信号是：{money_signal}。" if money_signal else "如果原文里涉及补贴金额、资助比例或奖励条件，企业要优先把金额口径和材料口径核清楚。"
     original_signal_options = [
         f"从政策原文看，{policy_signal}。" if policy_signal else f"从政策原文看，企业要回到原文里的支持对象、项目条件、费用口径和材料要求来判断匹配度。",
-        f"这次政策原文标题是{policy_name}，真正值得企业抓住的不是文件名称，而是里面的对象、项目、资金和材料边界。" if policy_title else f"这次要回到政策原文里的对象、项目、资金和材料边界，别只凭页面标题判断有没有机会。",
-        f"如果把原文拆开看，{policy_name}至少提醒企业关注{policy_focus}，这些内容能不能落到自身项目上，决定了后续有没有申报价值。" if policy_title else f"如果把原文拆开看，企业至少要关注{policy_focus}，这些内容能不能落到自身项目上，决定了后续有没有申报价值。",
+        f"真正值得企业抓住的不是文件名称，而是里面的对象、项目、资金和材料边界。{subsidy_sentence}",
+        f"如果把原文拆开看，企业至少要关注{policy_focus}，这些内容能不能落到自身项目上，决定了后续有没有申报价值。{subsidy_sentence}",
     ]
     opening_options = [
-        f"{policy_name}已经发布，政策来源为{source}。{original_signal_options[0]}围绕“{article_title}”，企业先别急着问能拿多少钱，而要核验适用范围、补贴价值、项目关联和材料基础。",
-        f"{source}发布的{policy_name}，对{audience}来说值得重点关注。{original_signal_options[1]}只要这些要素能对应到企业现有项目，就有必要进入补贴评估。",
-        f"看到{policy_name}后，企业要做的不是简单保存通知，而是马上围绕“{article_title}”判断它和自身业务的关系。{original_signal_options[2]}",
+        f"{policy_name}来自{source}。{original_signal_options[0]}企业先别急着问能拿多少钱，而要核验适用范围、补贴价值、项目关联和材料基础。",
+        f"{source}发布的相关政策，对{audience}来说值得重点关注。{original_signal_options[1]}只要这些要素能对应到企业现有项目，就有必要进入补贴评估。",
+        f"看到这类政策后，企业要做的不是简单保存通知，而是判断它和自身业务的关系。{original_signal_options[2]}",
     ]
     match_options = [
         f"适合重点关注这类机会的主体包括{audience}。建议把{policy_focus}拆成几个判断题：是否符合企业主体，项目是否在规定周期内，费用是否能归集，成果是否可量化，是否存在重复申报限制。这样做能在申报前先判断成功概率。",
@@ -519,14 +542,14 @@ def build_article_from_url(url: str, index: int) -> dict[str, object]:
         f"如果企业内部缺少专门的政策团队，深圳金赋补贴平台可以先完成第一轮筛选：哪些政策适合{audience}，哪些只是看起来相关，哪些需要先做资质培育。企业再决定是否投入正式申报资源。",
     ]
     value_options = [
-        f"围绕“{article_title}”，企业还可以继续排查同区域、同产业、同项目阶段下的其他补贴，判断是否存在区级配套、市级专项、省级扶持或国家级资质培育机会。把日常投入沉淀成可申报项目，才是持续拿补贴的关键。",
-        f"如果企业只盯单条政策，往往容易错过组合机会。以“{article_title}”为入口，可以同步梳理研发、市场、人才、融资、合规和品牌等相关政策，形成一张年度补贴路线图，而不是零散碰运气。",
-        f"真正高效的申报，不是每次临时找材料，而是把“{article_title}”这类机会纳入企业年度经营计划。项目启动时就考虑政策口径，费用发生时就保留证据，成果形成时就准备说明，补贴申报会更从容。",
-        f"从客户服务角度看，“{article_title}”也是一次重新整理企业资产的机会：哪些投入能证明，哪些资质能加分，哪些项目还能延伸申报。补贴平台能帮助企业把这些信息沉淀下来，后续遇到新政策时快速复用。",
-        f"“{article_title}”不应只被当成一次通知，而应成为企业优化内部管理的提醒。凡是与政策相关的投入，都要形成预算、合同、票据、成果和复盘，这些资料未来可能同时服务多个补贴项目。",
-        f"企业还可以借“{article_title}”重新梳理年度预算：哪些投入已经发生，哪些投入即将发生，哪些成果需要补证明。只要项目管理更规范，政策机会出现时就不会因为资料缺口而被动。",
-        f"对成长型企业来说，“{article_title}”背后还有一个更重要的问题：企业是否已经形成持续申报能力。一次补贴可以解决短期资金压力，长期材料体系和政策路线图才会带来稳定收益。",
-        f"把“{article_title}”放进企业经营会议中讨论，也能帮助管理层看清政策与业务的关系。不是所有补贴都要申，但值得申的项目必须提前规划、提前留痕、提前分工。",
+        f"围绕{short_topic}，企业还可以继续排查同区域、同产业、同项目阶段下的其他补贴，判断是否存在区级配套、市级专项、省级扶持或国家级资质培育机会。把日常投入沉淀成可申报项目，才是持续拿补贴的关键。",
+        f"如果企业只盯单条政策，往往容易错过组合机会。以{short_topic}为入口，可以同步梳理研发、市场、人才、融资、合规和品牌等相关政策，形成一张年度补贴路线图，而不是零散碰运气。",
+        f"真正高效的申报，不是每次临时找材料，而是把这类机会纳入企业年度经营计划。项目启动时就考虑政策口径，费用发生时就保留证据，成果形成时就准备说明，补贴申报会更从容。",
+        f"从客户服务角度看，{short_topic}也是一次重新整理企业资产的机会：哪些投入能证明，哪些资质能加分，哪些项目还能延伸申报。补贴平台能帮助企业把这些信息沉淀下来，后续遇到新政策时快速复用。",
+        f"{short_topic}不应只被当成一次通知，而应成为企业优化内部管理的提醒。凡是与政策相关的投入，都要形成预算、合同、票据、成果和复盘，这些资料未来可能同时服务多个补贴项目。",
+        f"企业还可以借这次机会重新梳理年度预算：哪些投入已经发生，哪些投入即将发生，哪些成果需要补证明。只要项目管理更规范，政策机会出现时就不会因为资料缺口而被动。",
+        f"对成长型企业来说，{short_topic}背后还有一个更重要的问题：企业是否已经形成持续申报能力。一次补贴可以解决短期资金压力，长期材料体系和政策路线图才会带来稳定收益。",
+        f"把这类政策放进企业经营会议中讨论，也能帮助管理层看清政策与业务的关系。不是所有补贴都要申，但值得申的项目必须提前规划、提前留痕、提前分工。",
     ]
     next_step_options = [
         f"下一步，{audience}可以先把企业基础信息、近两年项目投入和已获资质导入补贴平台，由平台初筛政策适配度；再由内部负责人确认申报优先级，避免所有政策平均用力。这样既能保留机会，也能控制申报成本，把有限精力放在最有把握的项目上。",
@@ -539,14 +562,14 @@ def build_article_from_url(url: str, index: int) -> dict[str, object]:
         f"对刚开始做政策管理的{audience}，不必一次追求所有补贴都覆盖。可以先选一两个匹配度高、材料成熟度高的项目练手，建立路径后，再逐步扩展到资质培育、项目资金和区级配套。",
     ]
     review_options = [
-        f"同时，企业还应把“{article_title}”放进年度补贴日历，标注预计申报时间、牵头部门、配合部门和关键材料负责人。只要政策一启动，就能按清单推进，而不是临时翻聊天记录找资料。",
-        f"从管理层角度看，“{article_title}”还可以作为一次内部体检：项目有没有预算，费用有没有凭证，成果有没有数据，资质有没有短板。把这些问题提前暴露出来，后续申报会更稳。",
+        f"同时，企业还应把相关机会放进年度补贴日历，标注预计申报时间、牵头部门、配合部门和关键材料负责人。只要政策一启动，就能按清单推进，而不是临时翻聊天记录找资料。",
+        f"从管理层角度看，{short_topic}还可以作为一次内部体检：项目有没有预算，费用有没有凭证，成果有没有数据，资质有没有短板。把这些问题提前暴露出来，后续申报会更稳。",
         f"对{audience}而言，政策准备不是一次性动作，而是持续积累。每完成一个项目，都应同步沉淀合同、票据、成果和复盘，后续无论申报哪类补贴，都能少走弯路。",
-        f"如果企业内部没有专人跟政策，“{article_title}”这类机会很容易被忽略。建议把政策匹配、材料归档和申报提醒固化为月度动作，让补贴申报从偶然机会变成常规管理。",
-        f"企业还要注意，政策申报不是把材料堆上去就结束。围绕“{article_title}”，最好提前准备项目逻辑、资金逻辑和成果逻辑，让材料之间能相互解释，而不是各说各话。",
+        f"如果企业内部没有专人跟政策，这类机会很容易被忽略。建议把政策匹配、材料归档和申报提醒固化为月度动作，让补贴申报从偶然机会变成常规管理。",
+        f"企业还要注意，政策申报不是把材料堆上去就结束。围绕{short_topic}，最好提前准备项目逻辑、资金逻辑和成果逻辑，让材料之间能相互解释，而不是各说各话。",
         f"在正式申报前，{audience}可以做一次模拟审查：材料是否齐全，金额是否一致，项目描述是否前后统一，证明是否能支撑政策要求。提前发现问题，比提交后补正更主动。",
-        f"对外部政策变化保持敏感也很重要。围绕“{article_title}”，企业可以持续关注同主管部门、同产业方向、同区域层级的后续通知，避免只看一次政策就停止跟进。",
-        f"如果企业希望长期拿补贴，就要把“{article_title}”这类政策变成内部管理动作：项目立项问政策，费用发生留凭证，成果验收做复盘，年度总结看下一轮申报。",
+        f"对外部政策变化保持敏感也很重要。围绕{short_topic}，企业可以持续关注同主管部门、同产业方向、同区域层级的后续通知，避免只看一次政策就停止跟进。",
+        f"如果企业希望长期拿补贴，就要把{short_topic}相关事项变成内部管理动作：项目立项问政策，费用发生留凭证，成果验收做复盘，年度总结看下一轮申报。",
     ]
     service_options = [
         f"更重要的是，企业要把补贴工作从“有人提醒才看”变成“每月主动复盘”。深圳金赋可围绕{audience}建立政策跟踪、材料维护和节点提醒机制，让经营数据、项目资料和补贴机会保持同步。",
@@ -559,20 +582,20 @@ def build_article_from_url(url: str, index: int) -> dict[str, object]:
         f"补贴不是临时福利，而是企业经营管理的一部分。对于{audience}，越早把项目、费用、成果和资料纳入补贴平台，越容易形成可复用的政策资产，也越容易把握后续申报机会。",
     ]
     closing_options = [
-        f"如果企业想围绕“{article_title}”判断是否值得申报，并生成更贴合自身情况的补贴推荐清单，可关注公众号「金赋补贴宝」，通过公众号访问补贴平台，进行企业资质评估和政策匹配。",
-        f"想知道{audience}现有项目能不能匹配“{article_title}”，或者还缺哪些申报材料，可关注公众号「金赋补贴宝」，通过公众号访问补贴平台，先做一次企业资质评估。",
-        f"近期围绕“{article_title}”有补贴申报、资质培育或项目资金规划需求的企业，可关注公众号「金赋补贴宝」，通过公众号访问补贴平台，查看适合自身情况的政策推荐。",
+        f"如果企业想判断这类政策是否值得申报，并生成更贴合自身情况的补贴推荐清单，可关注公众号「金赋补贴宝」，通过公众号访问补贴平台，进行企业资质评估和政策匹配。",
+        f"想知道{audience}现有项目能不能匹配这类机会，或者还缺哪些申报材料，可关注公众号「金赋补贴宝」，通过公众号访问补贴平台，先做一次企业资质评估。",
+        f"近期有补贴申报、资质培育或项目资金规划需求的企业，可关注公众号「金赋补贴宝」，通过公众号访问补贴平台，查看适合自身情况的政策推荐。",
         f"如果{audience}不确定这类政策是否适合自己，建议先做一次资质评估和政策匹配。可关注公众号「金赋补贴宝」，通过公众号访问补贴平台，把企业资料转化为可执行的补贴清单。",
-        f"企业也可以把“{article_title}”作为年度补贴规划的起点。关注公众号「金赋补贴宝」，通过公众号访问补贴平台，先确认自身条件、材料缺口和可优先推进的政策方向。",
+        f"企业也可以把这类机会作为年度补贴规划的起点。关注公众号「金赋补贴宝」，通过公众号访问补贴平台，先确认自身条件、材料缺口和可优先推进的政策方向。",
         f"不确定项目是否能申报，不建议只凭经验判断。关注公众号「金赋补贴宝」，通过公众号访问补贴平台，让系统先根据企业信息做匹配，再决定是否进入材料准备。",
         f"如果企业已经有项目投入，但不知道能否形成补贴申请，可关注公众号「金赋补贴宝」，通过公众号访问补贴平台，先完成资质评估，再对照推荐清单安排申报节奏。",
-        f"政策机会不会一直停留在通知里，关键是企业能不能及时行动。关注公众号「金赋补贴宝」，通过公众号访问补贴平台，把“{article_title}”转化为自己的补贴评估结果。",
+        f"政策机会不会一直停留在通知里，关键是企业能不能及时行动。关注公众号「金赋补贴宝」，通过公众号访问补贴平台，把相关信息转化为自己的补贴评估结果。",
     ]
     variant = (index - 1)
     style = variant % 8
     if style == 0:
         paragraphs = [
-            f"深圳金赋成立于2017年，长期围绕企业补贴申报做政策匹配和材料管理，补贴平台沉淀了1100万条全国四级公开政策数据。说白了，“{article_title}”不是让企业多看一条通知，而是提醒企业看看手上的项目能不能变成补贴机会。{opening_options[variant % len(opening_options)]}",
+            f"深圳金赋成立于2017年，长期围绕企业补贴申报做政策匹配和材料管理，补贴平台沉淀了1100万条全国四级公开政策数据。说白了，{short_topic}不是让企业多看一条通知，而是提醒企业看看手上的项目能不能变成补贴机会。{opening_options[variant % len(opening_options)]}",
             f"对{audience}来说，重点不是把政策读得多细，而是把{policy_focus}和真实业务对上号。能对上的地方，就是值得优先评估的机会；对不上的地方，也能反过来提醒企业补短板。",
             f"材料也不用一开始就想得很复杂，可以先把{proof_materials}集中到一个项目资料夹里。合同、票据、照片、数据、成果说明放在一起，后面不管是评估还是申报，都会轻松很多。",
             company_options[(variant + 3) % len(company_options)],
@@ -582,7 +605,7 @@ def build_article_from_url(url: str, index: int) -> dict[str, object]:
         ]
     elif style == 1:
         paragraphs = [
-            f"深圳金赋服务企业时，常见的第一类问题就是：政策很多，但不知道哪条真正适合自己。这篇更适合给{audience}做一次轻量提醒：{article_title}。{opening_options[(variant + 1) % len(opening_options)]}",
+            f"深圳金赋服务企业时，常见的第一类问题就是：政策很多，但不知道哪条真正适合自己。这篇更适合给{audience}做一次轻量提醒：先看{short_topic}能不能落到现有项目。{opening_options[(variant + 1) % len(opening_options)]}",
             f"先别急着问“能补多少”，更应该先问“我有没有类似项目”。如果企业正在做{policy_focus}相关工作，那就值得把项目投入、成果和证明材料先盘一遍。",
             f"再看材料是不是拿得出来。{proof_materials}这些内容，平时看起来只是日常资料，放到政策场景里就可能变成判断企业能不能拿补贴的关键证据。",
             f"深圳金赋想帮企业解决的，正是“政策很多但不知道哪条适合我”的问题。{company_options[(variant + 5) % len(company_options)]}",
@@ -591,9 +614,9 @@ def build_article_from_url(url: str, index: int) -> dict[str, object]:
         ]
     elif style == 2:
         paragraphs = [
-            f"深圳金赋做补贴平台时，经常会把政策机会先翻译成老板能看懂的投入产出账。从老板视角看，“{article_title}”其实不是一条孤立通知，而是一道经营管理题。{opening_options[(variant + 2) % len(opening_options)]}",
+            f"深圳金赋做补贴平台时，经常会把政策机会先翻译成老板能看懂的投入产出账。从老板视角看，{short_topic}其实不是一条孤立通知，而是一道经营管理题。{opening_options[(variant + 2) % len(opening_options)]}",
             f"老板关心的是：企业已经花出去的钱、已经做完的项目、已经沉淀的资质，有没有可能换回政策资金。围绕{policy_focus}，只要能找到业务事实和证明材料，就有进一步评估的价值。",
-            f"财务这边也很关键。围绕“{article_title}”，合同、发票、付款、费用归集和项目名称如果前后不一致，再好的项目也容易卡住。{material_options[(variant + 4) % len(material_options)]}",
+            f"财务这边也很关键。围绕{short_topic}，合同、发票、付款、费用归集和项目名称如果前后不一致，再好的项目也容易卡住。{material_options[(variant + 4) % len(material_options)]}",
             f"项目负责人则要把过程讲清楚：为什么做、怎么做、做出什么效果。说到底，补贴不是“写出来”的，而是靠真实投入和可验证成果支撑出来的。",
             f"补贴平台适合先做一轮筛查，看看哪些项目值得申，哪些项目还需要养一养。{service_options[(variant + 6) % len(service_options)]}",
             next_step_options[(variant + 7) % len(next_step_options)],
@@ -601,7 +624,7 @@ def build_article_from_url(url: str, index: int) -> dict[str, object]:
         ]
     elif style == 3:
         paragraphs = [
-            f"可以把“{article_title}”想成一张项目便签：这条政策适合谁、看什么项目、需要什么证据、现在要不要行动。{opening_options[variant % len(opening_options)]}",
+            f"可以把{short_topic}想成一张项目便签：适合谁、看什么项目、需要什么证据、现在要不要行动。{opening_options[variant % len(opening_options)]}",
             f"适合谁？主要看{audience}能不能和政策方向对上。尤其是{policy_focus}这些点，越贴近企业真实业务，后续越值得跟进。",
             f"看什么项目？看已经发生的投入，也看接下来准备推进的计划。项目目标、投入内容、执行周期、成果数据越清楚，补贴评估越有底。{match_options[(variant + 4) % len(match_options)]}",
             f"需要什么证据？先把{proof_materials}放进同一个资料夹，别让项目资料散落在不同同事手里。{material_options[(variant + 5) % len(material_options)]}",
@@ -621,7 +644,7 @@ def build_article_from_url(url: str, index: int) -> dict[str, object]:
         ]
     elif style == 5:
         paragraphs = [
-            f"假设你们刚做完一个项目，现在看到“{article_title}”，可以先别急着写申报材料，先把项目复盘一遍。{opening_options[(variant + 2) % len(opening_options)]}",
+            f"假设你们刚做完一个项目，现在看到{short_topic}相关政策，可以先别急着写申报材料，先把项目复盘一遍。{opening_options[(variant + 2) % len(opening_options)]}",
             f"复盘时可以聊得很直白：这个项目为什么做？花了多少钱？谁参与？有没有数据？有没有客户、用户或现场成果？这些问题如果答得清楚，补贴评估就有基础。",
             f"再把资料找出来。{proof_materials}不只是普通资料，更像是项目的证据包。证据包越完整，后面政策匹配和申报判断就越快。",
             f"如果发现资料缺口，也没关系，早点发现反而是好事。能补说明的补说明，能补数据的补数据，能补成果的补成果，别等到窗口快关了才着急。",
@@ -631,7 +654,7 @@ def build_article_from_url(url: str, index: int) -> dict[str, object]:
         ]
     elif style == 6:
         paragraphs = [
-            f"很多企业会问：这条政策到底和我有什么关系？围绕“{article_title}”，可以用几个很接地气的问题来判断。{opening_options[variant % len(opening_options)]}",
+            f"很多企业会问：这类政策到底和我有什么关系？围绕{short_topic}，可以用几个很接地气的问题来判断。{opening_options[variant % len(opening_options)]}",
             f"我的企业类型对吗？答案要回到{audience}以及政策面向的业务方向。{match_options[(variant + 7) % len(match_options)]}",
             f"我的项目能证明吗？答案要看{proof_materials}是否能支撑费用、过程和成果。如果只能口头说明，没有证据，那就还需要再补一补。",
             f"现在值得推进吗？如果材料成熟、金额清晰、成果可量化，就值得让补贴平台先做评估；如果短板明显，可以先进入政策培育。{service_options[(variant + 1) % len(service_options)]}",
@@ -641,9 +664,9 @@ def build_article_from_url(url: str, index: int) -> dict[str, object]:
         ]
     else:
         paragraphs = [
-            f"把“{article_title}”放进年度补贴规划里看，企业会更容易找到节奏。{opening_options[(variant + 1) % len(opening_options)]}",
+            f"把{short_topic}放进年度补贴规划里看，企业会更容易找到节奏。{opening_options[(variant + 1) % len(opening_options)]}",
             f"先筛一遍：围绕{policy_focus}判断企业有没有机会、项目有没有基础、材料有没有雏形。{match_options[variant % len(match_options)]}",
-            f"再补一补：围绕“{article_title}”，把{proof_materials}按项目归档，统一命名、统一口径、统一负责人。{material_options[(variant + 1) % len(material_options)]}",
+            f"再补一补：围绕{short_topic}，把{proof_materials}按项目归档，统一命名、统一口径、统一负责人。{material_options[(variant + 1) % len(material_options)]}",
             f"然后定优先级：不是所有政策都要追，企业要先看匹配度、材料成熟度和资金价值。{value_options[(variant + 2) % len(value_options)]}",
             f"最后持续跟进：{next_step_options[(variant + 3) % len(next_step_options)]}",
             f"深圳金赋补贴平台可以把筛选、材料、优先级和提醒串起来，让{audience}从被动找政策变成主动管政策。{service_options[(variant + 4) % len(service_options)]}",
@@ -653,7 +676,7 @@ def build_article_from_url(url: str, index: int) -> dict[str, object]:
     if article_chars < 900:
         paragraphs.insert(
             -1,
-            f"再说得实际一点，{audience}平时不一定有专人盯政策，但项目投入、客户案例、合同票据和经营成果每天都在发生。围绕“{article_title}”，企业可以先把已有项目放进补贴平台做一次匹配，把能冲刺的机会、需要培育的条件和暂时不适合的项目分开看。这样不会把政策当成临时任务，而是变成一套能持续复用的补贴管理方法。",
+            f"再说得实际一点，{audience}平时不一定有专人盯政策，但项目投入、客户案例、合同票据和经营成果每天都在发生。企业可以先把已有项目放进补贴平台做一次匹配，把能冲刺的机会、需要培育的条件和暂时不适合的项目分开看。这样不会把政策当成临时任务，而是变成一套能持续复用的补贴管理方法。",
         )
     return {
         "title": title,
