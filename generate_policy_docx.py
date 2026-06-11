@@ -476,6 +476,58 @@ def make_article_title(plan_title: str, policy_title: str, index: int) -> str:
     title = templates[(index - 1) % len(templates)]
     return title if len(title) <= 34 else plan_title
 
+def policy_year(text: str) -> str:
+    match = re.search(r"(20\d{2})年", text or "")
+    return match.group(1) if match else ""
+
+
+def readable_policy_subject(policy_title: str) -> str:
+    subject = short_policy_subject(policy_title)
+    if not subject:
+        return ""
+    subject = re.sub(r"^(安排|下达|提前下达|拨付|转发|印发|发布|组织申报|开展|做好)", "", subject)
+    subject = re.sub(r"^\d{4}年(?:第[一二三四五六七八九十0-9]+批)?", "", subject)
+    subject = re.sub(r"^(?:第[一二三四五六七八九十0-9]+批)?(?:中央|省级|市级|区级)?财政", "", subject)
+    subject = re.sub(r"(补助资金预算|资金预算|预算)$", "资金", subject)
+    subject = subject.strip(" ，。；：:、-—_（）()[]【】")
+    keyword_subjects = [
+        ("医疗服务与保障能力", "医疗服务与保障能力资金"),
+        ("就业", "就业补贴政策"),
+        ("创业", "创业补贴政策"),
+        ("技能", "技能人才补贴"),
+        ("人才", "人才服务补贴"),
+        ("科技", "科技项目资金"),
+        ("农业", "农业项目资金"),
+        ("工业", "工业企业扶持"),
+        ("制造", "制造业扶持"),
+        ("财政", "财政资金政策"),
+        ("数据", "数据要素政策"),
+        ("数字", "数字化项目政策"),
+        ("成果", "科技成果转化"),
+    ]
+    for keyword, label in keyword_subjects:
+        if keyword in subject:
+            return label
+    return subject[:18]
+
+
+def make_db_article_title(policy_title: str, article_suffix: str) -> str:
+    subject = readable_policy_subject(policy_title)
+    year = policy_year(policy_title)
+    if subject:
+        prefix = f"{year}年{subject}" if year and not subject.startswith(year) else subject
+        candidates = [
+            f"{prefix}，企业要看补贴口径",
+            f"{prefix}别只收藏，先做申报评估",
+            f"围绕{prefix}，企业要提前备材料",
+        ]
+        for candidate in candidates:
+            if len(candidate) <= 34:
+                return candidate
+        return prefix[:30]
+    cleaned_suffix = article_suffix.rstrip("？?")
+    return cleaned_suffix[:34] or "企业补贴机会，先做申报评估"
+
 def clean_fetched_title(title: str) -> str:
     raw_title = remove_urls(re.sub(r"\s+", " ", title or "")).strip(" -_|")
     if any(keyword in raw_title for keyword in BOILERPLATE_KEYWORDS):
@@ -744,7 +796,7 @@ def build_article_from_policy(row: dict[str, object]) -> dict[str, object]:
     max_amount = format_amount(row.get("max_amount"))
     policy_text = strip_html(str(row.get("content") or ""))
     article_suffix, target_guidance, jinfu_guidance = choose_article_angle(title)
-    article_title = f"{title[:24]}：{article_suffix}"
+    article_title = make_db_article_title(title, article_suffix)
     summary = policy_text[:220] if policy_text else f"{source}发布相关扶持政策，企业可结合自身资质和项目阶段关注申报机会。"
     paragraphs = [
         f"{title}已经发布，政策来源为{source}，申报或有效周期为{valid_period}，资助亮点为{max_amount}。从政策原文看，核心信息可以概括为：{summary}。对企业来说，这类政策不只是新闻信息，更应该转化为年度经营、研发、人才、市场或产业项目规划中的具体动作。",
@@ -819,6 +871,22 @@ def sanitize_windows_filename(name: str) -> str:
     cleaned = re.sub(r'[<>:"/\\|?*\x00-\x1f]', '', name).strip().rstrip('.')
     return cleaned[:180] or "policy_article"
 
+def unique_article_title(title: str, used_titles: dict[str, int]) -> str:
+    count = used_titles.get(title, 0) + 1
+    used_titles[title] = count
+    return title if count == 1 else f"{title}-{count:02d}"
+
+
+def unique_docx_filename(title: str, used_filenames: set[str]) -> str:
+    filename_base = sanitize_windows_filename(title)
+    output_name = f"{filename_base}.docx"
+    filename_count = 2
+    while output_name in used_filenames:
+        output_name = f"{filename_base}-{filename_count:02d}.docx"
+        filename_count += 1
+    used_filenames.add(output_name)
+    return output_name
+
 
 def paragraph_xml(text: str, style: str | None = None) -> str:
     style_xml = f'<w:pPr><w:pStyle w:val="{style}"/></w:pPr>' if style else ""
@@ -865,8 +933,13 @@ def main() -> None:
     articles = resolve_articles(args.from_db, args.ids, args.limit, args.urls)
 
     generated_docs = []
+    used_titles: dict[str, int] = {}
+    used_filenames: set[str] = set()
     for article in articles:
-        output_name = sanitize_windows_filename(str(article["article_title"])) + ".docx"
+        article = dict(article)
+        article["article_title"] = unique_article_title(str(article["article_title"]), used_titles)
+        output_name = unique_docx_filename(str(article["article_title"]), used_filenames)
+
         output_path = output_dir / output_name
         create_docx(output_path, str(article["article_title"]), article["paragraphs"])
         generated_docs.append((output_name, article))
