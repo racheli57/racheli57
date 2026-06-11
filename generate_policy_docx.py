@@ -109,16 +109,16 @@ SUBJECT_BY_POST_ID = {
 
 TITLE_VARIANTS_BY_POST_ID = {
     "12821085": [
-        "南山五类补贴窗口已打开",
+        "南山补贴窗口开了",
         "模型券和房租补贴别错过",
-        "软件企业拿补贴先测匹配",
-        "鸿蒙项目能不能申先评估",
+        "软件企业先测补贴匹配",
+        "鸿蒙项目申报前先评估",
         "南山企业补贴材料这样备",
-        "南山软件项目补贴别漏看",
-        "人才和空间补贴先盘点",
-        "模型券申报先做材料体检",
-        "南山企业拿补贴要趁早",
-        "五类项目能否申先测一遍",
+        "软件空间和模型券一起看",
+        "人才补贴与园区房租先盘点",
+        "模型券项目材料体检清单",
+        "南山软件企业别错过五类补贴",
+        "鸿蒙开发团队能不能申先测一遍",
     ],
 }
 
@@ -750,16 +750,16 @@ def build_article_from_url(url: str, index: int) -> dict[str, object]:
         f"政策机会不会一直停留在通知里，关键是企业能不能及时行动。关注「金赋补贴宝」，进入补贴平台，把相关信息转化为自己的补贴评估结果。",
     ]
     ad_hook_options = [
-        f"适合发推广文的表达可以更直接：这类补贴政策不是让企业背条文，而是帮企业找到拿补贴、拿贴息的入口。深圳金赋补贴平台先做匹配，再看项目和材料值不值得推进。",
-        f"换成轻内容语气，就是一句话：企业别错过身边的补贴政策！只要{proof_materials}能说明项目真实发生，就可以先让补贴平台测一测有没有机会拿补贴。",
+        f"这类补贴政策不是让企业背条文，而是帮企业找到拿补贴、拿贴息的入口。深圳金赋补贴平台先做匹配，再看项目和材料值不值得推进。",
+        f"企业别错过身边的补贴政策。只要{proof_materials}能说明项目真实发生，就可以先让补贴平台测一测有没有机会拿补贴。",
         f"客户最爱问的不是政策有多长，而是我能不能拿补贴。围绕{short_topic}，深圳金赋会先帮企业看主体、项目、费用和材料，再判断是否值得进入申报准备。",
-        f"这类内容可以带点广告味：想拿补贴、拿贴息，别只靠人工翻政策。把企业信息放进补贴平台，先看适配度，再安排材料和申报节奏。",
-        f"推广标题可以活泼一点，正文也要落到服务上：深圳金赋补贴平台帮企业找补贴政策、测申报机会、看材料缺口，让老板先知道值不值得做。",
+        f"想拿补贴、拿贴息，别只靠人工翻政策。把企业信息放进补贴平台，先看适配度，再安排材料和申报节奏。",
+        f"深圳金赋补贴平台帮企业找补贴政策、测申报机会、看材料缺口，让老板先知道值不值得做。",
         f"如果企业正在做融资、研发、设备、市场或合规投入，别只看成本，也要看看能不能衔接补贴、奖励或贴息政策。补贴平台可以先帮企业把机会筛出来。",
         f"对企业来说，拿补贴不是碰运气，而是提前把项目和材料准备好。深圳金赋把政策匹配、资质评估和材料提醒串起来，让补贴机会更容易被发现。",
         f"这类政策适合用来唤醒客户：有项目、有投入、有凭证，就别急着说自己不符合。先上补贴平台做评估，看看能不能申补贴、拿贴息或进入资质培育。",
         f"写给企业负责人时，可以直接说：补贴政策不是离你很远，它可能就在已有项目里。深圳金赋帮企业把政策、项目和证据对上，少走弯路。",
-        f"批量发推广文时，重点不是复述文件，而是提醒客户行动：把项目放进补贴平台测一测，看看有没有补贴、贴息、奖励或配套资金线索。",
+        f"重点不是复述文件，而是让企业行动起来：把项目放进补贴平台测一测，看看有没有补贴、贴息、奖励或配套资金线索。",
     ]
 
     extra_options = [
@@ -833,7 +833,7 @@ def build_article_from_url(url: str, index: int) -> dict[str, object]:
             f"资料便签也要同步建起来。{proof_materials}可以按项目统一归档，别分散在财务、行政、项目经理和老板个人文件里。资料越集中，后续匹配越快。",
             f"如果企业目前离条件还差一些，也可以先放进培育清单。补贴平台能把这些状态动态记录下来，避免企业错过后续窗口。",
             company_options[(variant + 7) % len(company_options)],
-            f"这种写法很适合发给内部团队：不是要求大家马上申报，而是提醒大家把项目证据先放好。{value_options[(variant + 1) % len(value_options)]}",
+            f"内部团队可以先统一一个共识：不是马上申报，而是先把项目证据放好。{value_options[(variant + 1) % len(value_options)]}",
             closing_options[(variant + 8) % len(closing_options)],
         ]
     elif style == 4:
@@ -878,11 +878,11 @@ def build_article_from_url(url: str, index: int) -> dict[str, object]:
         ]
     elif style == 8:
         paragraphs = [
-            f"这条内容可以用更轻松的方式发给客户：别把{short_topic}只当新闻看，它可能和企业正在花的钱、做的项目、准备的资质有关。{original_signal_options[(variant + 1) % len(original_signal_options)]}",
+            f"换个更轻松的角度看：别把{short_topic}只当新闻看，它可能和企业正在花的钱、做的项目、准备的资质有关。{original_signal_options[(variant + 1) % len(original_signal_options)]}",
             f"深圳金赋经常遇到这样的情况：企业项目做了，费用也发生了，但没有人从补贴角度帮它归类。等到申报窗口出现，才发现合同、数据、成果说明散在不同部门。",
             f"如果{audience}近期正在做{policy_focus}相关事项，就建议把{proof_materials}先拉出来看看。不是马上写申报书，而是先判断有没有“可申报的底子”。",
             f"补贴平台的优势在于先做匹配，再谈推进。系统会结合企业注册地、行业、资质、项目投入和材料情况，帮企业看到可能适合的政策方向。",
-            f"这类推广文章不需要写得太官方，客户真正关心的是：我有没有机会、缺什么、要不要现在准备。{service_options[(variant + 5) % len(service_options)]}",
+            f"企业真正关心的是：我有没有机会、缺什么、要不要现在准备。{service_options[(variant + 5) % len(service_options)]}",
             extra_options[(variant + 1) % len(extra_options)],
             closing_options[(variant + 2) % len(closing_options)],
         ]
@@ -1083,7 +1083,7 @@ def build_article_from_url(url: str, index: int) -> dict[str, object]:
             ]
         elif layout == 9:
             paragraphs = [
-                f"这篇可以写成老板备忘：看到{short_topic}，先判断公司今年有没有相关投入，而不是把政策转给行政就结束。",
+                f"老板可以先记住一点：看到{short_topic}，先判断公司今年有没有相关投入，而不是把政策转给行政就结束。",
                 composed_angles[(variant + 3) % len(composed_angles)],
                 f"财务要看票据和费用，项目负责人要看过程和成果，管理层要看值不值得推进。",
                 composed_company[(variant + 4) % len(composed_company)],
@@ -1092,7 +1092,7 @@ def build_article_from_url(url: str, index: int) -> dict[str, object]:
             ]
         elif layout == 10:
             paragraphs = [
-                f"也可以从客户案例感来写：一家企业项目做完后，才发现{short_topic}相关政策已经发布，材料却还散在不同部门。",
+                f"有些企业项目做完后，才发现{short_topic}相关政策已经发布，材料却还散在不同部门。",
                 f"这种情况并不少见。{audience}平时如果没有建立材料台账，政策窗口打开时就容易手忙脚乱。",
                 f"深圳金赋补贴平台会先看{policy_focus}和企业项目是否对应，再提示{proof_materials}是否足够支撑申报判断。",
                 f"如果政策涉及补贴金额或奖励条件，企业更要把费用边界、投入周期和证明强度核清楚。",
@@ -1110,7 +1110,7 @@ def build_article_from_url(url: str, index: int) -> dict[str, object]:
             ]
         elif layout == 12:
             paragraphs = [
-                f"这类文章可以更像内部提醒：市场、财务、项目和行政都要知道，{short_topic}背后看的不是一个部门的材料。",
+                f"市场、财务、项目和行政都要知道，{short_topic}背后看的不是一个部门的材料。",
                 f"市场能提供客户和传播成果，项目能提供过程资料，财务能提供费用路径，行政能核对资质证照。",
                 f"把这些信息放进补贴平台，深圳金赋才能更准确地判断{policy_focus}是否能对应企业实际。",
                 composed_actions[(variant + 6) % len(composed_actions)],
@@ -1119,7 +1119,7 @@ def build_article_from_url(url: str, index: int) -> dict[str, object]:
             ]
         elif layout == 13:
             paragraphs = [
-                f"如果想让文章少一点官方味，可以从“别浪费已经发生的投入”说起。{short_topic}就是一次提醒：投入要留下证据，证据才可能变成申报基础。",
+                f"别浪费已经发生的投入。{short_topic}就是一次提醒：投入要留下证据，证据才可能变成申报基础。",
                 composed_angles[(variant + 4) % len(composed_angles)],
                 f"深圳金赋不是让企业追热点，而是帮企业把政策要求和真实业务对上。{composed_company[(variant + 3) % len(composed_company)]}",
                 f"围绕{proof_materials}，企业可以先做资料体检，看看哪些已经能用，哪些还需要补说明。",
@@ -1128,11 +1128,11 @@ def build_article_from_url(url: str, index: int) -> dict[str, object]:
             ]
         elif layout == 14:
             paragraphs = [
-                f"换成短内容的口吻：政策来了，不代表补贴自动到账；项目、费用、成果和材料都对得上，才有继续评估的价值。",
+                f"政策来了，不代表补贴自动到账；项目、费用、成果和材料都对得上，才有继续评估的价值。",
                 f"{short_topic}相关机会，建议{audience}重点看{policy_focus}。",
                 composed_company[(variant + 5) % len(composed_company)],
                 f"如果企业已经有相关投入，可以把资料先放进补贴平台做匹配；如果没有，也可以作为后续项目规划参考。",
-                f"这类写法更适合批量推广，因为它不讲大道理，只提醒客户把机会先筛出来。",
+                f"企业不用先研究所有细节，可以先把机会筛出来，再决定是否继续推进。",
                 closing_options[(variant + 4) % len(closing_options)],
             ]
         else:
