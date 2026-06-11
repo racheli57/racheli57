@@ -132,6 +132,41 @@ SOURCE_BY_POST_ID = {
     "12762397": "深圳市工业和信息化局",
     "12077746": "深圳市工业和信息化局",
     "11619789": "深圳市市场监督管理局",
+    "12821085": "南山区工业和信息化局",
+}
+
+
+PLAN_BY_POST_ID = {
+    "12821085": (
+        "南山五类补贴窗口，企业先测匹配",
+        "南山区软件企业、数字经济企业、鸿蒙应用开发团队、人力资源服务机构和产业园入驻企业",
+        "鸿蒙原生应用开发、软件产业空间、模型券、软件人才、产业园房租补贴、申报窗口和材料完整度",
+        "项目方案、开发成果、软件著作权、模型服务记录、人员社保、租赁合同、房租发票、付款凭证和企业资质材料",
+    ),
+}
+
+
+SUBJECT_BY_POST_ID = {
+    "12821085": "南山五类补贴项目",
+}
+
+
+TITLE_VARIANTS_BY_POST_ID = {
+    "12821085": [
+        "南山五类补贴窗口已打开",
+        "模型券和房租补贴别错过",
+        "软件企业拿补贴先测匹配",
+        "鸿蒙项目能不能申先评估",
+        "南山企业补贴材料这样备",
+    ],
+}
+
+
+FALLBACK_POLICY_BY_POST_ID = {
+    "12821085": (
+        "南山区工业和信息化局关于开通鸿蒙原生应用开发、2026年一季度“模型券”等项目的通知",
+        "五类申报已开通：鸿蒙原生应用开发扶持、软件产业空间扶持、2026年一季度模型券、软件企业人才扶持、南山人力资源服务产业园入驻机构房租补贴。申报时间为2026年6月4日9时至2026年6月19日18时。企业需按项目操作规程准备材料并在线申报，重点关注项目条件、申报窗口、补贴和房租补贴相关材料、模型服务记录、软件成果、人才和空间证明。"
+    ),
 }
 
 
@@ -641,7 +676,7 @@ def clean_fetched_title(title: str) -> str:
 
 def build_article_from_url(url: str, index: int) -> dict[str, object]:
     source = source_from_url(url)
-    plan = PROMOTION_PLANS[index - 1] if index - 1 < len(PROMOTION_PLANS) else PROMOTION_PLANS[-1]
+    plan = PLAN_BY_POST_ID.get(post_id_from_url(url)) or (PROMOTION_PLANS[index - 1] if index - 1 < len(PROMOTION_PLANS) else PROMOTION_PLANS[-1])
     planned_title, audience, policy_focus, proof_materials = plan
     fetched_title = ""
     fetched_text = ""
@@ -649,12 +684,17 @@ def build_article_from_url(url: str, index: int) -> dict[str, object]:
         fetched_title, fetched_text = fetch_url_text(url)
     except (HTTPError, URLError, TimeoutError, OSError):
         fetched_title, fetched_text = "", ""
+    if not fetched_title or not fetched_text:
+        fallback = FALLBACK_POLICY_BY_POST_ID.get(post_id_from_url(url))
+        if fallback:
+            fetched_title, fetched_text = fallback
     policy_title = clean_policy_title(fetched_title)
     policy_signal = policy_excerpt(fetched_text)
     money_signal = subsidy_highlight(fetched_text)
-    article_title = make_article_title(planned_title, policy_title, index)
+    title_variants = TITLE_VARIANTS_BY_POST_ID.get(post_id_from_url(url))
+    article_title = title_variants[(index - 1) % len(title_variants)] if title_variants else make_article_title(planned_title, policy_title, index)
     title = policy_title or planned_title
-    policy_subject = short_policy_subject(policy_title) or planned_title
+    policy_subject = SUBJECT_BY_POST_ID.get(post_id_from_url(url)) or short_policy_subject(policy_title) or planned_title
     short_topic = re.split(r"[，,：:？?]", policy_subject)[0].strip()[:18] or "这类政策"
     policy_name = "这份政策原文"
     subsidy_sentence = f"原文中和补贴最相关的信号是：{money_signal}。" if money_signal else "如果原文里涉及补贴金额、资助比例或奖励条件，企业要优先把金额口径和材料口径核清楚。"
@@ -829,7 +869,7 @@ def build_article_from_url(url: str, index: int) -> dict[str, object]:
         paragraphs = [
             f"把{short_topic}当成一张项目便签来看，会更容易抓重点：适合谁、看什么项目、需要什么证据、现有资料够不够。{opening_options[variant % len(opening_options)]}",
             f"便签上最重要的内容，是企业自身是否能对应{policy_focus}。如果只有概念相似，但没有项目、费用和成果支撑，申报价值就要谨慎评估。",
-            f"资料便签也要同步建起来。{proof_materials}可以按项目统一归档，别分散在财务、行政、项目经理和老板微信里。资料越集中，后续匹配越快。",
+            f"资料便签也要同步建起来。{proof_materials}可以按项目统一归档，别分散在财务、行政、项目经理和老板个人文件里。资料越集中，后续匹配越快。",
             f"如果企业目前离条件还差一些，也可以先放进培育清单。补贴平台能把这些状态动态记录下来，避免企业错过后续窗口。",
             company_options[(variant + 7) % len(company_options)],
             f"这种写法很适合发给内部团队：不是要求大家马上申报，而是提醒大家把项目证据先放好。{value_options[(variant + 1) % len(value_options)]}",
@@ -1293,7 +1333,7 @@ def ordered_unique(items: list[str]) -> list[str]:
     return unique_items
 
 
-def resolve_articles(from_db: bool, ids: str, limit: int, urls: str) -> list[dict[str, object]]:
+def resolve_articles(from_db: bool, ids: str, limit: int, urls: str, variants_per_url: int = 1) -> list[dict[str, object]]:
     if from_db:
         rows = load_policies_from_mysql(parse_ids(ids), limit)
         if not rows:
@@ -1301,7 +1341,14 @@ def resolve_articles(from_db: bool, ids: str, limit: int, urls: str) -> list[dic
         return [build_article_from_policy(row) for row in rows]
 
     selected_urls = ordered_unique(parse_ids(urls) if urls else POLICY_URLS)
-    return [build_article_from_url(url, index) for index, url in enumerate(selected_urls, start=1)]
+    variants_per_url = max(1, variants_per_url)
+    articles: list[dict[str, object]] = []
+    index = 1
+    for url in selected_urls:
+        for _ in range(variants_per_url):
+            articles.append(build_article_from_url(url, index))
+            index += 1
+    return articles
 
 
 def sanitize_windows_filename(name: str) -> str:
@@ -1367,11 +1414,12 @@ def main() -> None:
     parser.add_argument("--limit", type=int, default=10, help="Number of latest MySQL rows to fetch when --from-db is used without --ids.")
     parser.add_argument("--urls", default="", help="Comma/space separated policy URLs. Defaults to the current request's URL list.")
     parser.add_argument("--output-dir", default=str(OUTPUT_DIR), help="Directory for generated DOCX files.")
+    parser.add_argument("--variants-per-url", type=int, default=1, help="Generate multiple article variants for each URL in URL mode.")
     args = parser.parse_args()
 
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
-    articles = resolve_articles(args.from_db, args.ids, args.limit, args.urls)
+    articles = resolve_articles(args.from_db, args.ids, args.limit, args.urls, args.variants_per_url)
 
     generated_docs = []
     used_titles: dict[str, int] = {}
