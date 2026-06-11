@@ -109,16 +109,16 @@ SUBJECT_BY_POST_ID = {
 
 TITLE_VARIANTS_BY_POST_ID = {
     "12821085": [
-        "南山租金补贴最高500万",
-        "软件企业房租补贴先测匹配",
-        "营收增长越高补贴比例越高",
-        "5000平到10000平怎么核",
-        "租赁合同满1年再看补贴",
-        "南山软件企业租金别白花",
-        "20%到40%租金补贴怎么算",
-        "规上软件企业空间成本可评估",
-        "房租发票和付款凭证先备好",
-        "南山办公用房补贴机会来了",
+        "南山专项资金最高500万",
+        "软件企业租金补贴别错过",
+        "20%到40%房租补贴怎么拿",
+        "营收增长企业空间补贴来了",
+        "办公用房成本可申请补贴",
+        "5000平到10000平补贴面积怎么看",
+        "租赁合同满1年先测专项资金",
+        "不含税租金口径别算错",
+        "南山规上软件企业省房租",
+        "无偿资助加事后补贴怎么申",
     ],
 }
 
@@ -522,7 +522,7 @@ def make_article_title(plan_title: str, policy_title: str, index: int) -> str:
         f"{subject}里的支持方向别看漏",
         f"{subject}窗口前，企业先补短板",
         f"围绕{subject}，做一张项目证据表",
-        f"{subject}适合发给老板看一眼",
+        f"{subject}老板先看这一条",
         f"{subject}对企业意味着什么",
         f"不要只转发{subject}，要做评估",
         f"{subject}出现后，资料库要动起来",
@@ -554,7 +554,7 @@ def make_article_title(plan_title: str, policy_title: str, index: int) -> str:
         f"{subject}里的贴息机会别漏看",
         f"企业想拿补贴，先看{subject}",
         f"{subject}别只读，先测补贴机会",
-        f"发客户看{subject}，重点讲补贴",
+        f"把{subject}讲成补贴机会",
         f"{subject}里的申报机会怎么抓",
         f"围绕{subject}，帮企业找补贴",
     ]
@@ -703,7 +703,7 @@ def build_article_from_url(url: str, index: int) -> dict[str, object]:
         f"围绕{short_topic}，企业还可以继续排查同区域、同产业、同项目阶段下的其他补贴，判断是否存在区级配套、市级专项、省级扶持或国家级资质培育机会。把日常投入沉淀成可申报项目，才是持续拿补贴的关键。",
         f"如果企业只盯单条政策，往往容易错过组合机会。以{short_topic}为入口，可以同步梳理研发、市场、人才、融资、合规和品牌等相关政策，形成一张年度补贴路线图，而不是零散碰运气。",
         f"真正高效的申报，不是每次临时找材料，而是把这类机会纳入企业年度经营计划。项目启动时就考虑政策口径，费用发生时就保留证据，成果形成时就准备说明，补贴申报会更从容。",
-        f"从客户服务角度看，{short_topic}也是一次重新整理企业资产的机会：哪些投入能证明，哪些资质能加分，哪些项目还能延伸申报。补贴平台能帮助企业把这些信息沉淀下来，后续遇到新政策时快速复用。",
+        f"从企业服务角度看，{short_topic}也是一次重新整理企业资产的机会：哪些投入能证明，哪些资质能加分，哪些项目还能延伸申报。补贴平台能帮助企业把这些信息沉淀下来，后续遇到新政策时快速复用。",
         f"{short_topic}不应只被当成一次通知，而应成为企业优化内部管理的提醒。凡是与政策相关的投入，都要形成预算、合同、票据、成果和复盘，这些资料未来可能同时服务多个补贴项目。",
         f"企业还可以借这次机会重新梳理年度预算：哪些投入已经发生，哪些投入即将发生，哪些成果需要补证明。只要项目管理更规范，政策机会出现时就不会因为资料缺口而被动。",
         f"对成长型企业来说，{short_topic}背后还有一个更重要的问题：企业是否已经形成持续申报能力。一次补贴可以解决短期资金压力，长期材料体系和政策路线图才会带来稳定收益。",
@@ -752,13 +752,13 @@ def build_article_from_url(url: str, index: int) -> dict[str, object]:
     ad_hook_options = [
         f"这类补贴政策不是让企业背条文，而是帮企业找到拿补贴、拿贴息的入口。深圳金赋补贴平台先做匹配，再看项目和材料值不值得推进。",
         f"企业别错过身边的补贴政策。只要{proof_materials}能说明项目真实发生，就可以先让补贴平台测一测有没有机会拿补贴。",
-        f"客户最爱问的不是政策有多长，而是我能不能拿补贴。围绕{short_topic}，深圳金赋会先帮企业看主体、项目、费用和材料，再判断是否值得进入申报准备。",
+        f"企业最关心的不是政策有多长，而是自己能不能拿补贴。围绕{short_topic}，深圳金赋会先帮企业看主体、项目、费用和材料，再判断是否值得进入申报准备。",
         f"想拿补贴、拿贴息，别只靠人工翻政策。把企业信息放进补贴平台，先看适配度，再安排材料和申报节奏。",
         f"深圳金赋补贴平台帮企业找补贴政策、测申报机会、看材料缺口，让老板先知道值不值得做。",
         f"如果企业正在做融资、研发、设备、市场或合规投入，别只看成本，也要看看能不能衔接补贴、奖励或贴息政策。补贴平台可以先帮企业把机会筛出来。",
         f"对企业来说，拿补贴不是碰运气，而是提前把项目和材料准备好。深圳金赋把政策匹配、资质评估和材料提醒串起来，让补贴机会更容易被发现。",
-        f"这类政策适合用来唤醒客户：有项目、有投入、有凭证，就别急着说自己不符合。先上补贴平台做评估，看看能不能申补贴、拿贴息或进入资质培育。",
-        f"写给企业负责人时，可以直接说：补贴政策不是离你很远，它可能就在已有项目里。深圳金赋帮企业把政策、项目和证据对上，少走弯路。",
+        f"有项目、有投入、有凭证，就别急着说自己不符合。先上补贴平台做评估，看看能不能申补贴、拿贴息或进入资质培育。",
+        f"补贴政策不是离企业很远，它可能就在已有项目里。深圳金赋帮企业把政策、项目和证据对上，少走弯路。",
         f"重点不是复述文件，而是让企业行动起来：把项目放进补贴平台测一测，看看有没有补贴、贴息、奖励或配套资金线索。",
     ]
 
@@ -771,10 +771,10 @@ def build_article_from_url(url: str, index: int) -> dict[str, object]:
         f"换个角度看，{short_topic}也是一次企业资料整理机会。把平时零散的项目、费用、证书、照片和成果说明沉淀到补贴平台，后面遇到类似政策时，企业就不用再临时拼材料。",
         f"有些企业明明项目不错，却因为资料散、口径乱、负责人换了而错过机会。深圳金赋希望通过补贴平台把政策匹配和资料管理前置，让{audience}更早知道自己差在哪里、能争取什么。",
         f"如果要写进企业年度计划，{short_topic}不只是一个政策提醒，更是一条资金线索。把它和研发、设备、人才、市场、合规等投入放在一起看，往往能发现更多组合申报空间。",
-        f"从推广角度讲，这类政策不用写得太像公告。企业更想知道自己有没有项目、材料缺什么、是否值得评估，补贴平台正好可以先把这些问题筛一遍。",
-        f"换成客户能听懂的话，就是别让已经发生的投入躺在文件夹里。把项目、费用、成果和资质放进补贴平台，才有机会在政策窗口打开时快速响应。",
+        f"企业不用把这类政策读成公告，先弄清自己有没有项目、材料缺什么、是否值得评估，补贴平台正好可以把这些问题筛一遍。",
+        f"换成企业能听懂的话，就是别让已经发生的投入躺在文件夹里。把项目、费用、成果和资质放进补贴平台，才有机会在政策窗口打开时快速响应。",
         f"有些机会现在未必马上申报，但可以先做储备。企业把{proof_materials}补齐后，后续遇到同类通知，就能少花时间解释项目来龙去脉。",
-        f"对销售和市场团队来说，{short_topic}也能变成客户沟通话题：提醒企业做一次政策体检，比单纯转发通知更有价值。",
+        f"对企业服务团队来说，{short_topic}也能变成一次有价值的提醒：帮助企业做政策体检，比单纯转发通知更有用。",
         f"如果企业以前申报过补贴，也可以借这次机会复盘旧材料。哪些资料可以复用，哪些口径要更新，哪些项目还能衔接新的政策方向，都值得重新整理。",
         f"从长期服务看，补贴工作越早进入日常管理越好。每月更新一次项目和材料，往往比申报期突击整理更稳，也更容易发现组合申报机会。",
         f"这类政策还可以用来提醒企业做预算前置：未来准备投入的设备、研发、市场或合规事项，能否提前按政策口径留证据，决定后续能不能申报。",
@@ -787,11 +787,11 @@ def build_article_from_url(url: str, index: int) -> dict[str, object]:
         f"换个角度看，{short_topic}也是一次企业资料整理机会。把平时零散的项目、费用、证书、照片和成果说明沉淀到补贴平台，后面遇到类似政策时，就不用再临时拼材料。",
         f"如果企业已有项目但不确定是否匹配，可以先做预评估。预评估不等于马上申报，而是先判断对象、费用、时间、成果和证明材料是否值得继续推进。",
         f"对企业老板来说，这类政策最有用的地方，是帮助判断哪些经营投入可能形成资金回流。把投入和政策对应起来，补贴申报才不会变成临时碰运气。",
-        f"如果文章要用于批量触达客户，建议语气可以更轻一点：政策不是让企业背条文，而是提醒企业把项目证据留好，把能争取的补贴机会先看清楚。",
+        f"语气可以更轻一点：政策不是让企业背条文，而是提醒企业把项目证据留好，把能争取的补贴机会先看清楚。",
         f"很多企业不是没机会，而是资料太散。把{proof_materials}提前放进统一台账，后续申报时就能快速找到证据，不会因为跨部门沟通浪费窗口期。",
         f"项目还没完全成熟也没关系，先把缺口列出来。缺成果就补案例，缺费用说明就整理台账，缺资质就进入培育，这样下一次政策窗口出现时更从容。",
         f"这类政策也适合和其他补贴一起看。企业可以同步排查同区域、同产业、同项目阶段下的配套资金，避免只盯单条通知而错过组合机会。",
-        f"客户真正关心的通常不是文件名字，而是自己能不能用。推广文章里把政策转成评估动作，会比复述条款更容易促成咨询。",
+        f"企业真正关心的通常不是文件名字，而是自己能不能用。把政策转成评估动作，会比复述条款更容易形成内部判断。",
         f"补贴平台的优势是先把复杂政策拆成企业看得懂的判断项：主体、项目、费用、材料、时间和风险。判断清楚后，是否推进就更容易决定。",
     ]
     variant = (index - 1)
@@ -799,102 +799,93 @@ def build_article_from_url(url: str, index: int) -> dict[str, object]:
     style = variant % STYLE_VARIATION_COUNT
     if style == 0:
         paragraphs = [
-            f"深圳金赋成立于2017年，长期围绕企业补贴申报做政策匹配和材料管理，补贴平台沉淀了1100万条全国四级公开政策数据。说白了，{short_topic}不是让企业多看一条通知，而是提醒企业看看手上的项目能不能变成补贴机会。{opening_options[variant % len(opening_options)]}",
-            f"对{audience}来说，重点不是把政策读得多细，而是把{policy_focus}和真实业务对上号。能对上的地方，就是值得优先评估的机会；对不上的地方，也能反过来提醒企业补短板。",
-            f"材料也不用一开始就想得很复杂，可以先把{proof_materials}集中到一个项目资料夹里。合同、票据、照片、数据、成果说明放在一起，后面不管是评估还是申报，都会轻松很多。",
-            company_options[(variant + 3) % len(company_options)],
-            f"这类政策真正的价值，不只是当下有没有补贴，而是帮企业养成项目留痕的习惯。{value_options[(variant + 4) % len(value_options)]}",
-            service_options[(variant + 7) % len(service_options)],
+            f"先看最直观的数字：这类专项资金对符合条件的软件企业，租金补贴每年最高500万元。对在南山租办公室、团队规模持续扩张的企业来说，房租不是小开支，能不能转成补贴机会，值得马上测一测。",
+            f"原文里的关键口径很清楚：{policy_focus}。尤其是合同期1年及以上、营收分档、面积上限和不含税租金核算，都会影响最终可评估金额。",
+            f"深圳金赋成立于2017年，长期为企业做补贴申报政策匹配和材料管理。补贴平台会先把企业注册地、行业代码、营收、租赁面积和租金票据放在一起看，避免只凭感觉判断。",
+            f"企业可以先准备{proof_materials}，不用一开始就写长材料，先把能证明租赁事实、付款事实和经营规模的数据集中起来。",
+            f"如果初筛发现符合方向，再进一步测算20%、30%、40%补贴比例对应的空间；如果暂时不够条件，也可以进入培育清单，后续营收、材料或租约变化后继续匹配。",
             closing_options[(variant + 8) % len(closing_options)],
         ]
     elif style == 1:
         paragraphs = [
-            f"这篇可以当作给企业老板的一条提醒：政策不会主动变成现金流，项目和材料对得上，才可能变成补贴机会。{source}这次释放的信号，建议{audience}认真看一眼。{original_signal_options[variant % len(original_signal_options)]}",
-            f"不用一上来就研究所有条款，先做几个朴素判断：企业是不是政策服务对象，项目是不是和{policy_focus}有关，{proof_materials}是不是拿得出来。只要答案比较清楚，就值得进入评估。",
-            f"深圳金赋做补贴平台，核心就是帮企业把“看不懂政策”变成“知道能不能申”。{company_options[(variant + 5) % len(company_options)]}",
-            f"如果原文涉及金额、比例或奖励条件，也别只盯最高值。企业更要看自己项目的投入规模、时间范围和资料完整度，避免把精力花在匹配度不高的政策上。",
-            f"所以，这类政策可以当成一次经营提醒：项目要留痕，费用要规范，成果要能讲清楚。{review_options[(variant + 6) % len(review_options)]}",
-            closing_options[(variant + 7) % len(closing_options)],
+            f"南山的软件企业如果正在为办公空间成本头疼，这次专项资金就很值得关注。政策不是泛泛支持，而是把租赁自用办公用房、规上互联网和软件信息服务业企业、营收增长等条件写得比较具体。",
+            f"简单说，符合条件的企业按实际支付租金的一定比例拿补贴，最高500万元；营收增长0%到10%、10%到20%、20%以上，对应20%、30%、40%的补贴比例。",
+            f"这时候不要只问“能拿多少”，而要先问三件事：企业数据申报地是否在南山，行业代码是否为64或65，租赁合同和发票付款是否能闭环。",
+            f"补贴平台可以把这些问题变成一张匹配表。深圳金赋会结合{proof_materials}，帮企业先看申报基础，再判断是否需要补充不含税租金明细、营收数据或信用记录。",
+            f"对成长中的软件企业来说，房租补贴不只是省钱，更是把经营成本纳入年度补贴规划。项目越早进入平台，后续匹配同类资金、区级配套和产业政策时就越顺。",
+            service_options[(variant + 2) % len(service_options)],
         ]
     elif style == 2:
         paragraphs = [
-            f"如果从投入产出账来看，{short_topic}更像一道经营管理题。企业已经花出去的钱、已经完成的项目、已经沉淀的资质，能不能通过政策申报回收一部分成本？这正是深圳金赋补贴平台要帮企业算清楚的事。",
-            f"围绕{policy_focus}，企业可以先把业务事实摆出来：做了什么、花了多少、谁参与、结果如何。只要事实清楚，再去对照政策条件，就比盲目写材料稳得多。{opening_options[(variant + 2) % len(opening_options)]}",
-            f"财务这边也很关键。围绕{short_topic}，合同、发票、付款、费用归集和项目名称如果前后不一致，再好的项目也容易卡住。{material_options[(variant + 4) % len(material_options)]}",
-            f"项目负责人则要把过程讲清楚：为什么做、怎么做、做出什么效果。说到底，补贴不是“写出来”的，而是靠真实投入和可验证成果支撑出来的。",
-            f"补贴平台适合先做一轮筛查，看看哪些项目值得申，哪些项目还需要养一养。{service_options[(variant + 6) % len(service_options)]}",
-            extra_options[variant % len(extra_options)],
-            closing_options[(variant + 8) % len(closing_options)],
+            f"把这项政策换成财务语言，就是“租金支出有没有机会形成资金回流”。南山区软件产业空间扶持项目采取无偿资助、事后补贴制，符合条件的企业不需要项目验收，但材料口径一定要站得住。",
+            f"原文特别强调租金按不含税金额核算，需要核减增值税专用发票、普通发票税额。这个点很容易被忽略，金额测算如果一开始就算错，后面评估也会偏。",
+            f"企业可以先把租赁合同、房租发票、付款凭证、租赁面积、营收数据和南山经营证明拉出来，按月份做一份租金台账。台账越清楚，补贴比例和面积上限越容易核。",
+            f"深圳金赋补贴平台适合做前置测算：企业把基础信息录入后，平台先判断是否落在南山区、是否属于规上64或65行业、合同期是否满1年，再看材料缺口。",
+            f"如果企业上年度营收增长较好，尤其达到20%以上，就要重点关注40%这一档；如果增长在10%到20%之间，也别忽略30%的补贴空间。",
+            closing_options[(variant + 5) % len(closing_options)],
         ]
     elif style == 3:
         paragraphs = [
-            f"把{short_topic}当成一张项目便签来看，会更容易抓重点：适合谁、看什么项目、需要什么证据、现有资料够不够。{opening_options[variant % len(opening_options)]}",
-            f"便签上最重要的内容，是企业自身是否能对应{policy_focus}。如果只有概念相似，但没有项目、费用和成果支撑，申报价值就要谨慎评估。",
-            f"资料便签也要同步建起来。{proof_materials}可以按项目统一归档，别分散在财务、行政、项目经理和老板个人文件里。资料越集中，后续匹配越快。",
-            f"如果企业目前离条件还差一些，也可以先放进培育清单。补贴平台能把这些状态动态记录下来，避免企业错过后续窗口。",
-            company_options[(variant + 7) % len(company_options)],
-            f"内部团队可以先统一一个共识：不是马上申报，而是先把项目证据放好。{value_options[(variant + 1) % len(value_options)]}",
-            closing_options[(variant + 8) % len(closing_options)],
+            f"这条政策对企业老板很友好：它直接瞄准办公用房租金。对于南山区规上互联网和软件信息服务业企业，房租每年最高500万元的补贴上限，足够进入年度经营预算讨论。",
+            f"但补贴不是只看租金金额，还要看面积和营收档位。营收5亿到10亿，补贴面积最高5000平米；10亿到20亿，最高8000平米；20亿以上，最高10000平米。",
+            f"企业如果正在扩租、续租或搬迁，建议同步做政策评估。因为租赁合同、实际使用情况、发票和付款节奏，会直接影响后续能不能把办公成本整理成合规材料。",
+            f"补贴平台会把政策条件和企业现状对应起来：哪些面积可纳入，哪些租金不能算，哪些票据需要补齐，哪些营收数据要提前确认。",
+            f"深圳金赋服务企业拿补贴，最看重的是“先测再准备”。符合方向就继续完善材料，不符合也能知道差在哪里，避免盲目投入申报精力。",
+            value_options[(variant + 1) % len(value_options)],
         ]
     elif style == 4:
         paragraphs = [
-            f"这类政策最怕的不是看不懂，而是觉得“好像和我有关”，结果真准备时发现证据不够。{opening_options[(variant + 1) % len(opening_options)]}",
-            f"别只看名称相关。{audience}要先确认业务方向、项目周期和投入内容是否能对应{policy_focus}，否则很容易花了时间却发现匹配度不高。",
-            f"也别只堆材料。{proof_materials}要能串成一个完整故事：企业为什么做这个项目，钱花在哪里，最后形成了什么效果。{material_options[(variant + 6) % len(material_options)]}",
-            f"还有一个常见情况：多个政策看起来都能申，但同一笔费用不能反复用。企业最好提前把费用边界标清楚，后面沟通会省很多事。{next_step_options[(variant + 7) % len(next_step_options)]}",
-            f"深圳金赋补贴平台的作用，就是把这些问题提前暴露出来。{company_options[(variant + 1) % len(company_options)]}",
-            service_options[(variant + 2) % len(service_options)],
+            f"如果企业今年想降本，别只盯采购和人力，办公租金也可能有补贴线索。南山这项专项资金对软件企业的空间成本给出支持，符合条件的可按实际支付租金比例获得补贴。",
+            f"最关键的适用范围包括：在南山区实际经营、数据申报地在南山、规上互联网和软件信息服务业企业、租赁自用办公用房，并且合同期在1年及以上。",
+            f"这里有两个容易踩空的点：一是南山区政策性产业用房不纳入本项目；二是补贴租金按不含税金额核算，不能把税额也算进去。",
+            f"深圳金赋补贴平台会先做“能不能匹配”的判断，再提示材料怎么补。企业上传{proof_materials}后，可以更快看到自身条件与政策要求之间的距离。",
+            f"对财务来说，这是一次规范票据和租金台账的机会；对管理层来说，这是一次把固定成本转化为补贴机会的机会。别等申报窗口临近才整理，提前评估更稳。",
             closing_options[(variant + 3) % len(closing_options)],
         ]
     elif style == 5:
         paragraphs = [
-            f"假设你们刚做完一个项目，现在看到{short_topic}相关政策，可以先别急着写申报材料，先把项目复盘一遍。{opening_options[(variant + 2) % len(opening_options)]}",
-            f"复盘时可以聊得很直白：这个项目为什么做？花了多少钱？谁参与？有没有数据？有没有客户、用户或现场成果？这些问题如果答得清楚，补贴评估就有基础。",
-            f"再把资料找出来。{proof_materials}不只是普通资料，更像是项目的证据包。证据包越完整，后面政策匹配和申报判断就越快。",
-            f"如果发现资料缺口，也没关系，早点发现反而是好事。能补说明的补说明，能补数据的补数据，能补成果的补成果，别等到窗口快关了才着急。",
-            f"深圳金赋会把复盘结果放进补贴平台，形成企业自己的政策资产库。{company_options[(variant + 2) % len(company_options)]}",
-            f"以后同类政策再出现时，企业就不用从零开始翻资料。{value_options[(variant + 3) % len(value_options)]}",
-            closing_options[(variant + 4) % len(closing_options)],
+            f"很多软件企业会觉得：我们只是正常租办公室，和补贴有什么关系？这项政策给了一个明确答案——在南山租赁自用办公用房，只要企业类型、营收和材料符合，就可能进入租金补贴评估。",
+            f"补贴金额不是一刀切，而是和企业营收规模、营收增速、租赁面积、实际支付租金相关。增长越好，可能对应的补贴比例越高，最高可到40%。",
+            f"建议企业先做一张“房租补贴小账本”：合同期、租赁面积、月租金、发票税额、付款凭证、1-11月营收、全年营收变化，都放进去。",
+            f"补贴平台可以把这张小账本变成政策匹配结果。深圳金赋会帮助企业判断5000平米、8000平米、10000平米面积上限分别适不适用，也会提醒不含税口径。",
+            f"如果暂时没有达到高档增速，也不要急着放弃。企业可以先进入政策培育，后续营收提升、材料补齐或租约调整时，再重新测算。",
+            service_options[(variant + 5) % len(service_options)],
         ]
     elif style == 6:
         paragraphs = [
-            f"很多企业会问：这类政策到底和我有什么关系？围绕{short_topic}，可以用几个很接地气的问题来判断。{opening_options[variant % len(opening_options)]}",
-            f"我的企业类型对吗？答案要回到{audience}以及政策面向的业务方向。{match_options[(variant + 7) % len(match_options)]}",
-            f"我的项目能证明吗？答案要看{proof_materials}是否能支撑费用、过程和成果。如果只能口头说明，没有证据，那就还需要再补一补。",
-            f"现在值得推进吗？如果材料成熟、金额清晰、成果可量化，就值得让补贴平台先做评估；如果短板明显，可以先进入政策培育。{service_options[(variant + 1) % len(service_options)]}",
-            f"还有没有别的政策能一起看？{value_options[(variant + 2) % len(value_options)]}",
-            f"补贴平台可以把这些问题变成线上评估，让企业先看到匹配结果和材料建议，再决定要不要继续投入精力。{company_options[(variant + 3) % len(company_options)]}",
-            closing_options[(variant + 5) % len(closing_options)],
+            f"这项南山软件产业空间扶持，适合用来做一次企业自查。自查不用复杂，先看四个字：地点、行业、租约、票据。",
+            f"地点：企业是否在南山区实际经营，数据申报地是否在南山。行业：是否属于规上互联网和软件信息服务业企业，行业代码前两位是否为64或65。",
+            f"租约：租赁的是自用办公用房，合同期是否1年及以上，是否排除了政策性产业用房。票据：房租发票、付款凭证和不含税租金明细是否对应得上。",
+            f"四项能对上，再看补贴空间。政策写明每年最高500万元，并按营收增速分20%、30%、40%档位，金额值得认真测算。",
+            f"深圳金赋补贴平台可以把自查结果保存下来，形成企业自己的补贴档案。以后遇到租金补贴、产业专项资金、稳商扶持等同类政策，系统也能更快提示。",
+            closing_options[(variant + 6) % len(closing_options)],
         ]
     elif style == 7:
         paragraphs = [
-            f"把{short_topic}放进年度补贴规划里看，企业会更容易找到节奏。{opening_options[(variant + 1) % len(opening_options)]}",
-            f"先筛一遍：围绕{policy_focus}判断企业有没有机会、项目有没有基础、材料有没有雏形。{match_options[variant % len(match_options)]}",
-            f"再补一补：围绕{short_topic}，把{proof_materials}按项目归档，统一命名、统一口径、统一负责人。{material_options[(variant + 1) % len(material_options)]}",
-            f"然后定优先级：不是所有政策都要追，企业要先看匹配度、材料成熟度和资金价值。{value_options[(variant + 2) % len(value_options)]}",
-            f"最后持续跟进：{next_step_options[(variant + 3) % len(next_step_options)]}",
-            f"深圳金赋补贴平台可以把筛选、材料、优先级和提醒串起来，让{audience}从被动找政策变成主动管政策。{service_options[(variant + 4) % len(service_options)]}",
-            closing_options[(variant + 6) % len(closing_options)],
+            f"对南山软件企业来说，办公空间不只是成本，也可能是一项可管理的政策资产。租赁合同签下去以后，如果没有同步留好票据和营收证明，后面想申租金补贴就会很被动。",
+            f"这项专项资金采用核准类、无偿资助、事后补贴制，说明企业申报时更看重事实和材料是否清楚。项目无需验收，不代表材料可以粗略。",
+            f"原文中的重点包括最高500万元、合同期1年及以上、营收5亿/10亿/20亿门槛、5000/8000/10000平米面积上限，以及20%到40%的补贴比例。",
+            f"深圳金赋建议企业把租金补贴当成年度专项资金规划的一部分：每月租金付款后及时归档，每季度更新营收和租赁面积，年底再复盘是否达到更高补贴档位。",
+            f"补贴平台会根据企业资料动态匹配政策，帮助老板、财务和行政看到同一套判断依据，减少“文件在你那、票据在他那、数据没人确认”的情况。",
+            value_options[(variant + 2) % len(value_options)],
         ]
     elif style == 8:
         paragraphs = [
-            f"换个更轻松的角度看：别把{short_topic}只当新闻看，它可能和企业正在花的钱、做的项目、准备的资质有关。{original_signal_options[(variant + 1) % len(original_signal_options)]}",
-            f"深圳金赋经常遇到这样的情况：企业项目做了，费用也发生了，但没有人从补贴角度帮它归类。等到申报窗口出现，才发现合同、数据、成果说明散在不同部门。",
-            f"如果{audience}近期正在做{policy_focus}相关事项，就建议把{proof_materials}先拉出来看看。不是马上写申报书，而是先判断有没有“可申报的底子”。",
-            f"补贴平台的优势在于先做匹配，再谈推进。系统会结合企业注册地、行业、资质、项目投入和材料情况，帮企业看到可能适合的政策方向。",
-            f"企业真正关心的是：我有没有机会、缺什么、要不要现在准备。{service_options[(variant + 5) % len(service_options)]}",
-            extra_options[(variant + 1) % len(extra_options)],
-            closing_options[(variant + 2) % len(closing_options)],
+            f"先说一句实在的：房租已经交了，如果符合政策条件，就别让它只停留在费用表里。南山软件企业的租金支出，有机会通过专项资金做补贴评估。",
+            f"政策支持对象并不泛泛，而是锁定在南山区实际经营、数据申报地在南山的规上互联网和软件信息服务业企业。企业还要履行数据申报义务，守法诚信，并具备规范财务制度。",
+            f"企业最好现在就把{proof_materials}集中起来，让补贴平台先看一遍。资料齐不齐、口径对不对、补贴比例能不能测算，都会影响后续推进。",
+            f"尤其是营收增速和租金不含税金额，别凭印象。一个影响20%、30%、40%的档位，一个影响可核算租金基数，都关系到企业能评估出的补贴空间。",
+            f"深圳金赋做补贴平台，不是让企业追每一条政策，而是帮助企业找到更可能转化为补贴、贴息或奖励的机会。房租这种高频成本，当然值得优先放进清单。",
+            closing_options[(variant + 1) % len(closing_options)],
         ]
     elif style == 9:
         paragraphs = [
-            f"来做一个小场景：一家企业今年新增了项目投入，老板想知道这些钱除了带来业务增长，还能不能匹配政策补贴。看到{short_topic}时，就可以让补贴平台先做一次体检。",
-            f"体检不是看政策标题，而是看原文里的{policy_focus}能否对应到企业实际。{original_signal_options[(variant + 2) % len(original_signal_options)]}",
-            f"如果企业的{proof_materials}比较完整，平台就能更快判断项目成熟度；如果资料缺口明显，也能把缺口先列出来，避免临近申报才被动补材料。",
-            f"深圳金赋的服务思路比较务实：先判断值不值得申，再决定要不要深度准备。{company_options[(variant + 4) % len(company_options)]}",
-            f"对{audience}来说，这样做的好处是降低试错成本。政策再多，也不用每条都追；项目再多，也能先挑匹配度高的去推进。",
-            f"如果政策原文涉及补贴标准或资金支持，企业还要核清楚金额口径和费用边界。最高金额只是上限，真正能拿多少，要看项目投入、证明强度和审核结果。",
-            closing_options[(variant + 6) % len(closing_options)],
+            f"给南山软件企业一个提醒：如果办公用房合同已经满1年，企业营收也有一定规模，这项租金补贴政策可以尽快做匹配。最高500万元的空间，不适合只靠人工记忆来判断。",
+            f"企业先看自己在哪一档：5亿到10亿对应最高5000平米，10亿到20亿对应最高8000平米，20亿以上对应最高10000平米；再看营收增速对应20%、30%还是40%。",
+            f"测算之外，还要看材料。租赁合同、发票、付款凭证、南山经营证明、数据申报证明和营收数据如果分散在不同部门，就要尽快归集。",
+            f"补贴平台可以把这些信息变成企业自己的政策画像：哪些条件已满足，哪些材料待补，预计该优先看哪类专项资金。深圳金赋再结合企业情况给出更清晰的申报判断。",
+            f"这类补贴最适合提前准备。等通知出来才翻合同、找票据、核营收，往往会耽误节奏；现在把资料整理好，后续有窗口就能更快响应。",
+            service_options[(variant + 7) % len(service_options)],
         ]
     elif style == 10:
         paragraphs = [
@@ -902,7 +893,7 @@ def build_article_from_url(url: str, index: int) -> dict[str, object]:
             f"从原文提炼，企业要重点看{policy_focus}。{subsidy_sentence}这些信息决定了企业是马上评估，还是先继续培育。",
             f"深圳金赋会先帮企业把“能不能申”的问题拆开：主体是否匹配、项目是否真实、费用是否合规、成果是否可证明、材料是否够完整。",
             f"如果{audience}已经有类似项目，可以先把{proof_materials}交给平台做匹配；如果目前项目还在推进中，也可以提前按政策口径留痕。",
-            f"这类文章适合发给老板、财务和项目负责人一起看，因为补贴不是某一个部门的事。{review_options[(variant + 2) % len(review_options)]}",
+            f"老板、财务和项目负责人都可以一起看，因为补贴不是某一个部门的事。{review_options[(variant + 2) % len(review_options)]}",
             f"有了补贴平台，企业就不用靠人工记忆追政策。围绕{short_topic}这个主题，{value_options[(variant + 5) % len(value_options)]}",
             closing_options[(variant + 1) % len(closing_options)],
         ]
@@ -923,7 +914,7 @@ def build_article_from_url(url: str, index: int) -> dict[str, object]:
             f"深圳金赋的补贴平台不是简单展示政策，而是帮企业做匹配。{company_options[(variant + 2) % len(company_options)]}",
             f"对{audience}来说，最怕的是“知道有政策，但不知道自己能不能用”。平台会把{proof_materials}和政策条件对应起来，让企业先看到差距。",
             f"差距不是坏事，提前知道就能提前补。比如成果证明弱，就补案例；费用归集乱，就整理台账；项目口径不清，就统一说明。",
-            f"所以这类内容更适合做客户触达：提醒企业别等申报截止才行动，而是把政策匹配变成日常经营动作。{service_options[(variant + 3) % len(service_options)]}",
+            f"所以要提醒企业别等申报截止才行动，而是把政策匹配变成日常经营动作。{service_options[(variant + 3) % len(service_options)]}",
             closing_options[(variant + 5) % len(closing_options)],
         ]
     elif style == 13:
@@ -938,7 +929,7 @@ def build_article_from_url(url: str, index: int) -> dict[str, object]:
         ]
     elif style == 14:
         paragraphs = [
-            f"站在服务商视角看，{short_topic}最值得企业关注的不是新闻热度，而是能否拆成可操作的补贴线索。{source}发布的信息里，企业要重点看对象、项目、资金和材料边界。",
+            f"从企业拿补贴的角度看，{short_topic}最值得企业关注的不是新闻热度，而是能否拆成可操作的补贴线索。{source}发布的信息里，企业要重点看对象、项目、资金和材料边界。",
             f"如果{audience}涉及{policy_focus}，建议先做一轮快速筛选。筛选的目的不是马上申报，而是判断这条线索是否值得继续跟。",
             f"深圳金赋补贴平台会把政策线索和企业情况放在一起比对：注册地、行业、资质、项目投入、证明材料、历史申报情况，都会影响最终匹配结果。",
             f"材料方面，{proof_materials}要尽量围绕项目形成闭环。评估时最怕资料零散，明明有投入，却讲不清楚项目和政策之间的关系。",
@@ -948,12 +939,12 @@ def build_article_from_url(url: str, index: int) -> dict[str, object]:
         ]
     elif style == 15:
         paragraphs = [
-            f"如果把{short_topic}写成一条朋友圈提醒，大概可以这样说：企业别只忙着做项目，也要记得看看项目有没有政策价值。深圳金赋补贴平台，就是帮企业把这些价值找出来。",
+            f"给企业一个直接提醒：企业别只忙着做项目，也要记得看看项目有没有政策价值。深圳金赋补贴平台，就是帮企业把这些价值找出来。",
             f"这类政策背后的关键词是{policy_focus}。{subsidy_sentence}企业不用把所有条款都背下来，但要知道哪些条件和自己有关。",
             f"对{audience}来说，最实在的动作是把现有项目拿出来做匹配：项目做了多久、费用花在哪里、成果怎么证明、资料是否齐全。",
             f"如果{proof_materials}能对应上政策口径，就有机会继续推进；如果对应不上，也能提前知道短板在哪里。别等到别人开始申报了，自己才发现资料还散在各个部门。",
             f"深圳金赋不是让企业追每一条政策，而是帮企业筛出更可能转化为补贴的机会。{company_options[(variant + 1) % len(company_options)]}",
-            f"所以，这类内容适合用来唤醒客户：政策不是离企业很远的文件，它可能就藏在企业已经发生的投入里。{value_options[(variant + 2) % len(value_options)]}",
+            f"所以，可以直接提醒企业：政策不是离企业很远的文件，它可能就藏在企业已经发生的投入里。{value_options[(variant + 2) % len(value_options)]}",
             closing_options[(variant + 3) % len(closing_options)],
         ]
     else:
@@ -961,11 +952,11 @@ def build_article_from_url(url: str, index: int) -> dict[str, object]:
             f"这篇换个说法：{short_topic}不是一条冷冰冰的通知，而是企业重新审视项目投入的机会。{original_signal_options[variant % len(original_signal_options)]}",
             f"如果把{short_topic}发给企业负责人，可以先讲一句大白话：政策能不能用，最终要看项目、费用和证据是否站得住。",
             f"很多企业看到{short_topic}会先收藏，但真正有价值的动作，是把它和现有项目放在一起评估。{opening_options[(variant + 1) % len(opening_options)]}",
-            f"从客户沟通角度看，{short_topic}适合做一次轻提醒：别等申报开始才找资料，平时的项目记录就是后续拿补贴的基础。",
+            f"换到企业日常管理里看，{short_topic}适合做一次轻提醒：别等申报开始才找资料，平时的项目记录就是后续拿补贴的基础。",
             f"给团队开会时，可以把{short_topic}当成一个切入点：今年做过哪些项目，哪些费用能证明，哪些成果能量化。",
             f"{source}释放的这类政策信号，最适合提醒{audience}先做政策匹配，而不是盲目准备全套申报材料。",
             f"说得直接点，{short_topic}能不能变成企业机会，不取决于标题好不好看，而取决于{policy_focus}能否对应到企业事实。",
-            f"这类内容可以写得更像客户私信：你们今年如果有相关投入，建议先别错过{short_topic}这条线索。",
+            f"提醒可以更直接：你们今年如果有相关投入，建议先别错过{short_topic}这条线索。",
         ]
         composed_angles = [
             f"企业要看的不是文件篇幅，而是{policy_focus}。这些要素能对应到真实项目，才有继续评估的必要。",
@@ -1009,11 +1000,11 @@ def build_article_from_url(url: str, index: int) -> dict[str, object]:
             ]
         elif layout == 1:
             paragraphs = [
-                f"客户经常会问：{short_topic}和我有什么关系？答案不在标题里，而在企业是否符合对象、项目、费用和材料要求。",
+                f"企业经常会问：{short_topic}和我有什么关系？答案不在标题里，而在企业是否符合对象、项目、费用和材料要求。",
                 composed_angles[(variant + 2) % len(composed_angles)],
                 composed_actions[(variant + 4) % len(composed_actions)],
                 composed_company[(variant + 6) % len(composed_company)],
-                f"所以，这篇文章更适合当作客户提醒发出去：先评估，再准备，别一上来就陷入复杂流程。{service_options[(variant + 1) % len(service_options)]}",
+                f"所以，先评估，再准备，别一上来就陷入复杂流程。{service_options[(variant + 1) % len(service_options)]}",
                 closing_options[(variant + 2) % len(closing_options)],
             ]
         elif layout == 2:
@@ -1028,7 +1019,7 @@ def build_article_from_url(url: str, index: int) -> dict[str, object]:
             ]
         elif layout == 3:
             paragraphs = [
-                f"如果要把{short_topic}写成一篇更有温度的推广文，可以从企业的日常投入说起：项目每天都在做，但不是每笔投入都会自动变成补贴机会。",
+                f"从企业的日常投入说起，项目每天都在做，但不是每笔投入都会自动变成补贴机会。",
                 f"深圳金赋想提醒{audience}，真正要留意的是{policy_focus}。{subsidy_sentence}",
                 composed_actions[(variant + 1) % len(composed_actions)],
                 composed_company[(variant + 3) % len(composed_company)],
@@ -1051,7 +1042,7 @@ def build_article_from_url(url: str, index: int) -> dict[str, object]:
                 composed_angles[(variant + 5) % len(composed_angles)],
                 f"体检结果如果显示项目成熟，就进入政策匹配；如果资料不足，就先补台账、补成果、补费用说明。",
                 composed_company[(variant + 1) % len(composed_company)],
-                f"这种方式比直接写申报流程更适合推广，因为客户先需要知道自己有没有机会。{review_options[(variant + 5) % len(review_options)]}",
+                f"这种方式比直接堆申报流程更有用，因为企业先需要知道自己有没有机会。{review_options[(variant + 5) % len(review_options)]}",
                 closing_options[(variant + 7) % len(closing_options)],
             ]
         elif layout == 6:
@@ -1152,17 +1143,36 @@ def build_article_from_url(url: str, index: int) -> dict[str, object]:
             -1,
             f"深圳金赋会围绕{short_topic}这类政策，先用补贴平台做企业画像和政策匹配，再提示材料缺口、项目优先级和后续培育方向。",
         )
+    if not any("金赋补贴宝" in paragraph for paragraph in paragraphs):
+        paragraphs.append(closing_options[(variant + 4) % len(closing_options)])
     article_chars = sum(len(paragraph) for paragraph in paragraphs)
     padding_round = 0
-    while article_chars < 900:
+    while article_chars < 900 and padding_round < 2:
         padding = padding_options[(variant + padding_round) % len(padding_options)]
         if padding in paragraphs:
             padding = extra_options[(variant + padding_round + 1) % len(extra_options)]
         if padding in paragraphs:
-            padding = f"再从客户沟通角度补一句：围绕{short_topic}，企业更需要先看自身项目和材料是否成熟，再决定要不要投入申报准备。"
+            padding = f"再补一句：围绕{short_topic}，企业更需要先看自身项目和材料是否成熟，再决定要不要投入申报准备。"
         paragraphs.insert(-1, padding)
         article_chars = sum(len(paragraph) for paragraph in paragraphs)
         padding_round += 1
+    if article_chars < 780:
+        concise_fillers = [
+            f"南山这类专项资金最适合提前规划。企业可以把房租、研发、人才、市场等高频支出统一放进年度补贴清单，先看哪些已经具备条件，哪些还需要继续养资料。",
+            f"从拿补贴的角度看，租金补贴不是单独一张表，而是企业经营能力的侧面证明。营收规模、增长情况、租约稳定性和财务规范度越清楚，平台判断越准确。",
+            f"如果企业正在做降本增效，这项政策就不该只在财务报表里停留。把租金支出和专项资金匹配起来，能帮助企业看到办公成本背后的补贴、奖励和配套机会。",
+            f"对快速扩张的软件企业来说，办公面积和团队增长往往同步发生。现在把面积、租金和营收档位核清楚，后面遇到申报窗口时就能少补很多解释材料。",
+            f"企业也可以把这次评估当成一次内部协同：财务核票据，行政核租约，业务核经营数据，管理层确认申报优先级，补贴平台负责把条件和材料串起来。",
+            f"如果企业暂时达不到最高档，也不用气馁。补贴平台会记录当前差距，等营收增长、资料补齐或租赁面积变化后，再重新匹配同类专项资金机会。",
+            f"很多企业真正损失的不是补贴金额，而是没有建立政策台账。租金补贴这种高金额项目，更需要把合同、票据、付款和营收数据持续更新，避免窗口来了却找不到依据。",
+            f"这项政策还提醒企业：补贴申报不是临时动作，而是经营管理的一部分。平时把资料留好，年底做专项资金测算时，才更容易看见可争取的空间。",
+            f"对老板来说，这类政策的价值很直接：已经发生的房租支出，有机会通过政策匹配变成资金回流。先测一轮，不耽误经营，也能提前知道机会大小。",
+            f"企业如果已经在南山稳定办公，更应该把租金、面积、营收和行业代码做一次完整核验。只要基础条件能对上，后续材料准备就有了明确方向。",
+        ]
+        filler = concise_fillers[variant % len(concise_fillers)]
+        if filler not in paragraphs:
+            paragraphs.insert(-1, filler)
+            article_chars = sum(len(paragraph) for paragraph in paragraphs)
     return {
         "title": title,
         "source": source,
@@ -1403,7 +1413,7 @@ def main() -> None:
             f"- 政策来源：{article['source']}\n"
             f"- 有效期：{article['valid_period']}\n"
             f"- 资助亮点：{article['max_amount']}\n"
-            f"- 推广文章：{article['article_title']}\n\n"
+            f"- 文章标题：{article['article_title']}\n\n"
             f"{article_markdown(article)}"
         )
 
@@ -1411,7 +1421,7 @@ def main() -> None:
     (output_dir / "generated_documents.md").write_text(
         "# 生成的Word文档列表\n\n"
         f"{doc_list}\n\n"
-        "# 推广文章内容\n\n"
+        "# 文章内容\n\n"
         f"{joined_article_sections}\n",
         encoding="utf-8",
     )
