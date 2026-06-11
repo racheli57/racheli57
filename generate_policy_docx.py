@@ -655,8 +655,18 @@ def build_article_from_url(url: str, index: int) -> dict[str, object]:
         f"如果企业已经有项目投入，但不知道能否形成补贴申请，可关注公众号「金赋补贴宝」，通过公众号访问补贴平台，先完成资质评估，再对照推荐清单安排申报节奏。",
         f"政策机会不会一直停留在通知里，关键是企业能不能及时行动。关注公众号「金赋补贴宝」，通过公众号访问补贴平台，把相关信息转化为自己的补贴评估结果。",
     ]
+    extra_options = [
+        f"补充一句更落地的话：围绕{short_topic}，{audience}可以把现有项目分成“马上评估、继续养项目、暂时不推进”三类。补贴平台会把企业基础、项目投入、资质条件和材料成熟度放在一起看，让政策机会不再只停留在收藏夹里。",
+        f"很多补贴机会不是突然冒出来的，而是企业平时把{proof_materials}留完整后，窗口打开时自然能接上。深圳金赋更希望企业提前把资料变成可复用资产，而不是每次申报都从头找人、找票、找合同。",
+        f"对企业负责人来说，《{article_title}》真正要回答的是“哪些投入有机会转化为补贴”。如果项目事实、费用路径和成果证明能讲通，就值得进入评估；如果目前还缺证据，也能提前进入培育。",
+        f"如果团队担心政策太多看不过来，可以先让补贴平台按区域、行业、资质和项目阶段筛一遍。系统先给出方向，企业再决定要不要投入申报精力，这样比人工逐条翻政策更省心。",
+        f"尤其要提醒财务和项目负责人，{policy_focus}不能只停留在口头描述。合同、发票、付款、成果和数据最好能互相印证，后续无论写材料还是接受核查，都会更有底气。",
+        f"换个角度看，{short_topic}也是一次企业资料整理机会。把平时零散的项目、费用、证书、照片和成果说明沉淀到补贴平台，后面遇到类似政策时，企业就不用再临时拼材料。",
+        f"有些企业明明项目不错，却因为资料散、口径乱、负责人换了而错过机会。深圳金赋希望通过补贴平台把政策匹配和资料管理前置，让{audience}更早知道自己差在哪里、能争取什么。",
+        f"如果要写进企业年度计划，{short_topic}不只是一个政策提醒，更是一条资金线索。把它和研发、设备、人才、市场、合规等投入放在一起看，往往能发现更多组合申报空间。",
+    ]
     variant = (index - 1)
-    style = variant % 8
+    style = variant % 16
     if style == 0:
         paragraphs = [
             f"深圳金赋成立于2017年，长期围绕企业补贴申报做政策匹配和材料管理，补贴平台沉淀了1100万条全国四级公开政策数据。说白了，{short_topic}不是让企业多看一条通知，而是提醒企业看看手上的项目能不能变成补贴机会。{opening_options[variant % len(opening_options)]}",
@@ -669,31 +679,31 @@ def build_article_from_url(url: str, index: int) -> dict[str, object]:
         ]
     elif style == 1:
         paragraphs = [
-            f"深圳金赋服务企业时，常见的第一类问题就是：政策很多，但不知道哪条真正适合自己。这篇更适合给{audience}做一次轻量提醒：先看{short_topic}能不能落到现有项目。{opening_options[(variant + 1) % len(opening_options)]}",
-            f"先别急着问“能补多少”，更应该先问“我有没有类似项目”。如果企业正在做{policy_focus}相关工作，那就值得把项目投入、成果和证明材料先盘一遍。",
-            f"再看材料是不是拿得出来。{proof_materials}这些内容，平时看起来只是日常资料，放到政策场景里就可能变成判断企业能不能拿补贴的关键证据。",
-            f"深圳金赋想帮企业解决的，正是“政策很多但不知道哪条适合我”的问题。{company_options[(variant + 5) % len(company_options)]}",
+            f"这篇可以当作给企业老板的一条提醒：政策不会主动变成现金流，项目和材料对得上，才可能变成补贴机会。{source}这次释放的信号，建议{audience}认真看一眼。{original_signal_options[variant % len(original_signal_options)]}",
+            f"不用一上来就研究所有条款，先做几个朴素判断：企业是不是政策服务对象，项目是不是和{policy_focus}有关，{proof_materials}是不是拿得出来。只要答案比较清楚，就值得进入评估。",
+            f"深圳金赋做补贴平台，核心就是帮企业把“看不懂政策”变成“知道能不能申”。{company_options[(variant + 5) % len(company_options)]}",
+            f"如果原文涉及金额、比例或奖励条件，也别只盯最高值。企业更要看自己项目的投入规模、时间范围和资料完整度，避免把精力花在匹配度不高的政策上。",
             f"所以，这类政策可以当成一次经营提醒：项目要留痕，费用要规范，成果要能讲清楚。{review_options[(variant + 6) % len(review_options)]}",
             closing_options[(variant + 7) % len(closing_options)],
         ]
     elif style == 2:
         paragraphs = [
-            f"深圳金赋做补贴平台时，经常会把政策机会先翻译成老板能看懂的投入产出账。从老板视角看，{short_topic}其实不是一条孤立通知，而是一道经营管理题。{opening_options[(variant + 2) % len(opening_options)]}",
-            f"老板关心的是：企业已经花出去的钱、已经做完的项目、已经沉淀的资质，有没有可能换回政策资金。围绕{policy_focus}，只要能找到业务事实和证明材料，就有进一步评估的价值。",
+            f"如果从投入产出账来看，{short_topic}更像一道经营管理题。企业已经花出去的钱、已经完成的项目、已经沉淀的资质，能不能通过政策申报回收一部分成本？这正是深圳金赋补贴平台要帮企业算清楚的事。",
+            f"围绕{policy_focus}，企业可以先把业务事实摆出来：做了什么、花了多少、谁参与、结果如何。只要事实清楚，再去对照政策条件，就比盲目写材料稳得多。{opening_options[(variant + 2) % len(opening_options)]}",
             f"财务这边也很关键。围绕{short_topic}，合同、发票、付款、费用归集和项目名称如果前后不一致，再好的项目也容易卡住。{material_options[(variant + 4) % len(material_options)]}",
             f"项目负责人则要把过程讲清楚：为什么做、怎么做、做出什么效果。说到底，补贴不是“写出来”的，而是靠真实投入和可验证成果支撑出来的。",
             f"补贴平台适合先做一轮筛查，看看哪些项目值得申，哪些项目还需要养一养。{service_options[(variant + 6) % len(service_options)]}",
-            next_step_options[(variant + 7) % len(next_step_options)],
+            extra_options[variant % len(extra_options)],
             closing_options[(variant + 8) % len(closing_options)],
         ]
     elif style == 3:
         paragraphs = [
-            f"可以把{short_topic}想成一张项目便签：适合谁、看什么项目、需要什么证据、现在要不要行动。{opening_options[variant % len(opening_options)]}",
-            f"适合谁？主要看{audience}能不能和政策方向对上。尤其是{policy_focus}这些点，越贴近企业真实业务，后续越值得跟进。",
-            f"看什么项目？看已经发生的投入，也看接下来准备推进的计划。项目目标、投入内容、执行周期、成果数据越清楚，补贴评估越有底。{match_options[(variant + 4) % len(match_options)]}",
-            f"需要什么证据？先把{proof_materials}放进同一个资料夹，别让项目资料散落在不同同事手里。{material_options[(variant + 5) % len(material_options)]}",
-            f"现在要不要行动？如果材料已经七八成齐，就可以进入评估；如果还差不少，也可以先放进培育清单。补贴平台能把这些状态动态记录下来，避免企业错过窗口。",
+            f"把{short_topic}当成一张项目便签来看，会更容易抓重点：适合谁、看什么项目、需要什么证据、现有资料够不够。{opening_options[variant % len(opening_options)]}",
+            f"便签上最重要的内容，是企业自身是否能对应{policy_focus}。如果只有概念相似，但没有项目、费用和成果支撑，申报价值就要谨慎评估。",
+            f"资料便签也要同步建起来。{proof_materials}可以按项目统一归档，别分散在财务、行政、项目经理和老板微信里。资料越集中，后续匹配越快。",
+            f"如果企业目前离条件还差一些，也可以先放进培育清单。补贴平台能把这些状态动态记录下来，避免企业错过后续窗口。",
             company_options[(variant + 7) % len(company_options)],
+            f"这种写法很适合发给内部团队：不是要求大家马上申报，而是提醒大家把项目证据先放好。{value_options[(variant + 1) % len(value_options)]}",
             closing_options[(variant + 8) % len(closing_options)],
         ]
     elif style == 4:
@@ -726,7 +736,7 @@ def build_article_from_url(url: str, index: int) -> dict[str, object]:
             f"补贴平台可以把这些问题变成线上评估，让企业先看到匹配结果和材料建议，再决定要不要继续投入精力。{company_options[(variant + 3) % len(company_options)]}",
             closing_options[(variant + 5) % len(closing_options)],
         ]
-    else:
+    elif style == 7:
         paragraphs = [
             f"把{short_topic}放进年度补贴规划里看，企业会更容易找到节奏。{opening_options[(variant + 1) % len(opening_options)]}",
             f"先筛一遍：围绕{policy_focus}判断企业有没有机会、项目有没有基础、材料有没有雏形。{match_options[variant % len(match_options)]}",
@@ -736,12 +746,93 @@ def build_article_from_url(url: str, index: int) -> dict[str, object]:
             f"深圳金赋补贴平台可以把筛选、材料、优先级和提醒串起来，让{audience}从被动找政策变成主动管政策。{service_options[(variant + 4) % len(service_options)]}",
             closing_options[(variant + 6) % len(closing_options)],
         ]
+    elif style == 8:
+        paragraphs = [
+            f"这条内容可以用更轻松的方式发给客户：别把{short_topic}只当新闻看，它可能和企业正在花的钱、做的项目、准备的资质有关。{original_signal_options[(variant + 1) % len(original_signal_options)]}",
+            f"深圳金赋经常遇到这样的情况：企业项目做了，费用也发生了，但没有人从补贴角度帮它归类。等到申报窗口出现，才发现合同、数据、成果说明散在不同部门。",
+            f"如果{audience}近期正在做{policy_focus}相关事项，就建议把{proof_materials}先拉出来看看。不是马上写申报书，而是先判断有没有“可申报的底子”。",
+            f"补贴平台的优势在于先做匹配，再谈推进。系统会结合企业注册地、行业、资质、项目投入和材料情况，帮企业看到可能适合的政策方向。",
+            f"这类推广文章不需要写得太官方，客户真正关心的是：我有没有机会、缺什么、要不要现在准备。{service_options[(variant + 5) % len(service_options)]}",
+            extra_options[(variant + 1) % len(extra_options)],
+            closing_options[(variant + 2) % len(closing_options)],
+        ]
+    elif style == 9:
+        paragraphs = [
+            f"来做一个小场景：一家企业今年新增了项目投入，老板想知道这些钱除了带来业务增长，还能不能匹配政策补贴。看到{short_topic}时，就可以让补贴平台先做一次体检。",
+            f"体检不是看政策标题，而是看原文里的{policy_focus}能否对应到企业实际。{original_signal_options[(variant + 2) % len(original_signal_options)]}",
+            f"如果企业的{proof_materials}比较完整，平台就能更快判断项目成熟度；如果资料缺口明显，也能把缺口先列出来，避免临近申报才被动补材料。",
+            f"深圳金赋的服务思路比较务实：先判断值不值得申，再决定要不要深度准备。{company_options[(variant + 4) % len(company_options)]}",
+            f"对{audience}来说，这样做的好处是降低试错成本。政策再多，也不用每条都追；项目再多，也能先挑匹配度高的去推进。",
+            f"如果政策原文涉及补贴标准或资金支持，企业还要核清楚金额口径和费用边界。最高金额只是上限，真正能拿多少，要看项目投入、证明强度和审核结果。",
+            closing_options[(variant + 6) % len(closing_options)],
+        ]
+    elif style == 10:
+        paragraphs = [
+            f"老板一句话：这项政策和公司有什么关系？项目负责人可能说项目相关，财务可能说票据要再查，行政可能说资质还要确认。围绕{short_topic}，补贴平台就是把这些回答放到同一张图里。",
+            f"从原文提炼，企业要重点看{policy_focus}。{subsidy_sentence}这些信息决定了企业是马上评估，还是先继续培育。",
+            f"深圳金赋会先帮企业把“能不能申”的问题拆开：主体是否匹配、项目是否真实、费用是否合规、成果是否可证明、材料是否够完整。",
+            f"如果{audience}已经有类似项目，可以先把{proof_materials}交给平台做匹配；如果目前项目还在推进中，也可以提前按政策口径留痕。",
+            f"这类文章适合发给老板、财务和项目负责人一起看，因为补贴不是某一个部门的事。{review_options[(variant + 2) % len(review_options)]}",
+            f"有了补贴平台，企业就不用靠人工记忆追政策。结合《{article_title}》这个主题，{value_options[(variant + 5) % len(value_options)]}",
+            closing_options[(variant + 1) % len(closing_options)],
+        ]
+    elif style == 11:
+        paragraphs = [
+            f"如果把企业补贴申报比作一场备考，{short_topic}就是一道新题。题目难不难，不能只看标题，要看企业平时有没有把项目、费用和成果准备好。",
+            f"这道题的考点大概落在{policy_focus}。{opening_options[(variant + 2) % len(opening_options)]}",
+            f"深圳金赋补贴平台适合做“预判”：哪些材料能直接用，哪些材料还缺说明，哪些项目虽然相关但暂时不建议投入太多精力。",
+            f"{proof_materials}就是企业的答题材料。材料越能说明真实投入和实际成效，越有机会把政策机会变成申报项目。",
+            f"当然，不是所有企业都要自己研究政策。对于{audience}，更高效的做法是先把企业信息放进补贴平台，让系统给出匹配结果和材料建议。",
+            extra_options[(variant + 3) % len(extra_options)],
+            closing_options[(variant + 4) % len(closing_options)],
+        ]
+    elif style == 12:
+        paragraphs = [
+            f"有些政策适合写得严肃一点，有些则更适合说人话。{short_topic}给企业的启发很直接：已经做过的项目、正在发生的投入、未来要补的资质，都有必要从补贴角度重新看一遍。",
+            f"从政策原文看，企业应关注{policy_focus}。如果原文中出现奖励、补助、资助比例或金额上限，就要进一步核对自己项目是否在支持范围内。",
+            f"深圳金赋的补贴平台不是简单展示政策，而是帮企业做匹配。{company_options[(variant + 2) % len(company_options)]}",
+            f"对{audience}来说，最怕的是“知道有政策，但不知道自己能不能用”。平台会把{proof_materials}和政策条件对应起来，让企业先看到差距。",
+            f"差距不是坏事，提前知道就能提前补。比如成果证明弱，就补案例；费用归集乱，就整理台账；项目口径不清，就统一说明。",
+            f"所以这类内容更适合做客户触达：提醒企业别等申报截止才行动，而是把政策匹配变成日常经营动作。{service_options[(variant + 3) % len(service_options)]}",
+            closing_options[(variant + 5) % len(closing_options)],
+        ]
+    elif style == 13:
+        paragraphs = [
+            f"给{audience}一个简单判断：如果今年有项目投入、有资质建设、有市场拓展或合规成本，就别忽略{short_topic}这类政策信号。它不一定马上对应一笔补贴，但可能对应下一轮申报准备。",
+            f"深圳金赋成立以来一直服务企业做补贴申报，最深的感受是：很多企业不是不符合条件，而是没有提前整理材料。{original_signal_options[variant % len(original_signal_options)]}",
+            f"围绕{policy_focus}，企业可以先做一次轻量盘点。哪些项目已经完成，哪些费用能够归集，哪些成果有客户或数据支撑，哪些资质还需要补强。",
+            f"如果盘点后发现{proof_materials}比较完整，就可以进入政策匹配；如果还不完整，也可以先放入培育清单，后续持续补资料。",
+            f"补贴平台会把企业信息沉淀下来，后面遇到同类政策时，系统可以更快提醒企业。{company_options[(variant + 6) % len(company_options)]}",
+            extra_options[(variant + 4) % len(extra_options)],
+            closing_options[(variant + 7) % len(closing_options)],
+        ]
+    elif style == 14:
+        paragraphs = [
+            f"站在服务商视角看，{short_topic}最值得企业关注的不是新闻热度，而是能否拆成可操作的补贴线索。{source}发布的信息里，企业要重点看对象、项目、资金和材料边界。",
+            f"如果{audience}涉及{policy_focus}，建议先做一轮快速筛选。筛选的目的不是马上申报，而是判断这条线索是否值得继续跟。",
+            f"深圳金赋补贴平台会把政策线索和企业情况放在一起比对：注册地、行业、资质、项目投入、证明材料、历史申报情况，都会影响最终匹配结果。",
+            f"材料方面，{proof_materials}要尽量围绕项目形成闭环。评估时最怕资料零散，明明有投入，却讲不清楚项目和政策之间的关系。",
+            f"如果原文提到资金支持，企业还要重点看是否存在补贴上限、比例、对象范围和不重复享受要求。金额不是唯一重点，适配度才是能否推进的前提。",
+            f"这也是深圳金赋强调补贴平台的原因：先把《{article_title}》这类机会筛出来，再把材料管起来，最后再决定是否推进申报。{service_options[(variant + 6) % len(service_options)]}",
+            closing_options[(variant + 2) % len(closing_options)],
+        ]
+    else:
+        paragraphs = [
+            f"如果把{short_topic}写成一条朋友圈提醒，大概可以这样说：企业别只忙着做项目，也要记得看看项目有没有政策价值。深圳金赋补贴平台，就是帮企业把这些价值找出来。",
+            f"这类政策背后的关键词是{policy_focus}。{subsidy_sentence}企业不用把所有条款都背下来，但要知道哪些条件和自己有关。",
+            f"对{audience}来说，最实在的动作是把现有项目拿出来做匹配：项目做了多久、费用花在哪里、成果怎么证明、资料是否齐全。",
+            f"如果{proof_materials}能对应上政策口径，就有机会继续推进；如果对应不上，也能提前知道短板在哪里。别等到别人开始申报了，自己才发现资料还散在各个部门。",
+            f"深圳金赋不是让企业追每一条政策，而是帮企业筛出更可能转化为补贴的机会。{company_options[(variant + 1) % len(company_options)]}",
+            f"所以，这类内容适合用来唤醒客户：政策不是离企业很远的文件，它可能就藏在企业已经发生的投入里。{value_options[(variant + 2) % len(value_options)]}",
+            closing_options[(variant + 3) % len(closing_options)],
+        ]
     article_chars = sum(len(paragraph) for paragraph in paragraphs)
-    if article_chars < 900:
-        paragraphs.insert(
-            -1,
-            f"再说得实际一点，围绕{short_topic}，{audience}平时不一定有专人盯政策，但项目投入、客户案例、合同票据和经营成果每天都在发生。企业可以先把已有项目放进补贴平台做一次匹配，把能冲刺的机会、需要培育的条件和暂时不适合的项目分开看。这样不会把政策当成临时任务，而是变成一套能持续复用的补贴管理方法。",
-        )
+    padding_round = 0
+    while article_chars < 900:
+        padding = f"结合《{article_title}》这篇内容，" + extra_options[(variant + padding_round) % len(extra_options)]
+        paragraphs.insert(-1, padding)
+        article_chars = sum(len(paragraph) for paragraph in paragraphs)
+        padding_round += 1
     return {
         "title": title,
         "source": source,
