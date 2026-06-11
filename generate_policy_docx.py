@@ -14,6 +14,8 @@ from zipfile import ZIP_DEFLATED, ZipFile
 
 OUTPUT_DIR = Path.cwd()
 CTA = "可关注公众号「金赋补贴宝」，通过公众号访问补贴平台，进行企业资质评估和政策匹配，获取更适合自身情况的补贴推荐清单。"
+TITLE_MAX_CHARS = 30
+OLD_TITLE_YEAR_RE = re.compile(r"20(?:0\d|1\d|2[0-4])年?")
 
 # 默认只输出当前用户本轮提供的政策链接。
 POLICY_URLS = ['http://www.gd.gov.cn/gkmlpt/content/4/4661/post_4661586.html',
@@ -468,10 +470,25 @@ def subsidy_highlight(text: str, limit: int = 150) -> str:
             return sentence[:limit].strip(" ，。；：")
     return ""
 
+def remove_old_title_years(text: str) -> str:
+    cleaned = OLD_TITLE_YEAR_RE.sub("", text or "")
+    cleaned = re.sub(r"[，,、：:；;\s]+", "，", cleaned)
+    return cleaned.strip(" ，,、：:；;-—_（）()[]【】")
+
+
+def normalize_article_title(title: str, fallback: str = "企业补贴机会，先做评估") -> str:
+    cleaned = remove_old_title_years(title)
+    if not cleaned:
+        cleaned = remove_old_title_years(fallback) or "企业补贴机会，先做评估"
+    cleaned = re.sub(r"\s+", "", cleaned).strip(" ，,、：:；;-—_（）()[]【】")
+    return cleaned[:TITLE_MAX_CHARS] or "企业补贴机会，先做评估"
+
+
 def make_article_title(plan_title: str, policy_title: str, index: int) -> str:
-    subject = short_policy_subject(policy_title)
-    if not subject or len(subject) < 4:
-        return plan_title
+    raw_subject = remove_old_title_years(short_policy_subject(policy_title))
+    if not raw_subject or len(raw_subject) < 4:
+        return normalize_article_title(plan_title)
+    subject = raw_subject[:14]
     templates = [
         f"{subject}背后，企业要看到补贴线索",
         f"{subject}来了，别只收藏文件",
@@ -533,13 +550,23 @@ def make_article_title(plan_title: str, policy_title: str, index: int) -> str:
         f"{subject}不是冷文件，是资金线索",
         f"{subject}来了，先测一测能不能申",
         f"企业围绕{subject}做一次政策体检",
+        f"小红书聊{subject}，先看补贴",
+        f"公众号写{subject}，别少了申报评估",
+        f"{subject}能帮企业拿补贴吗",
+        f"拿补贴前，先看{subject}匹配度",
+        f"{subject}里的贴息机会别漏看",
+        f"企业想拿补贴，先看{subject}",
+        f"{subject}别只读，先测补贴机会",
+        f"发客户看{subject}，重点讲补贴",
+        f"{subject}里的申报机会怎么抓",
+        f"围绕{subject}，帮企业找补贴",
     ]
     start = (index - 1) % len(templates)
     for offset in range(len(templates)):
-        title = templates[(start + offset) % len(templates)]
-        if len(title) <= 34:
+        title = remove_old_title_years(templates[(start + offset) % len(templates)]).replace(" ", "")
+        if title and len(title) <= TITLE_MAX_CHARS:
             return title
-    return plan_title
+    return normalize_article_title(plan_title)
 
 def policy_year(text: str) -> str:
     match = re.search(r"(20\d{2})年", text or "")
@@ -579,19 +606,25 @@ def readable_policy_subject(policy_title: str) -> str:
 def make_db_article_title(policy_title: str, article_suffix: str) -> str:
     subject = readable_policy_subject(policy_title)
     year = policy_year(policy_title)
+    if year and int(year) < 2025:
+        year = ""
     if subject:
+        subject = normalize_article_title(subject)[:14]
         prefix = f"{year}年{subject}" if year and not subject.startswith(year) else subject
         candidates = [
             f"{prefix}，企业要看补贴口径",
             f"{prefix}别只收藏，先做申报评估",
             f"围绕{prefix}，企业要提前备材料",
+            f"{prefix}能不能拿补贴",
+            f"{prefix}贴息补贴别漏看",
         ]
         for candidate in candidates:
-            if len(candidate) <= 34:
-                return candidate
-        return prefix[:30]
+            title = remove_old_title_years(candidate).replace(" ", "")
+            if title and len(title) <= TITLE_MAX_CHARS:
+                return title
+        return normalize_article_title(prefix)
     cleaned_suffix = article_suffix.rstrip("？?")
-    return cleaned_suffix[:34] or "企业补贴机会，先做申报评估"
+    return normalize_article_title(cleaned_suffix, "企业补贴机会，先做评估")
 
 def clean_fetched_title(title: str) -> str:
     raw_title = remove_urls(re.sub(r"\s+", " ", title or "")).strip(" -_|")
@@ -714,6 +747,19 @@ def build_article_from_url(url: str, index: int) -> dict[str, object]:
         f"如果企业已经有项目投入，但不知道能否形成补贴申请，可关注公众号「金赋补贴宝」，通过公众号访问补贴平台，先完成资质评估，再对照推荐清单安排申报节奏。",
         f"政策机会不会一直停留在通知里，关键是企业能不能及时行动。关注公众号「金赋补贴宝」，通过公众号访问补贴平台，把相关信息转化为自己的补贴评估结果。",
     ]
+    ad_hook_options = [
+        f"适合发公众号的表达可以更直接：这类补贴政策不是让企业背条文，而是帮企业找到拿补贴、拿贴息的入口。深圳金赋补贴平台先做匹配，再看项目和材料值不值得推进。",
+        f"放到小红书语气里，就是一句话：企业别错过身边的补贴政策！只要{proof_materials}能说明项目真实发生，就可以先让补贴平台测一测有没有机会拿补贴。",
+        f"客户最爱问的不是政策有多长，而是我能不能拿补贴。围绕{short_topic}，深圳金赋会先帮企业看主体、项目、费用和材料，再判断是否值得进入申报准备。",
+        f"这类内容可以带点广告味：想拿补贴、拿贴息，别只靠人工翻政策。把企业信息放进补贴平台，先看适配度，再安排材料和申报节奏。",
+        f"公众号标题可以活泼一点，正文也要落到服务上：深圳金赋补贴平台帮企业找补贴政策、测申报机会、看材料缺口，让老板先知道值不值得做。",
+        f"如果企业正在做融资、研发、设备、市场或合规投入，别只看成本，也要看看能不能衔接补贴、奖励或贴息政策。补贴平台可以先帮企业把机会筛出来。",
+        f"对企业来说，拿补贴不是碰运气，而是提前把项目和材料准备好。深圳金赋把政策匹配、资质评估和材料提醒串起来，让补贴机会更容易被发现。",
+        f"这类政策适合用来唤醒客户：有项目、有投入、有凭证，就别急着说自己不符合。先上补贴平台做评估，看看能不能申补贴、拿贴息或进入资质培育。",
+        f"写给企业负责人时，可以直接说：补贴政策不是离你很远，它可能就在已有项目里。深圳金赋帮企业把政策、项目和证据对上，少走弯路。",
+        f"批量发推广文时，重点不是复述文件，而是提醒客户行动：把项目放进补贴平台测一测，看看有没有补贴、贴息、奖励或配套资金线索。",
+    ]
+
     extra_options = [
         f"补充一句更落地的话：围绕{short_topic}，{audience}可以把现有项目分成“马上评估、继续养项目、暂时不推进”三类。补贴平台会把企业基础、项目投入、资质条件和材料成熟度放在一起看，让政策机会不再只停留在收藏夹里。",
         f"很多补贴机会不是突然冒出来的，而是企业平时把{proof_materials}留完整后，窗口打开时自然能接上。深圳金赋更希望企业提前把资料变成可复用资产，而不是每次申报都从头找人、找票、找合同。",
@@ -1096,6 +1142,9 @@ def build_article_from_url(url: str, index: int) -> dict[str, object]:
                 padding_options[(variant + 9) % len(padding_options)],
                 closing_options[(variant + 6) % len(closing_options)],
             ]
+    if not any(keyword in paragraph for paragraph in paragraphs for keyword in ("拿补贴", "拿贴息", "补贴政策")):
+        paragraphs.insert(-1, ad_hook_options[variant % len(ad_hook_options)])
+
     if not any("深圳金赋" in paragraph for paragraph in paragraphs):
         paragraphs.insert(
             -1,
@@ -1259,9 +1308,13 @@ def sanitize_windows_filename(name: str) -> str:
     return cleaned[:180] or "policy_article"
 
 def unique_article_title(title: str, used_titles: dict[str, int]) -> str:
-    count = used_titles.get(title, 0) + 1
-    used_titles[title] = count
-    return title if count == 1 else f"{title}-{count:02d}"
+    normalized = normalize_article_title(title)
+    count = used_titles.get(normalized, 0) + 1
+    used_titles[normalized] = count
+    if count == 1:
+        return normalized
+    suffix = f"-{count:02d}"
+    return f"{normalized[: TITLE_MAX_CHARS - len(suffix)]}{suffix}"
 
 
 def unique_docx_filename(title: str, used_filenames: set[str]) -> str:
