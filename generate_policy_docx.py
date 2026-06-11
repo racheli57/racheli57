@@ -18,54 +18,10 @@ TITLE_MAX_CHARS = 30
 OLD_TITLE_YEAR_RE = re.compile(r"20(?:0\d|1\d|2[0-4])年?")
 
 # 默认只输出当前用户本轮提供的政策链接。
-POLICY_URLS = ['http://www.gd.gov.cn/gkmlpt/content/4/4661/post_4661586.html',
- 'https://com.gd.gov.cn/gkmlpt/content/4/4742/post_4742687.html',
- 'http://www.gd.gov.cn/gkmlpt/content/4/4511/post_4511096.html',
- 'https://hrss.gd.gov.cn/gkmlpt/content/4/4743/post_4743140.html',
- 'http://www.gd.gov.cn/gkmlpt/content/4/4678/post_4678912.html',
- 'https://dara.gd.gov.cn/tzgg2272/content/post_4433153.html',
- 'http://gdstc.gd.gov.cn/zwgk_n/tzgg/content/post_4434141.html',
- 'http://www.gd.gov.cn/zwgk/gongbao/2024/9/content/post_4422589.html',
- 'http://drc.gd.gov.cn/gkmlpt/content/1/1060/post_1060038.html',
- 'http://wsjkw.gd.gov.cn/gkmlpt/content/2/2129/post_2129164.html',
- 'http://sft.gd.gov.cn/gkmlpt/content/1/1139/post_1139861.html',
- 'http://mpa.gd.gov.cn/zwgk/zcfg/fgjd/qita/content/post_3817971.html',
- 'http://wsjkw.gd.gov.cn/gkmlpt/content/2/2132/post_2132319.html',
- 'http://edu.gd.gov.cn/gkmlpt/content/2/2093/post_2093172.html',
- 'http://www.gd.gov.cn/gkmlpt/content/0/143/post_143924.html',
- 'http://gpcgd.gd.gov.cn/xxgk/zcfg/content/post_1037172.html',
- 'http://mpa.gd.gov.cn/gkmlpt/content/2/2108/post_2108624.html',
- 'http://gdstc.gd.gov.cn/gkmlpt/content/3/3237/post_3237578.html',
- 'http://www.gd.gov.cn/gkmlpt/content/0/139/post_139630.html',
- 'http://td.gd.gov.cn/gkmlpt/content/1/1289/post_1289592.html',
- 'http://wsjkw.gd.gov.cn/gkmlpt/content/3/3490/post_3490615.html',
- 'http://mpa.gd.gov.cn/gkmlpt/content/2/2109/post_2109187.html',
- 'http://www.gd.gov.cn/gkmlpt/content/0/141/post_141315.html',
- 'http://mpa.gd.gov.cn/gkmlpt/content/2/2109/post_2109580.html',
- 'http://mpa.gd.gov.cn/gkmlpt/content/2/2105/post_2105909.html',
- 'https://eea.gd.gov.cn/gkmlpt/content/3/3494/post_3494987.html',
- 'http://slt.gd.gov.cn/gkmlpt/content/2/2702/post_2702963.html',
- 'http://td.gd.gov.cn/gkmlpt/content/1/1289/post_1289485.html',
- 'http://wsjkw.gd.gov.cn/gkmlpt/content/2/2127/post_2127167.html',
- 'http://wsjkw.gd.gov.cn/gkmlpt/content/2/2909/post_2909164.html',
- 'http://wsjkw.gd.gov.cn/gkmlpt/content/3/3053/post_3053489.html',
- 'http://mpa.gd.gov.cn/gkmlpt/content/3/3756/post_3756931.html',
- 'http://mpa.gd.gov.cn/gkmlpt/content/2/2165/post_2165715.html',
- 'http://wsjkw.gd.gov.cn/gkmlpt/content/3/3266/post_3266836.html',
- 'http://zfcxjst.gd.gov.cn/gkmlpt/content/3/3044/post_3044656.html',
- 'http://czt.gd.gov.cn/gkmlpt/content/0/185/post_185169.html',
- 'http://mpa.gd.gov.cn/gkmlpt/content/3/3694/post_3694059.html',
- 'http://gdstc.gd.gov.cn/gkmlpt/content/3/3246/post_3246819.html',
- 'http://edu.gd.gov.cn/gkmlpt/content/2/2102/post_2102804.html',
- 'http://edu.gd.gov.cn/gkmlpt/content/2/2101/post_2101591.html',
- 'http://edu.gd.gov.cn/gkmlpt/content/2/2102/post_2102788.html',
- 'http://czt.gd.gov.cn/gkmlpt/content/3/3692/post_3692131.html',
- 'http://mpa.gd.gov.cn/gkmlpt/content/3/3683/post_3683613.html',
- 'http://gdjr.gd.gov.cn/gkmlpt/content/1/1126/post_1126060.html',
- 'http://gdjr.gd.gov.cn/gkmlpt/content/1/1126/post_1126001.html',
- 'http://czt.gd.gov.cn/gkmlpt/content/3/3249/post_3249373.html',
- 'http://www.gd.gov.cn/gkmlpt/content/0/140/post_140714.html',
- 'https://www.sz.gov.cn/szzt2010/wgkzl/jcgk/jcygk/zdzcjc/content/mpost_12821085.html?f_link_type=f_linkinlinenote&flow_extra=eyJpbmxpbmVfZGlzcGxheV9wb3NpdGlvbiI6MCwiZG9jX3Bvc2l0aW9uIjowLCJkb2NfaWQiOiJiMGUwY2FkMzA2ODNkMDI1LWI4NzdiYTNlZWY1ZDZlOTEifQ%3D%3D']
+POLICY_URLS = [
+    'https://www.sz.gov.cn/szzt2010/wgkzl/jcgk/jcygk/zdzcjc/content/mpost_12821085.html?f_link_type=f_linkinlinenote&flow_extra=eyJpbmxpbmVfZGlzcGxheV9wb3NpdGlvbiI6MCwiZG9jX3Bvc2l0aW9uIjowLCJkb2NfaWQiOiJiMGUwY2FkMzA2ODNkMDI1LWI4NzdiYTNlZWY1ZDZlOTEifQ%3D%3D'
+]
+DEFAULT_VARIANTS_PER_URL = 10
 
 SOURCE_BY_HOST = {
     "www.szlh.gov.cn": "深圳市罗湖区相关部门",
@@ -158,6 +114,11 @@ TITLE_VARIANTS_BY_POST_ID = {
         "软件企业拿补贴先测匹配",
         "鸿蒙项目能不能申先评估",
         "南山企业补贴材料这样备",
+        "南山软件项目补贴别漏看",
+        "人才和空间补贴先盘点",
+        "模型券申报先做材料体检",
+        "南山企业拿补贴要趁早",
+        "五类项目能否申先测一遍",
     ],
 }
 
@@ -820,7 +781,7 @@ def build_article_from_url(url: str, index: int) -> dict[str, object]:
         f"说到底，补贴平台不是替企业制造项目，而是帮企业发现已有项目里的政策价值。只要真实业务和证明材料足够清楚，政策机会就更容易被看见。",
     ]
     padding_options = [
-        f"再补一层实际建议：这次从{source}看到的{short_topic}，企业可以先让补贴平台做一次轻量匹配，把可评估项目、待培育条件和暂不适合事项分开。这样文章发出去后，客户看到的是行动方向，不是又一段官方文字。",
+        f"再补一层实际建议：这次从{source}看到的{short_topic}，企业可以先让补贴平台做一次轻量匹配，把可评估项目、待培育条件和暂不适合事项分开，后续推进会更清楚。",
         f"如果团队担心政策太多看不过来，可以先按地区、行业、资质和项目阶段筛一遍。系统给出初步方向后，企业再决定要不要投入申报精力，比人工逐条翻政策更省心。",
         f"尤其要提醒财务和项目负责人，围绕{source}的{short_topic}，{policy_focus}不能只停留在口头描述。合同、发票、付款、成果和数据最好能互相印证，后续无论写材料还是接受核查，都会更有底气。",
         f"换个角度看，{short_topic}也是一次企业资料整理机会。把平时零散的项目、费用、证书、照片和成果说明沉淀到补贴平台，后面遇到类似政策时，就不用再临时拼材料。",
@@ -1414,7 +1375,7 @@ def main() -> None:
     parser.add_argument("--limit", type=int, default=10, help="Number of latest MySQL rows to fetch when --from-db is used without --ids.")
     parser.add_argument("--urls", default="", help="Comma/space separated policy URLs. Defaults to the current request's URL list.")
     parser.add_argument("--output-dir", default=str(OUTPUT_DIR), help="Directory for generated DOCX files.")
-    parser.add_argument("--variants-per-url", type=int, default=1, help="Generate multiple article variants for each URL in URL mode.")
+    parser.add_argument("--variants-per-url", type=int, default=DEFAULT_VARIANTS_PER_URL, help="Generate multiple article variants for each URL in URL mode.")
     args = parser.parse_args()
 
     output_dir = Path(args.output_dir)
