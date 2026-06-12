@@ -19,9 +19,48 @@ OLD_TITLE_YEAR_RE = re.compile(r"20(?:0\d|1\d|2[0-4])年?")
 
 # 默认只输出当前用户本轮提供的政策链接。
 POLICY_URLS = [
-    'https://www.sz.gov.cn/szzt2010/wgkzl/jcgk/jcygk/zdzcjc/content/mpost_12821085.html?f_link_type=f_linkinlinenote&flow_extra=eyJpbmxpbmVfZGlzcGxheV9wb3NpdGlvbiI6MCwiZG9jX3Bvc2l0aW9uIjowLCJkb2NfaWQiOiJiMGUwY2FkMzA2ODNkMDI1LWI4NzdiYTNlZWY1ZDZlOTEifQ%3D%3D'
+    'http://hrss.gd.gov.cn/gkmlpt/content/3/3848/post_3848321.html',
+    'http://hrss.gd.gov.cn/gkmlpt/content/3/3829/post_3829415.html',
+    'http://zfcxjst.gd.gov.cn/gkmlpt/content/3/3237/post_3237631.html',
+    'http://drc.gd.gov.cn/gkmlpt/content/1/1060/post_1060486.html',
+    'http://mpa.gd.gov.cn/gkmlpt/content/2/2106/post_2106330.html',
+    'http://zfcxjst.gd.gov.cn/gkmlpt/content/1/1457/post_1457103.html',
+    'http://hrss.gd.gov.cn/gkmlpt/content/3/3265/post_3265129.html',
+    'http://drc.gd.gov.cn/gkmlpt/content/0/864/post_864366.html',
+    'http://gdjr.gd.gov.cn/gkmlpt/content/2/2269/post_2269667.html',
+    'http://hrss.gd.gov.cn/gkmlpt/content/3/3776/post_3776746.html',
+    'http://mpa.gd.gov.cn/gkmlpt/content/3/3271/post_3271247.html',
+    'http://czt.gd.gov.cn/gkmlpt/content/3/3087/post_3087620.html',
+    'http://mpa.gd.gov.cn/gkmlpt/content/2/2107/post_2107912.html',
+    'http://gdjr.gd.gov.cn/gkmlpt/content/3/3668/post_3668706.html',
+    'http://wsjkw.gd.gov.cn/gkmlpt/content/2/2127/post_2127713.html',
+    'http://mpa.gd.gov.cn/gkmlpt/content/2/2108/post_2108916.html',
+    'http://slt.gd.gov.cn/gkmlpt/content/1/1075/post_1075975.html',
+    'http://mpa.gd.gov.cn/gkmlpt/content/2/2105/post_2105837.html',
+    'http://sft.gd.gov.cn/gkmlpt/content/1/1140/post_1140262.html',
+    'http://mpa.gd.gov.cn/zwgk/zcfg/fgjd/yaopin/content/post_3818440.html',
+    'http://gdyjzx.gd.gov.cn/zcyj/zjsd/content/post_3520038.html',
+    'http://czt.gd.gov.cn/gkmlpt/content/4/4232/post_4232862.html#98',
+    'http://czt.gd.gov.cn/gkmlpt/content/4/4232/post_4232870.html#98',
+    'http://czt.gd.gov.cn/gkmlpt/content/4/4233/post_4233927.html#86',
+    'http://czt.gd.gov.cn/gkmlpt/content/4/4194/post_4194666.html#98',
+    'http://www.gd.gov.cn/zwgk/gongbao/2021/30/content/post_3627117.html',
+    'http://dara.gd.gov.cn/gkmlpt/content/4/4151/post_4151053.html#1602',
+    'http://czt.gd.gov.cn/gkmlpt/content/4/4074/post_4074434.html#86',
+    'http://czt.gd.gov.cn/gkmlpt/content/4/4067/post_4067988.html#86',
+    'http://td.gd.gov.cn/gkmlpt/content/4/4028/post_4028350.html#1487',
+    'http://czt.gd.gov.cn/gkmlpt/content/3/3055/post_3055821.html',
+    'http://gdii.gd.gov.cn/gkmlpt/content/4/4016/post_4016613.html#2902',
+    'http://edu.gd.gov.cn/gkmlpt/content/3/3987/post_3987646.html#1621',
+    'http://hmo.gd.gov.cn/gkmlpt/content/3/3928/post_3928133.html',
+    'http://gdwsxf.gd.gov.cn/zcfg/zcwj/content/post_3895832.html',
+    'http://gdii.gd.gov.cn/gkmlpt/content/3/3551/post_3551296.html',
+    'http://td.gd.gov.cn/gkmlpt/content/3/3572/post_3572563.html',
+    'http://amr.gd.gov.cn/gkmlpt/content/2/2277/post_2277497.html',
+    'http://hrss.gd.gov.cn/gkmlpt/content/3/3334/post_3334065.html',
+    'http://zfcxjst.gd.gov.cn/gkmlpt/content/3/3326/post_3326848.html',
 ]
-DEFAULT_VARIANTS_PER_URL = 10
+DEFAULT_VARIANTS_PER_URL = 1
 
 SOURCE_BY_HOST = {
     "www.szlh.gov.cn": "深圳市罗湖区相关部门",
@@ -49,6 +88,10 @@ SOURCE_BY_HOST = {
     "mpa.gd.gov.cn": "广东省药品监督管理局",
     "sft.gd.gov.cn": "广东省司法厅",
     "wsjkw.gd.gov.cn": "广东省卫生健康委员会",
+    "hmo.gd.gov.cn": "广东省港澳事务办公室",
+    "gdyjzx.gd.gov.cn": "广东省粤港澳大湾区研究院",
+    "gdwsxf.gd.gov.cn": "广东省卫生健康相关部门",
+    "amr.gd.gov.cn": "广东省市场监督管理局",
     "drc.gd.gov.cn": "广东省发展和改革委员会",
     "com.gd.gov.cn": "广东省商务厅",
     "zxqyj.sz.gov.cn": "深圳市中小企业服务局",
@@ -804,7 +847,10 @@ def build_article_from_url(url: str, index: int) -> dict[str, object]:
     ]
     variant = (index - 1)
     STYLE_VARIATION_COUNT = 128
+    has_specific_plan = post_id_from_url(url) in PLAN_BY_POST_ID
     style = variant % STYLE_VARIATION_COUNT
+    if not has_specific_plan:
+        style = 16 + (variant % (STYLE_VARIATION_COUNT - 16))
     if style == 0:
         paragraphs = [
             f"先看企业最关心的数字：入驻南山人力资源服务产业园的人才服务机构，前两年可按实际支付租金70%申请补贴，每年最高100万元；第三年至第五年仍可按50%申请，每年最高70万元。对正在园区经营的机构来说，房租不是小开支，完全值得先测一轮。",
@@ -883,7 +929,7 @@ def build_article_from_url(url: str, index: int) -> dict[str, object]:
             f"政策支持对象并不泛泛，而是锁定拥有核心产品、成长性好、竞争力强、全球性或国内知名的人才服务机构，同时要求申请补贴时间段实际经营地在南山区园区。",
             f"机构最好现在就把{proof_materials}集中起来，让补贴平台先看一遍。资料齐不齐、口径对不对、补贴年度能不能测算，都会影响后续推进。",
             f"尤其是租金实际归属期、付款时间和不含税金额，别凭印象。一个影响补贴期间，一个影响补贴基数，都关系到机构能评估出的补贴空间。",
-            f"深圳金赋做补贴平台，不是让机构追每一条政策，而是帮助机构找到更可能转化为补贴、贴息或奖励的机会。房租这种高频成本，当然值得优先放进清单。",
+            f"深圳金赋做补贴平台，不是让机构追每一条政策，而是帮助机构找到更可能转化为补贴、贴息或奖励的机会。房租这类高频成本，当然值得优先放进清单。",
             closing_options[(variant + 1) % len(closing_options)],
         ]
     elif style == 9:
@@ -917,7 +963,7 @@ def build_article_from_url(url: str, index: int) -> dict[str, object]:
         ]
     elif style == 12:
         paragraphs = [
-            f"有些政策适合写得严肃一点，有些则更适合说人话。{short_topic}给企业的启发很直接：已经做过的项目、正在发生的投入、未来要补的资质，都有必要从补贴角度重新看一遍。",
+            f"有些政策看起来严肃，其实落到企业就是一句话：{short_topic}提醒企业把已经做过的项目、正在发生的投入、未来要补的资质，都从补贴角度重新看一遍。",
             f"从政策原文看，企业应关注{policy_focus}。如果原文中出现奖励、补助、资助比例或金额上限，就要进一步核对自己项目是否在支持范围内。",
             f"深圳金赋的补贴平台不是简单展示政策，而是帮企业做匹配。{company_options[(variant + 2) % len(company_options)]}",
             f"对{audience}来说，最怕的是“知道有政策，但不知道自己能不能用”。平台会把{proof_materials}和政策条件对应起来，让企业先看到差距。",
@@ -1046,11 +1092,11 @@ def build_article_from_url(url: str, index: int) -> dict[str, object]:
             ]
         elif layout == 5:
             paragraphs = [
-                f"这篇可以用“补贴体检”的方式来写。{audience}看到{short_topic}后，先把企业主体、项目投入、材料证据和申报价值做一次检查。",
+                f"可以先用“补贴体检”的思路来判断。{audience}看到{short_topic}后，先把企业主体、项目投入、材料证据和申报价值做一次检查。",
                 composed_angles[(variant + 5) % len(composed_angles)],
                 f"体检结果如果显示项目成熟，就进入政策匹配；如果资料不足，就先补台账、补成果、补费用说明。",
                 composed_company[(variant + 1) % len(composed_company)],
-                f"这种方式比直接堆申报流程更有用，因为企业先需要知道自己有没有机会。{review_options[(variant + 5) % len(review_options)]}",
+                f"这样比直接堆申报流程更有用，因为企业先需要知道自己有没有机会。{review_options[(variant + 5) % len(review_options)]}",
                 closing_options[(variant + 7) % len(closing_options)],
             ]
         elif layout == 6:
@@ -1064,7 +1110,7 @@ def build_article_from_url(url: str, index: int) -> dict[str, object]:
             ]
         elif layout == 7:
             paragraphs = [
-                f"换个轻松点的表达：政策不是离企业很远的文件，很多时候它就藏在企业已经发生的项目、费用和成果里。{short_topic}也是如此。",
+                f"换个更直白的说法：政策不是离企业很远的文件，很多时候它就藏在企业已经发生的项目、费用和成果里。{short_topic}也是如此。",
                 composed_angles[variant % len(composed_angles)],
                 f"深圳金赋补贴平台要做的，就是帮企业把这些线索捞出来。{composed_company[(variant + 2) % len(composed_company)]}",
                 composed_actions[(variant + 4) % len(composed_actions)],
@@ -1073,7 +1119,7 @@ def build_article_from_url(url: str, index: int) -> dict[str, object]:
             ]
         elif layout == 8:
             paragraphs = [
-                f"从销售触达角度写，{short_topic}可以先抓住一个痛点：企业投入不少，但不知道哪些能对应政策资金。",
+                f"企业先抓住一个痛点：投入不少，但不知道哪些能对应政策资金。{short_topic}正好适合拿来做一次项目匹配。",
                 f"围绕{policy_focus}，先别急着写长篇材料，而是把企业现有项目和费用做一次匹配。",
                 composed_company[(variant + 1) % len(composed_company)],
                 f"如果{proof_materials}已经比较完整，就可以继续评估；如果还缺证据，也能先进入培育清单。",
@@ -1092,7 +1138,7 @@ def build_article_from_url(url: str, index: int) -> dict[str, object]:
         elif layout == 10:
             paragraphs = [
                 f"有些企业项目做完后，才发现{short_topic}相关政策已经发布，材料却还散在不同部门。",
-                f"这种情况并不少见。{audience}平时如果没有建立材料台账，政策窗口打开时就容易手忙脚乱。",
+                f"类似情况并不少见。{audience}平时如果没有建立材料台账，政策窗口打开时就容易手忙脚乱。",
                 f"深圳金赋补贴平台会先看{policy_focus}和企业项目是否对应，再提示{proof_materials}是否足够支撑申报判断。",
                 f"如果政策涉及补贴金额或奖励条件，企业更要把费用边界、投入周期和证明强度核清楚。",
                 padding_options[(variant + 4) % len(padding_options)],
@@ -1166,21 +1212,26 @@ def build_article_from_url(url: str, index: int) -> dict[str, object]:
         padding_round += 1
     if article_chars < 780:
         concise_fillers = [
-            f"南山这类房租补贴专项资金最适合提前规划。机构可以把园区租金、人才服务产品、客户案例和经营数据统一放进年度补贴清单，先看哪些已经具备条件，哪些还需要继续养资料。",
-            f"从拿补贴的角度看，房租补贴不是单独一张发票，而是机构园区经营能力的侧面证明。入驻证明、租金归属期、付款路径和核心产品资料越清楚，平台判断越准确。",
-            f"如果机构正在做降本增效，这项政策就不该只在财务报表里停留。把租金支出和专项资金匹配起来，能帮助机构看到园区成本背后的补贴、奖励和配套机会。",
-            f"对成长快的人才服务机构来说，团队规模、产品能力和园区空间往往同步增长。现在把租金、归属期和补贴年度核清楚，后面遇到申报窗口时就能少补很多解释材料。",
-            f"机构也可以把这次评估当成一次内部协同：财务核票据，行政核入驻和租约，业务核核心产品和成长性，管理层确认申报优先级，补贴平台负责把条件和材料串起来。",
-            f"如果机构暂时达不到材料完整度，也不用气馁。补贴平台会记录当前差距，等产品资料、知名度证明、租金票据或经营数据补齐后，再重新匹配同类专项资金机会。",
-            f"很多机构真正损失的不是补贴金额，而是没有建立园区租金台账。房租补贴这种高频成本项目，更需要把合同、发票、付款和归属期持续更新，避免窗口来了却找不到依据。",
-            f"这项政策还提醒机构：补贴申报不是临时动作，而是园区经营管理的一部分。平时把资料留好，年度做专项资金测算时，才更容易看见可争取的空间。",
-            f"对负责人来说，这类政策的价值很直接：已经发生的园区房租支出，有机会通过政策匹配变成资金回流。先测一轮，不耽误经营，也能提前知道机会大小。",
-            f"机构如果已经在南山园区稳定经营，更应该把入驻证明、租金归属期、付款凭证和核心产品资料做一次完整核验。只要基础条件能对上，后续材料准备就有了明确方向。",
+            f"这类政策最适合提前规划。企业可以把研发、人才、设备、市场、合规等高频投入统一放进年度补贴清单，先看哪些已经具备条件，哪些还需要继续养资料。",
+            f"从拿补贴的角度看，政策机会不是单独一份通知，而是企业经营能力的侧面证明。项目事实、费用路径、成果资料和合规记录越清楚，平台判断越准确。",
+            f"如果企业正在做降本增效，这类政策就不该只在文件夹里停留。把真实投入和专项资金匹配起来，能帮助企业看到成本背后的补贴、奖励和配套机会。",
+            f"对成长快的企业来说，项目推进、团队扩张和资金投入往往同步发生。现在把合同、票据、数据和成果核清楚，后面遇到申报窗口时就能少补很多解释材料。",
+            f"企业也可以把这次评估当成一次内部协同：财务核票据，项目核过程，业务核成果，管理层确认申报优先级，补贴平台负责把条件和材料串起来。",
+            f"如果企业暂时达不到申报条件，也不用气馁。补贴平台会记录当前差距，等资质提升、项目成熟或资料补齐后，再重新匹配同类专项资金机会。",
+            f"很多企业真正损失的不是补贴金额，而是没有建立政策台账。高频投入项目更需要把合同、发票、付款、成果和归档说明持续更新，避免窗口来了却找不到依据。",
+            f"这类政策还提醒企业：补贴申报不是临时动作，而是经营管理的一部分。平时把资料留好，年度做专项资金测算时，才更容易看见可争取的空间。",
+            f"对负责人来说，这类政策的价值很直接：已经发生的经营投入，有机会通过政策匹配变成资金回流。先测一轮，不耽误经营，也能提前知道机会大小。",
+            f"企业如果已经有相关项目，更应该把主体资质、费用凭证、项目成果和申报口径做一次完整核验。只要基础条件能对上，后续材料准备就有了明确方向。",
         ]
         filler = concise_fillers[variant % len(concise_fillers)]
         if filler not in paragraphs:
             paragraphs.insert(-1, filler)
             article_chars = sum(len(paragraph) for paragraph in paragraphs)
+        if article_chars < 700:
+            second_filler = concise_fillers[(variant + 3) % len(concise_fillers)]
+            if second_filler not in paragraphs:
+                paragraphs.insert(-1, second_filler)
+                article_chars = sum(len(paragraph) for paragraph in paragraphs)
     return {
         "title": title,
         "source": source,
