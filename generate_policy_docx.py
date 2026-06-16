@@ -19,58 +19,13 @@ OLD_TITLE_YEAR_RE = re.compile(r"20(?:0\d|1\d|2[0-4])年?")
 
 # 默认只输出当前用户本轮提供的政策链接。
 POLICY_URLS = [
-    'https://zfxxgk.ndrc.gov.cn/web/iteminfo.jsp?id=20310',
-    'http://jkw.mof.gov.cn/zhengcefabu/202504/t20250417_3962157.htm',
-    'https://www.samr.gov.cn/zw/zfxxgk/fdzdgknr/ggjgs/art/2025/art_3c47f071f32f469b9e25d6707c134763.html',
-    'https://www.ndrc.gov.cn/xxgk/zcfb/ghxwj/202404/t20240408_1365533.html',
-    'https://www.ndrc.gov.cn/xxgk/zcfb/ghxwj/202406/t20240613_1386859.html',
-    'https://www.ndrc.gov.cn/xxgk/zcfb/ghxwj/202404/t20240408_1365534.html',
-    'https://www.samr.gov.cn/zw/zfxxgk/fdzdgknr/zlfzs/art/2025/art_e9e759faa4bd414b9a82cbd66e03318d.html',
-    'https://www.mee.gov.cn/xxgk2018/xxgk/xxgk04/202502/t20250213_1102236.html',
-    'https://www.ndrc.gov.cn/xxgk/zcfb/ghxwj/202412/t20241223_1395123.html',
-    'https://www.ndrc.gov.cn/xxgk/zcfb/ghxwj/202409/t20240902_1392738.html',
-    'https://www.miit.gov.cn/jgsj/zfs/gysj/art/2020/art_0af07ce7d60c444f8d03abf5b7c1d226.html',
-    'https://www.ndrc.gov.cn/xxgk/zcfb/tz/202105/t20210520_1280317.html',
-    'https://www.ndrc.gov.cn/xxgk/zcfb/tz/202106/t20210625_1284068.html',
-    'https://zfxxgk.ndrc.gov.cn/web/iteminfo.jsp?id=19411',
-    'https://www.ndrc.gov.cn/xxgk/zcfb/tz/202304/t20230419_1353841.html',
-    'https://zfxxgk.ndrc.gov.cn/web/iteminfo.jsp?id=19557',
-    'https://www.miit.gov.cn/jgsj/zfs/wjfb/art/2020/art_e20d4f03b3c74443a4f726071e18425c.html',
-    'https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2022/art_6c22ebf578c54bd2bfec958e9eaeb7b6.html',
-    'https://www.ndrc.gov.cn/xxgk/zcfb/fzggwl/201603/t20160324_960815.html',
-    'https://www.ndrc.gov.cn/xxgk/zcfb/ghxwj/202106/t20210608_1282767.html',
-    'https://www.ndrc.gov.cn/xxgk/zcfb/ghxwj/202105/t20210510_1279506.html',
-    'https://www.ndrc.gov.cn/xxgk/zcfb/ghxwj/202104/t20210419_1272543.html',
-    'https://www.ndrc.gov.cn/xxgk/zcfb/ghxwj/202201/t20220110_1311645.html',
-    'https://www.ndrc.gov.cn/xxgk/zcfb/ghxwj/202105/t20210518_1280099.html',
-    'https://www.ndrc.gov.cn/xxgk/zcfb/ghxwj/202112/t20211203_1306808.html',
-    'https://www.ndrc.gov.cn/xxgk/zcfb/ghxwj/202104/t20210423_1277184.html',
-    'https://www.ndrc.gov.cn/xxgk/zcfb/ghxwj/202103/t20210331_1271352.html',
-    'https://www.ndrc.gov.cn/xxgk/zcfb/ghxwj/202303/t20230327_1352010.html',
-    'https://www.ndrc.gov.cn/xxgk/zcfb/ghxwj/202106/t20210616_1283303.html',
-    'https://www.ndrc.gov.cn/xxgk/zcfb/ghxwj/202102/t20210201_1266678.html',
-    'https://www.ndrc.gov.cn/xxgk/zcfb/ghxwj/202112/t20211231_1311117.html',
-    'https://www.ndrc.gov.cn/xxgk/zcfb/ghxwj/202203/t20220318_1319509.html',
-    'https://www.ndrc.gov.cn/xxgk/zcfb/ghxwj/202102/t20210226_1268509.html',
-    'http://www.chinatax.gov.cn/chinatax/n377/c5192467/content.html',
-    'http://www.chinatax.gov.cn/chinatax/n368/c5185877/content.html',
-    'http://www.chinatax.gov.cn/chinatax/n362/c5185945/content.html',
-    'http://www.chinatax.gov.cn/chinatax/n359/c5183540/content.html',
-    'http://nrra.gov.cn/art/2019/4/11/art_46_96741.html',
-    'http://www.chinatax.gov.cn/chinatax/n359/c5173765/content.html',
-    'http://www.chinatax.gov.cn/chinatax/n362/c5181927/content.html',
-    'http://www.chinatax.gov.cn/chinatax/n810341/n810825/c101434/c5181967/content.html',
-    'http://www.chinatax.gov.cn/chinatax/n377/c5163860/content.html',
-    'http://szs.mof.gov.cn/zhengcefabu/202210/t20221008_3844612.htm',
-    'http://gss.mof.gov.cn/gzdt/zhengcefabu/201805/t20180522_2903728.htm',
-    'http://www.chinatax.gov.cn/chinatax/n810341/n810825/c101434/c5167064/content.html',
-    'http://szs.mof.gov.cn/zhengcefabu/202001/t20200122_3463283.htm',
-    'http://www.chinatax.gov.cn/chinatax/n810341/n810825/c101434/c5163816/content.html',
-    'http://www.chinatax.gov.cn/chinatax/n362/c16209774/content.html',
-    'http://www.most.gov.cn/xxgk/xinxifenlei/fdzdgknr/fgzc/zcjd/202206/t20220607_181018.html',
-    'http://szs.mof.gov.cn/zhengcefabu/202206/t20220607_3816110.htm',
+    'https://www.lg.gov.cn/xxgk/zwgk/tzgg/content/post_12827844.html',
+    'https://stic.sz.gov.cn/gkmlpt/content/12/12826/post_12826107.html#4165',
+    'https://stic.sz.gov.cn/gkmlpt/content/12/12817/post_12817823.html#4165',
+    'https://stic.sz.gov.cn/xxgk/tzgg/content/post_12809327.html',
+    'https://stic.sz.gov.cn/gkmlpt/content/12/12809/post_12809968.html#4165',
 ]
-DEFAULT_VARIANTS_PER_URL = 1
+DEFAULT_VARIANTS_PER_URL = 5
 
 SOURCE_BY_HOST = {
     "www.szlh.gov.cn": "深圳市罗湖区相关部门",
@@ -193,6 +148,119 @@ FALLBACK_POLICY_BY_POST_ID = {
         "为支持拥有核心产品、成长性好、竞争力强、全球性或国内知名的人才服务机构入驻区人力资源服务产业园，南山区制定人力资源服务产业园入驻机构房租补贴项目操作规程。政策鼓励拥有核心产品、成长性好、竞争力强、全球性或国内知名的人才服务机构入驻区人力资源服务产业园。对经核准的入驻机构，在第一年和第二年每年按实际支付租金的70%给予最高100万元租金补贴，在第三年、第四年和第五年每年按实际支付租金的50%给予最高70万元租金补贴。申请房租补贴从首次申请起连续计算，以12个月为一个年度，每年申报一次。本项资助属于核准类项目，采取无偿资助方式和事后补贴制，受资助项目无需验收，受年度资金预算控制。项目开通是对企业2023年至2024年1年接续上一次申报周期的租金不含税给予补贴，以租金实际归属期为准，付款时间需在项目开通前。申请主体应为申请补贴时间段实际经营地在南山区的人力资源服务产业园入驻机构含分支机构，需履行相关数据申报义务、守法经营、诚实守信、有规范财务管理制度。本项目不得与辖区其他同类性质租赁补贴政策重复申报，也不得与前海合作区制定的同类性质扶持政策重复申报。被纳入严重失信主体名单或失信惩戒措施清单的，以及申请后项目实施地或数据申报地发生变化不再符合条件的，不予资助。"
     ),
 }
+
+
+
+# 当前 5 条政策的标题、主题和兜底原文要点。
+PLAN_BY_POST_ID.update({
+    "12827844": (
+        "龙岗低空经济补贴机会来了",
+        "低空飞行器研发制造企业、无人机运营服务商、低空测试基地、场景应用单位、低空经济产业链配套企业",
+        "低空经济产业链、运营费用补贴、测试基地支持、前沿技术研发扶持、载人航线奖励、项目实施地、业务真实性、投入费用和运营数据",
+        "营业执照、项目方案、研发资料、测试记录、飞行运营数据、场景应用合同、发票付款凭证、设备清单、成果证明和财务资料",
+    ),
+    "12826107": (
+        "研发费用资助别只看账本",
+        "持续开展研发活动的科技企业、高新技术企业、专精特新企业、软件信息服务企业和制造业研发主体",
+        "研发费用归集、研发项目管理、财务数据、税务口径、研发人员、知识产权、项目成果和数据申报情况",
+        "研发立项书、研发费用辅助账、财务报表、税务资料、研发人员名单、专利软著、检测报告、合同发票和付款凭证",
+    ),
+    "12817823": (
+        "概念验证中心资助机会来了",
+        "科技成果转化机构、高校院所、企业研发平台、概念验证中心、中小试基地和产业服务平台",
+        "概念验证、中试熟化、样品试制、工艺验证、公共服务能力、场地设备、专业团队、转化案例和绩效成果",
+        "建设方案、设备清单、场地证明、团队资料、服务合同、发票付款、案例证明、运营制度和成果转化记录",
+    ),
+    "12809327": (
+        "重点实验室组建资助来了",
+        "高校、科研机构、医疗卫生机构、科技企业和准备建设高水平研发平台的创新主体",
+        "研究方向、科研团队、场地条件、仪器设备、研发基础、承担项目、代表性成果、开放共享机制和建设目标",
+        "实验室建设方案、科研人员资料、设备清单、场地证明、论文专利、项目合同、经费投入、管理制度和成果应用材料",
+    ),
+    "12809968": (
+        "技术转移补贴机会来了",
+        "技术转移服务机构、成果转化平台、科技服务企业、技术交易相关企业和高校院所成果转化团队",
+        "技术交易收入、服务项目、转化案例、合同登记、专业人员、服务能力、绩效成果和合规运营",
+        "技术合同、合同登记证明、交易凭证、服务协议、发票付款、转化案例、知识产权资料、人员资质和财务数据",
+    ),
+})
+
+SOURCE_BY_POST_ID.update({
+    "12827844": "深圳市龙岗区相关部门",
+    "12826107": "深圳市科技创新局",
+    "12817823": "深圳市科技创新局",
+    "12809327": "深圳市科技创新局",
+    "12809968": "深圳市科技创新局",
+})
+
+SUBJECT_BY_POST_ID.update({
+    "12827844": "龙岗低空经济扶持",
+    "12826107": "深圳研发费用资助",
+    "12817823": "概念验证和中小试基地资助",
+    "12809327": "深圳重点实验室组建资助",
+    "12809968": "技术转移成果转化资助",
+})
+
+TITLE_VARIANTS_BY_POST_ID.update({
+    "12827844": [
+        "龙岗低空经济补贴机会来了",
+        "低空经济企业专项资金先评估",
+        "无人机项目扶持别错过",
+        "低空测试基地补贴怎么拿",
+        "龙岗低空企业申报要趁早",
+    ],
+    "12826107": [
+        "研发费用资助别只看账本",
+        "深圳研发投入也能拿补贴",
+        "研发费用专项资金先测算",
+        "科技企业研发补贴怎么申",
+        "研发台账做好补贴更稳",
+    ],
+    "12817823": [
+        "概念验证中心资助机会来了",
+        "中小试基地专项资金先评估",
+        "成果转化前先看中试补贴",
+        "验证中心认定别错过资助",
+        "科技成果中试补贴怎么拿",
+    ],
+    "12809327": [
+        "重点实验室组建资助来了",
+        "实验室专项资金先测条件",
+        "科研平台补贴机会别错过",
+        "重点实验室材料提前备",
+        "研发平台建设能否拿补贴",
+    ],
+    "12809968": [
+        "技术转移补贴机会来了",
+        "成果转化项目先测资助",
+        "技术交易补贴机会别漏看",
+        "转化服务机构专项资金来了",
+        "科技成果变现别漏补贴",
+    ],
+})
+
+FALLBACK_POLICY_BY_POST_ID.update({
+    "12827844": (
+        "龙岗区低空经济产业政策扶持企业申报指南（2026年度第一批）",
+        "龙岗区低空经济产业政策扶持企业申报指南面向低空经济产业链企业，重点支持低空飞行器研发制造、运营服务、测试验证、场景应用和产业配套等方向。政策原文涉及运营费用补贴、测试基地支持、前沿技术研发扶持、载人航线年度奖励等资金信号，其中测试基地每年最高300万元，前沿技术每年最高2500万元，载人航线年度奖励不超过1500万元。企业应关注申报主体、项目实施地、业务真实性、投入费用、运营数据、飞行场景、合同发票、付款凭证、测试记录、研发资料和成果证明等内容。",
+    ),
+    "12826107": (
+        "深圳市科技创新局关于发布《2026年度深圳市研发费用资助项目申请指南》的通知",
+        "深圳市研发费用资助项目重点面向符合条件的科技企业，支持企业持续开展研发活动。申报时通常要关注企业研发费用归集、研发项目管理、财务数据、税务口径、研发人员、知识产权、项目成果和数据申报情况。企业应提前整理研发立项、研发费用辅助账、审计或税务相关材料、研发成果、专利软著、人员名单、合同发票和付款凭证，判断研发投入是否具备申请资助的基础。",
+    ),
+    "12817823": (
+        "深圳市科技创新局关于发布《2026年度深圳市概念验证中心和中小试基地认定资助项目申请指南》的通知",
+        "深圳市概念验证中心和中小试基地认定资助项目聚焦科技成果从实验室走向市场的关键环节，支持概念验证、中试熟化、样品试制、工艺验证和公共服务能力建设。申报单位需要关注平台定位、服务能力、场地设备、专业团队、服务项目、转化案例、投入费用、运营制度和绩效成果等内容。企业或机构应提前沉淀建设方案、设备清单、服务合同、发票付款、案例证明、团队资料和成果转化记录。",
+    ),
+    "12809327": (
+        "深圳市科技创新局关于发布《2026年度深圳市重点实验室组建资助项目申请指南》的通知",
+        "深圳市重点实验室组建资助项目支持高校、科研机构、医疗卫生机构和企业围绕重点领域建设高水平科研平台。申报重点通常包括研究方向、科研团队、场地条件、仪器设备、研发基础、承担项目、代表性成果、开放共享机制和未来建设目标。申报主体应提前准备实验室建设方案、科研人员资料、设备清单、论文专利、项目合同、经费投入、场地证明、管理制度和成果应用材料。",
+    ),
+    "12809968": (
+        "深圳市科技创新局关于发布《2026年度技术转移和成果转化项目申请指南》的通知",
+        "深圳市技术转移和成果转化项目面向促进科技成果交易、转化服务、技术合同登记、成果落地和产业化服务的机构或企业。政策重点通常包括技术交易收入、服务项目、转化案例、合同登记、专业人员、服务能力、绩效成果和合规运营。企业应提前整理技术合同、交易凭证、服务协议、发票付款、成果转化说明、客户案例、知识产权资料、人员资质和财务数据，判断是否具备申报资助或奖励的条件。",
+    ),
+})
 
 
 PROMOTION_PLANS = [
@@ -895,7 +963,7 @@ def build_article_from_url(url: str, index: int) -> dict[str, object]:
     ]
     variant = (index - 1)
     STYLE_VARIATION_COUNT = 128
-    has_specific_plan = post_id_from_url(url) in PLAN_BY_POST_ID
+    has_specific_plan = post_id_from_url(url) == "12821085"
     style = variant % STYLE_VARIATION_COUNT
     if not has_specific_plan:
         style = 16 + (variant % (STYLE_VARIATION_COUNT - 16))
