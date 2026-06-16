@@ -542,12 +542,34 @@ def remove_old_title_years(text: str) -> str:
     return cleaned.strip(" ，,、：:；;-—_（）()[]【】")
 
 
+BRACKET_PAIRS = {"（": "）", "《": "》", "【": "】", "(": ")", "[": "]"}
+REVERSE_BRACKET_PAIRS = {closing: opening for opening, closing in BRACKET_PAIRS.items()}
+
+
+def remove_unbalanced_brackets(text: str) -> str:
+    """Drop unmatched bracket characters so generated titles/articles do not contain half brackets."""
+    chars = list(text or "")
+    stack: list[tuple[str, int]] = []
+    remove_indexes: set[int] = set()
+    for index, char in enumerate(chars):
+        if char in BRACKET_PAIRS:
+            stack.append((char, index))
+        elif char in REVERSE_BRACKET_PAIRS:
+            if stack and stack[-1][0] == REVERSE_BRACKET_PAIRS[char]:
+                stack.pop()
+            else:
+                remove_indexes.add(index)
+    remove_indexes.update(index for _, index in stack)
+    return "".join(char for index, char in enumerate(chars) if index not in remove_indexes)
+
+
 def normalize_article_title(title: str, fallback: str = "企业补贴机会，先做评估") -> str:
     cleaned = remove_old_title_years(title)
     if not cleaned:
         cleaned = remove_old_title_years(fallback) or "企业补贴机会，先做评估"
     cleaned = re.sub(r"\s+", "", cleaned).strip(" ，,、：:；;-—_（）()[]【】")
-    return cleaned[:TITLE_MAX_CHARS] or "企业补贴机会，先做评估"
+    cleaned = remove_unbalanced_brackets(cleaned[:TITLE_MAX_CHARS]).strip(" ，,、：:；;-—_（）()[]【】")
+    return cleaned or "企业补贴机会，先做评估"
 
 
 def make_article_title(plan_title: str, policy_title: str, index: int) -> str:
@@ -1258,13 +1280,14 @@ def build_article_from_url(url: str, index: int) -> dict[str, object]:
             if second_filler not in paragraphs:
                 paragraphs.insert(-1, second_filler)
                 article_chars = sum(len(paragraph) for paragraph in paragraphs)
+    paragraphs = [remove_unbalanced_brackets(paragraph).strip() for paragraph in paragraphs]
     return {
-        "title": title,
+        "title": remove_unbalanced_brackets(title),
         "source": source,
         "valid_period": "以政策原文及后续申报指南为准",
         "max_amount": "以政策原文及后续申报指南为准",
         "from_url": url,
-        "article_title": article_title,
+        "article_title": remove_unbalanced_brackets(article_title),
         "paragraphs": paragraphs,
     }
 
@@ -1327,13 +1350,14 @@ def build_article_from_policy(row: dict[str, object]) -> dict[str, object]:
         jinfu_guidance,
         f"如果你希望直接从企业自身情况出发，判断这条政策是否值得申报，并同步发现其他可叠加关注的区级、市级、省级和国家级补贴机会，{CTA}",
     ]
+    paragraphs = [remove_unbalanced_brackets(paragraph).strip() for paragraph in paragraphs]
     return {
-        "title": title,
+        "title": remove_unbalanced_brackets(title),
         "source": source,
         "valid_period": valid_period,
-        "max_amount": max_amount,
+        "max_amount": remove_unbalanced_brackets(max_amount),
         "from_url": row.get("from_url") or "",
-        "article_title": article_title,
+        "article_title": remove_unbalanced_brackets(article_title),
         "paragraphs": paragraphs,
     }
 
