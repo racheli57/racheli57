@@ -15,6 +15,9 @@ from zipfile import ZIP_DEFLATED, ZipFile
 OUTPUT_DIR = Path.cwd()
 CTA = "可关注「金赋补贴宝」，进入补贴平台，进行企业资质评估和政策匹配，获取更适合自身情况的补贴推荐清单。"
 TITLE_MAX_CHARS = 30
+TITLE_MIN_CHARS = 10
+MIN_ARTICLE_CHARS = 1000
+TARGET_ARTICLE_CHARS = 1080
 OLD_TITLE_YEAR_RE = re.compile(r"20(?:0\d|1\d|2[0-4])年?")
 
 # 默认只输出当前用户本轮提供的政策链接。
@@ -199,16 +202,16 @@ SUBJECT_BY_POST_ID.update({
 
 TITLE_VARIANTS_BY_POST_ID.update({
     "12827844": [
-        "龙岗低空补贴最高2500万",
+        "龙岗低空专项资金最高2500万",
         "无人机测试基地最高补300万",
-        "低空载人航线奖励别错过",
-        "低空企业申报前先体检",
-        "运营费用50%补贴怎么拿",
+        "低空载人航线1500万奖励",
+        "低空企业申报前先做体检",
+        "运营费用50%补贴这样准备",
         "专利标准齐了再冲低空补贴",
-        "5条载人航线也能拿奖励",
-        "低空项目材料别临时补",
-        "龙岗低空专项资金申报指南",
-        "低空经济企业拿补贴清单",
+        "5条载人航线奖励先测算",
+        "低空项目材料别等申报才补",
+        "龙岗低空经济专项资金清单",
+        "低空经济企业拿补贴路线图",
     ],
     "12826107": [
         "研发费用资助别只看账本",
@@ -893,6 +896,19 @@ def build_low_altitude_article(url: str, variant: int) -> dict[str, object]:
         ],
     ]
     paragraphs = [remove_unbalanced_brackets(p).strip() for p in variants[(variant - 1) % len(variants)]]
+    low_altitude_expansions = [
+        "再往细处看，低空经济申报不是单纯拼规模，而是拼企业能不能把项目过程讲完整。比如测试基地要证明公共服务能力，载人航线要证明稳定运营，前沿技术项目要证明科研实力和持续绩效。深圳金赋建议企业把这些要求提前拆成内部任务：业务部门负责项目事实，财务部门负责费用路径，法务或行政负责合同和信用资料，技术团队负责专利、标准、课题和成果说明。这样准备出来的材料更像一个完整项目，而不是零散附件。",
+        "金额越高的项目，越要提前做风险判断。前沿技术每年2500万元扶持看起来很有吸引力，但政策也写明了专利、标准、合作和综合改革试点任务等持续要求；载人航线奖励不超过1500万元，也离不开备案、飞行记录和第三方审计；测试基地最高300万元补贴，则需要把运营费用拆清楚。补贴平台能先帮企业把机会和风险放在一张表里，避免只盯最高金额，忽略后续绩效和材料压力。",
+        "对低空企业来说，这类专项资金还有一个现实价值：帮助企业把已经发生的研发、运营、测试、服务投入重新整理成可申报的政策资产。很多公司平时只把这些资料当作经营档案，没有按补贴申报的口径归类。深圳金赋会提醒企业重点沉淀三类内容：能证明主体符合低空经济方向的资质资料，能证明项目真实运营的合同记录，能证明费用和成果可核验的财务审计材料。",
+        "如果企业现在还没完全达标，也不代表没有价值。政策本身就是一张培育路线图：测试基地要补公共服务能力和审计资料，前沿技术要补专利、标准、课题和合作记录，载人航线要补备案、飞行记录和经营审计。企业可以先通过补贴平台做匹配评估，把今年能申、明年可培育、需要补齐的条件分开，后续遇到申报窗口时就不会手忙脚乱。",
+        "这批文章为什么反复提醒材料？因为补贴申报最终不是一句‘我们符合低空经济’就能通过，而是要让主管部门、审计机构和评审人员都能看懂项目价值。企业越早把项目名称、实施地点、费用归属、服务对象、技术成果、飞行或运营记录统一起来，越容易形成有说服力的申报包。想拿补贴，先把事实留住；想拿得稳，再把口径对齐。",
+    ]
+    fill_index = 0
+    while sum(len(paragraph) for paragraph in paragraphs) < TARGET_ARTICLE_CHARS and fill_index < len(low_altitude_expansions):
+        extra = low_altitude_expansions[(variant + fill_index - 1) % len(low_altitude_expansions)]
+        if extra not in paragraphs:
+            paragraphs.insert(-1, extra)
+        fill_index += 1
     return {
         "title": "龙岗区低空经济产业政策扶持企业申报指南（2026年度第一批）",
         "source": source,
@@ -1427,7 +1443,7 @@ def build_article_from_url(url: str, index: int) -> dict[str, object]:
         paragraphs.append(closing_options[(variant + 4) % len(closing_options)])
     article_chars = sum(len(paragraph) for paragraph in paragraphs)
     padding_round = 0
-    while article_chars < 900 and padding_round < 2:
+    while article_chars < TARGET_ARTICLE_CHARS and padding_round < 4:
         padding = padding_options[(variant + padding_round) % len(padding_options)]
         if padding in paragraphs:
             padding = extra_options[(variant + padding_round + 1) % len(extra_options)]
@@ -1436,7 +1452,7 @@ def build_article_from_url(url: str, index: int) -> dict[str, object]:
         paragraphs.insert(-1, padding)
         article_chars = sum(len(paragraph) for paragraph in paragraphs)
         padding_round += 1
-    if article_chars < 780:
+    if article_chars < MIN_ARTICLE_CHARS:
         concise_fillers = [
             f"这类政策最适合提前规划。企业可以把研发、人才、设备、市场、合规等高频投入统一放进年度补贴清单，先看哪些已经具备条件，哪些还需要继续养资料。",
             f"从拿补贴的角度看，政策机会不是单独一份通知，而是企业经营能力的侧面证明。项目事实、费用路径、成果资料和合规记录越清楚，平台判断越准确。",
@@ -1453,7 +1469,7 @@ def build_article_from_url(url: str, index: int) -> dict[str, object]:
         if filler not in paragraphs:
             paragraphs.insert(-1, filler)
             article_chars = sum(len(paragraph) for paragraph in paragraphs)
-        if article_chars < 700:
+        if article_chars < MIN_ARTICLE_CHARS:
             second_filler = concise_fillers[(variant + 3) % len(concise_fillers)]
             if second_filler not in paragraphs:
                 paragraphs.insert(-1, second_filler)
