@@ -640,6 +640,119 @@ def remove_unbalanced_brackets(text: str) -> str:
     return "".join(char for index, char in enumerate(chars) if index not in remove_indexes)
 
 
+
+PARAPHRASE_REPLACEMENTS = [
+    ("建议", ["不妨", "可以", "更适合", "最好"]),
+    ("提前", ["尽早", "先一步", "在窗口期前", "趁现在"]),
+    ("材料", ["资料", "证明文件", "申报依据", "支撑文件"]),
+    ("政策匹配", ["政策适配", "机会匹配", "政策筛选", "项目匹配"]),
+    ("资质评估", ["资质测评", "条件预判", "申报体检", "资格评估"]),
+    ("研发费用", ["研发投入", "研发经费", "研发支出", "研发费用"]),
+    ("项目资料", ["项目档案", "项目证据", "项目资料", "项目支撑"]),
+    ("费用归集", ["费用整理", "经费归集", "投入归集", "费用归集"]),
+    ("材料缺口", ["资料短板", "证明缺口", "材料缺口", "资料缺口"]),
+]
+
+
+def variant_phrase(text: str, seed: int) -> str:
+    """Lightly rewrite wording so same ideas do not become identical paragraphs without touching brand names."""
+    protected = {
+        "深圳金赋": "__JINFU__",
+        "金赋补贴宝": "__JINFU_CTA__",
+        "补贴平台": "__SUBSIDY_PLATFORM__",
+    }
+    rewritten = text
+    for source, token in protected.items():
+        rewritten = rewritten.replace(source, token)
+    for offset, (source, choices) in enumerate(PARAPHRASE_REPLACEMENTS):
+        if source in rewritten:
+            replacement = choices[(seed + offset) % len(choices)]
+            if replacement != source:
+                rewritten = rewritten.replace(source, replacement, 1)
+    for source, token in protected.items():
+        rewritten = rewritten.replace(token, source)
+    return rewritten
+
+
+def reorder_sentences(text: str, seed: int) -> str:
+    sentences = [part for part in re.split(r"(?<=[。！？])", text) if part]
+    if len(sentences) < 3:
+        return text
+    # Keep the opening sentence readable, but rotate the middle so duplicated paragraphs differ.
+    middle = sentences[1:-1]
+    shift = seed % len(middle)
+    if shift:
+        middle = middle[shift:] + middle[:shift]
+    return "".join([sentences[0], *middle, sentences[-1]])
+
+
+def cleanup_generated_wording(text: str) -> str:
+    fixes = {
+        "证明证明文件": "证明文件",
+        "证明申报依据": "证明材料",
+        "支撑文件清单": "材料清单",
+        "项目支撑文件": "项目资料",
+        "申报支撑文件": "申报材料",
+    }
+    cleaned = text
+    for bad, good in fixes.items():
+        cleaned = cleaned.replace(bad, good)
+    return cleaned
+
+
+def diversify_paragraph(text: str, seed: int, force_reorder: bool = False) -> str:
+    diversified = variant_phrase(text, seed)
+    if force_reorder or seed % 2:
+        diversified = reorder_sentences(diversified, seed)
+    return remove_unbalanced_brackets(cleanup_generated_wording(diversified)).strip()
+
+
+CTA_EXPANSIONS = [
+    "系统会先把研发增量、加计扣除记录、项目证据和材料缺口放在同一张清单里，企业再决定是否启动正式申报，节奏会稳很多。",
+    "评估后可以看到哪些资料已经能用、哪些还需要补强，也能顺手把高企、专精特新、成果转化等后续政策放进年度规划。",
+    "这样做的好处是先判断机会大小，再安排财务、研发和项目负责人分工，避免临近申报期才反复补证明。",
+    "如果暂时不满足条件，也能把差距记录下来，后续围绕研发台账、知识产权、费用归集继续培育。",
+    "企业不必把所有政策都追一遍，先让补贴平台筛出更匹配的方向，再把精力放在最值得推进的项目上。",
+    "一次评估也能帮助老板看清投入和政策资金之间的关系，让研发成本不只是账面支出，而是有机会形成资金回流。",
+    "后续如果政策窗口打开，企业可以直接沿着清单补材料、核金额、排节点，减少跨部门沟通成本。",
+    "对研发型企业来说，这也是一次年度资料体检，把分散在财务、研发、人事和知识产权部门的信息先串起来。",
+    "平台会根据企业画像持续更新推荐结果，后面有区级配套、市级专项或资质培育机会，也更容易及时发现。",
+    "先做轻量评估，再决定是否深度准备，既能保留拿补贴机会，也能控制申报投入。",
+]
+
+
+def expand_cta(paragraph: str, seed: int) -> str:
+    if "金赋补贴宝" not in paragraph:
+        return paragraph
+    expansion = CTA_EXPANSIONS[seed % len(CTA_EXPANSIONS)]
+    if expansion in paragraph:
+        expansion = CTA_EXPANSIONS[(seed + 3) % len(CTA_EXPANSIONS)]
+    return f"{paragraph}{expansion}"
+
+
+def polish_article_paragraphs(paragraphs: list[str], article_index: int, seen_paragraphs: set[str] | None = None) -> list[str]:
+    """Diversify wording, lengthen CTAs, and avoid exact repeated long paragraphs across a batch."""
+    polished: list[str] = []
+    local_seen: set[str] = set()
+    seen = seen_paragraphs if seen_paragraphs is not None else set()
+    for paragraph_index, paragraph in enumerate(paragraphs):
+        seed = article_index * 17 + paragraph_index * 5
+        candidate = expand_cta(paragraph, seed)
+        candidate = diversify_paragraph(candidate, seed)
+        attempts = 0
+        while len(candidate) > 80 and (candidate in seen or candidate in local_seen) and attempts < 6:
+            candidate = diversify_paragraph(candidate, seed + attempts + 1, force_reorder=True)
+            if attempts >= 2:
+                prefix_options = ["换个角度看，", "进一步说，", "落到企业操作上，", "从申报准备看，", "站在财务视角，", "回到项目本身，"]
+                candidate = prefix_options[(seed + attempts) % len(prefix_options)] + candidate
+            attempts += 1
+        if len(candidate) > 80:
+            seen.add(candidate)
+            local_seen.add(candidate)
+        polished.append(candidate)
+    return polished
+
+
 def normalize_article_title(title: str, fallback: str = "企业补贴机会，先做评估") -> str:
     cleaned = remove_old_title_years(title)
     if not cleaned:
@@ -1140,14 +1253,16 @@ def build_article_from_url(url: str, index: int) -> dict[str, object]:
     fetched_text = ""
     post_id = post_id_from_url(url)
     fallback = FALLBACK_POLICY_BY_POST_ID.get(post_id)
-    try:
-        fetched_title, fetched_text = fetch_url_text(url)
-    except (HTTPError, URLError, TimeoutError, OSError):
-        fetched_title, fetched_text = "", ""
     if fallback:
+        # Known policies already have curated title/text; skip network fetch for faster regeneration.
         fetched_title, fetched_text = fallback
-    elif not fetched_title or not fetched_text:
-        fetched_title, fetched_text = "", ""
+    else:
+        try:
+            fetched_title, fetched_text = fetch_url_text(url)
+        except (HTTPError, URLError, TimeoutError, OSError):
+            fetched_title, fetched_text = "", ""
+        if not fetched_title or not fetched_text:
+            fetched_title, fetched_text = "", ""
     policy_title = clean_policy_title(fetched_title)
     policy_signal = policy_excerpt(fetched_text)
     money_signal = subsidy_highlight(fetched_text)
@@ -1923,9 +2038,13 @@ def main() -> None:
     generated_docs = []
     used_titles: dict[str, int] = {}
     used_filenames: set[str] = set()
-    for article in articles:
+    seen_paragraphs: set[str] = set()
+    for article_index, article in enumerate(articles, start=1):
         article = dict(article)
         article["article_title"] = unique_article_title(str(article["article_title"]), used_titles)
+        raw_paragraphs = article.get("paragraphs", [])
+        assert isinstance(raw_paragraphs, list)
+        article["paragraphs"] = polish_article_paragraphs([str(p) for p in raw_paragraphs], article_index, seen_paragraphs)
         output_name = unique_docx_filename(str(article["article_title"]), used_filenames)
 
         output_path = output_dir / output_name
