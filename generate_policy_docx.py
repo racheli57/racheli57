@@ -983,6 +983,110 @@ def ensure_brand_cta(paragraphs: list[str], article_index: int) -> list[str]:
         paragraphs.append(addition)
     return paragraphs
 
+
+OPENING_MOODS = [
+    "先说个实在的判断：",
+    "如果把它放到企业经营里看，",
+    "这事别只交给资料员，",
+    "换成老板视角，",
+    "财务同事看到这里，可以先记一笔：",
+    "项目负责人更该关注的是，",
+    "说白了，",
+    "有个容易被忽略的细节：",
+    "别急着翻下一条政策，",
+    "从拿补贴的角度看，",
+    "更接地气一点讲，",
+    "这类项目最怕什么？",
+    "先别问能不能申，",
+    "真正要提前做的，是",
+    "如果企业已经做过相关工作，",
+    "把时间线拉长一点看，",
+    "别小看这个动作，",
+    "对经办人来说，",
+    "对管理层来说，",
+    "如果想少走弯路，",
+    "这不是一句口号，",
+    "把材料摊开来看，",
+    "先给企业提个醒：",
+    "这个机会值不值得追，",
+]
+
+
+def opening_key(text: str) -> str:
+    compact = re.sub(r"^[\s　‘’“”\'\"（(【\[]+", "", text or "")
+    compact = re.sub(r"[，。！？；：、,.!?;:\s].*$", "", compact[:24])
+    return compact[:10]
+
+
+def vary_article_paragraph_openings(paragraphs: list[str], article_index: int) -> list[str]:
+    """Make paragraph starts feel less templated inside one article.
+
+    Handwritten builders sometimes produce good policy detail but still start several
+    paragraphs with the same role label or structure. This pass only changes the
+    front door of long paragraphs: it rotates short conversational leads, trims
+    duplicate prefixes, and leaves brand/CTA wording intact.
+    """
+    varied: list[str] = []
+    local_counts: dict[str, int] = {}
+    role_prefix_re = re.compile(
+        r"^(财务同事|项目负责人|技术团队|质量负责人|老板|行政同事|市场团队|标准负责人|申报经办人|研发负责人|品牌负责人|运营团队|管理层|资料负责人|合规同事|业务部门)"
+        r"(先看这个点|可以这样拆|别漏这个细节|要提前留痕|先把资料排队|可以换个角度看|最好先算一笔账|别只看表面金额|要把证据链拉直|可以先做一次体检|更适合先核口径|要把时间线理清)，?"
+    )
+    for idx, paragraph in enumerate(paragraphs):
+        text = paragraph.strip()
+        if idx == 0 or len(text) < 90:
+            varied.append(text)
+            continue
+        text = role_prefix_re.sub("", text).lstrip("，,。；;：: ")
+        key = opening_key(text)
+        local_counts[key] = local_counts.get(key, 0) + 1
+        should_add_lead = local_counts[key] > 1 or idx % 2 == 0
+        if should_add_lead and not text.startswith(tuple(OPENING_MOODS)):
+            lead = OPENING_MOODS[(article_index * 7 + idx * 3) % len(OPENING_MOODS)]
+            if lead.endswith("是"):
+                text = f"{lead}{text}"
+            elif lead.endswith("？"):
+                text = f"{lead}{text}"
+            else:
+                text = f"{lead}{text}"
+        varied.append(remove_unbalanced_brackets(cleanup_generated_wording(text)).strip())
+    return varied
+
+
+def enforce_batch_opening_variety(
+    paragraphs: list[str],
+    article_index: int,
+    article_title: str,
+    opening_counts: dict[str, int],
+) -> list[str]:
+    """Final pass to prevent repeated paragraph openings across a generated batch."""
+    varied: list[str] = []
+    title_hint = re.sub(r"[，。！？；：、,.!?;:\s]+", "", article_title)[:8] or "这类项目"
+    leads = [
+        f"从{title_hint}看，",
+        f"围绕{title_hint}，",
+        f"拿{title_hint}来算，",
+        f"回到{title_hint}本身，",
+        f"企业看{title_hint}，",
+        f"如果盯住{title_hint}，",
+        f"把{title_hint}放进预算表，",
+        f"换到{title_hint}的场景，",
+        f"想借{title_hint}拿补贴，",
+        f"别让{title_hint}只停在文件里，",
+    ]
+    for idx, paragraph in enumerate(paragraphs):
+        text = paragraph.strip()
+        if len(text) < 50:
+            varied.append(text)
+            continue
+        key = opening_key(text)
+        opening_counts[key] = opening_counts.get(key, 0) + 1
+        if opening_counts[key] > 1 and not text.startswith(tuple(leads)):
+            lead = leads[(article_index + idx + opening_counts[key]) % len(leads)]
+            text = f"{lead}{text}"
+        varied.append(remove_unbalanced_brackets(cleanup_generated_wording(text)).strip())
+    return varied
+
 def normalize_article_title(title: str, fallback: str = "企业补贴机会，先做评估") -> str:
     cleaned = remove_old_title_years(title)
     if not cleaned:
@@ -2262,25 +2366,46 @@ def build_standards_article(url: str, variant: int) -> dict[str, object]:
         if extra not in paragraphs:
             paragraphs.insert(-1, extra)
         fill += 1
-    lead_subjects = [
-        "财务同事", "项目负责人", "技术团队", "质量负责人", "老板", "行政同事", "市场团队", "标准负责人",
-        "申报经办人", "研发负责人", "品牌负责人", "运营团队", "管理层", "资料负责人", "合规同事", "业务部门",
+    # Keep paragraph openings varied by tying them to the concrete project type
+    # and paragraph role. This avoids a whole batch starting with the same
+    # generic phrases such as “财务同事…” or “对已经做过标准工作的企业…”.
+    def strip_generic_start(value: str) -> str:
+        patterns = [
+            r"^先看企业最关心的金额。",
+            r"^材料才是申报成败的分水岭。",
+            r"^放到经营场景里看，",
+            r"^不过，",
+            r"^如果企业",
+            r"^企业可以先问自己几个问题：",
+            r"^深圳金赋",
+        ]
+        cleaned_value = value
+        for pattern in patterns:
+            cleaned_value = re.sub(pattern, "", cleaned_value).lstrip("，。；：、 ")
+        return cleaned_value or value
+
+    paragraph_opening_styles = [
+        lambda p: p,
+        lambda p: f"{primary[0]}先算资金账：{strip_generic_start(p)}",
+        lambda p: f"{primary[0]}材料怎么备？{strip_generic_start(p)}",
+        lambda p: f"做{primary[0]}的企业要留意，{strip_generic_start(p)}",
+        lambda p: f"顺手排查{secondary[0]}时，{strip_generic_start(p)}",
+        lambda p: f"别把{tertiary[0]}漏掉，{strip_generic_start(p)}",
+        lambda p: f"申报前先问一句：{strip_generic_start(p)}",
+        lambda p: f"想把标准成果变成补贴，{strip_generic_start(p)}",
+        lambda p: f"从资料柜翻到资金表，{strip_generic_start(p)}",
+        lambda p: f"换成客户能听懂的话，{strip_generic_start(p)}",
+        lambda p: f"这笔钱能不能拿稳，{strip_generic_start(p)}",
+        lambda p: f"把{primary[0]}放进年度清单，{strip_generic_start(p)}",
+        lambda p: f"最后看落地动作：{strip_generic_start(p)}",
     ]
-    lead_actions = [
-        "先看这个点", "可以这样拆", "别漏这个细节", "要提前留痕", "先把资料排队", "可以换个角度看",
-        "最好先算一笔账", "别只看表面金额", "要把证据链拉直", "可以先做一次体检", "更适合先核口径", "要把时间线理清",
-    ]
-    rhythm_leads = [f"{subject}{action}，" for action in lead_actions for subject in lead_subjects]
     varied_paragraphs: list[str] = []
     for paragraph_index, paragraph in enumerate(paragraphs):
         if paragraph_index == 0:
             varied_paragraphs.append(paragraph)
             continue
-        lead = rhythm_leads[((variant - 1) * 5 + paragraph_index) % len(rhythm_leads)]
-        if paragraph.startswith(tuple(rhythm_leads)):
-            varied_paragraphs.append(paragraph)
-        else:
-            varied_paragraphs.append(f"{lead}围绕{primary[0]}，{paragraph}")
+        style = paragraph_opening_styles[(paragraph_index + variant - 1) % len(paragraph_opening_styles)]
+        varied_paragraphs.append(style(paragraph))
     paragraphs = varied_paragraphs
     return {
         "title": "深圳市市场监督管理局深圳标准领域专项资金资助奖励操作规程",
@@ -3304,6 +3429,11 @@ def main() -> None:
                 preserve_sentence_order=False,
             )
         article["paragraphs"] = ensure_brand_cta(article["paragraphs"], article_index)
+        if not bool(article.get("skip_polish")):
+            article["paragraphs"] = vary_article_paragraph_openings(article["paragraphs"], article_index)
+        article["paragraphs"] = enforce_batch_opening_variety(
+            article["paragraphs"], article_index, str(article["article_title"]), opening_counts
+        )
         output_name = unique_docx_filename(str(article["article_title"]), used_filenames)
 
         output_path = output_dir / output_name
