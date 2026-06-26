@@ -2280,11 +2280,26 @@ def build_standards_article(url: str, variant: int) -> dict[str, object]:
         "补贴平台的作用不是简单把政策转发给企业，而是把‘能不能申、申哪一项、缺什么材料、金额大概多少’拆成清楚的问题。标准专项资金入口很多，先匹配再推进，会比临时翻文件稳得多。",
     ]
     hooks = [
-        f"标准做完就收进文件夹？有点亏。{primary[0]}这类成果，如果资料链条够完整，可能对应的不是一句荣誉介绍，而是真金白银的专项资金。",
-        f"别把标准化当成质量部门的内部工作。{primary[0]}背后有补贴、有奖励，也有企业对外展示实力的机会，关键看材料能不能把价值讲明白。",
-        f"老板看标准，常常看到的是行业话语权；财务看标准，更应该看到资金回流。{primary[0]}的资助口径已经很清楚，企业要做的是把证据拿出来。",
-        f"如果公司参与过标准、认证、培训或标准化活动，先别急着说‘这个离我们远’。{primary[0]}也许就是切入口，金额和材料都值得认真盘一遍。",
-        f"标准成果不是摆设。对很多深圳企业来说，{primary[0]}既能支撑品牌背书，也可能变成补贴平台里一条清晰的资金线索。",
+        f"{primary[0]}做完别急着归档，资金机会可能就在后面。",
+        f"{primary[0]}不是冷门材料，它有机会变成企业的补贴入口。",
+        f"{primary[0]}如果已经落地，别只让它服务品牌，也要看看资金口径。",
+        f"{primary[0]}看似专业，其实和企业拿补贴、做背书都有关。",
+        f"{primary[0]}别只写进介绍册，能不能匹配专项资金也值得算一算。",
+        f"{primary[0]}这件事，做过和会申报之间还差一套证据链。",
+        f"{primary[0]}不只是成果展示，整理得好就是一条资金线索。",
+        f"{primary[0]}如果材料齐，企业就别让补贴机会悄悄溜走。",
+        f"{primary[0]}背后可能藏着一笔钱，先别急着说用不上。",
+        f"{primary[0]}对企业的价值，可能比一份荣誉证书更实在。",
+        f"{primary[0]}做得早的企业，现在可以回头查查补贴空间。",
+        f"{primary[0]}别等窗口开启才翻资料，提前盘点更容易抢时间。",
+        f"{primary[0]}如果能证明应用成效，资金匹配就更有底气。",
+        f"{primary[0]}不是只有大企业能关注，中小企业也可能有入口。",
+        f"{primary[0]}一旦对应上政策分类，过去投入就有机会变成回流。",
+        f"{primary[0]}这类成果，最怕明明做了却没人整理。",
+        f"{primary[0]}要不要申，先看金额、角色和材料三件事。",
+        f"{primary[0]}如果已经形成成果，下一步就该看能否拿补贴。",
+        f"{primary[0]}不是摆在档案柜里的文件，它可以进入资金清单。",
+        f"{primary[0]}越早做资料体检，越不容易错过专项资金。",
     ]
     scenarios = [
         f"拿{primary[0]}来说，政策口径是{primary[1]}。这句话里有两个重点：一是金额有上限，二是企业角色很重要。主导、参与、获证、承办、培训、研究，路径不同，补贴金额和材料难度也不同。",
@@ -2304,21 +2319,29 @@ def build_standards_article(url: str, variant: int) -> dict[str, object]:
         f"标准化工作本来就能提升客户信任、投标竞争力和行业影响力。如果再把补贴政策用起来，企业就不只是‘做过标准’，而是把标准成果转成了经营层面的收益。",
         f"补贴平台会把企业资料拆成可匹配字段：有没有标准文本、有没有证书、有没有活动验收、有没有审计报告、有没有采用证明。字段越完整，匹配结果越清楚。",
     ]
+    service_lines = [
+        f"深圳金赋的服务不止是提醒企业‘有政策’，还会结合企业行业、标准成果、财务票据、认证证书和历史申报记录，判断这项补贴是马上申、继续培育，还是先放进下一轮储备。",
+        f"补贴平台适合先做一次轻量体检：企业把已有标准成果录入后，可以看到可能匹配的项目类别、金额区间、材料缺口和优先级，避免一上来就花大量时间写材料。",
+        f"如果企业标准成果比较多，深圳金赋会建议先做分层：金额高且资料齐的优先推进，金额高但证据弱的重点补材料，金额小但容易拿的可以作为快速项目处理。",
+        f"对没有专职政策团队的企业来说，补贴平台能把政策条款翻译成可执行动作：哪些材料找技术部门，哪些材料找财务，哪些证明要提前向合作方或协会补齐。",
+    ]
     closing_lines = [
         f"如果企业已经做过{primary[0]}，可以关注「金赋补贴宝」，进入补贴平台先做一次资质评估。把标准文本、证书、公告、活动记录和费用证明放进清单里，让深圳金赋帮你看看金额空间和材料缺口，别让标准成果只停在文件夹里。",
         f"想知道{primary[0]}能不能申，建议先关注「金赋补贴宝」，进入补贴平台做政策匹配。企业不需要一开始就把所有材料写成申报书，先看条件是否对得上、金额是否值得做、资料是否还缺，决策会轻松很多。",
         f"如果你们公司标准成果不少，却一直没人系统盘点，关注「金赋补贴宝」进入补贴平台，把标准、认证、培训、活动和人才资料先做一次体检。能申的尽快推进，暂时不成熟的也能纳入下一轮培育。",
         f"标准化投入已经发生了，就别让补贴机会擦肩而过。关注「金赋补贴宝」，进入补贴平台做企业资质评估和政策匹配，深圳金赋会帮企业把资金机会、材料短板和申报节奏看得更清楚。",
     ]
-    # Seven longer paragraphs: fewer blocks, richer content, and different starts.
+    # Seven longer paragraphs: fewer blocks, richer content, and concrete
+    # project-tied starts. The first sentence of every paragraph uses the
+    # current project category so batch articles do not share identical leads.
     starts = [
         hooks[(variant - 1) % len(hooks)],
-        scenarios[(variant + 1) % len(scenarios)],
-        proof_lines[(variant + 2) % len(proof_lines)],
-        company_lines[(variant - 1) % len(company_lines)],
-        scenarios[(variant + 3) % len(scenarios)].replace(primary[0], secondary[0], 1),
-        business_lines[(variant + 1) % len(business_lines)],
-        closing_lines[(variant - 1) % len(closing_lines)],
+        f"{primary[0]}先把金额算明白：{scenarios[0]}",
+        f"{primary[0]}材料别等窗口开了再找：{proof_lines[(variant + 2) % len(proof_lines)]}",
+        f"深圳金赋会这样看{primary[0]}：{company_lines[(variant - 1) % len(company_lines)]}{service_lines[(variant + 1) % len(service_lines)]}",
+        f"再顺手排查{secondary[0]}：除了{primary[0]}，{secondary[0]}也可能有空间，政策对应的是{secondary[1]}。不一定非要冲金额最高的一项，材料成熟度高的项目反而更适合先推进。",
+        f"落到经营上，{primary[0]}不是孤立动作：{business_lines[(variant + 1) % len(business_lines)]}",
+        f"最后给做{primary[0]}的企业一个提醒：{closing_lines[(variant - 1) % len(closing_lines)]}",
     ]
     paragraph_tails = [
         f"一句话，{primary[0]}不是单纯的专业标签，它可能是企业拿补贴、拿奖励、做品牌背书的共同入口。",
