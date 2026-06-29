@@ -4,7 +4,7 @@
 内置 build_ip_rights_article()，可一次生成 10 篇不同风格宣传稿，
 并同步输出 docx 文件与 generated_documents.md 汇总清单。
 
-文案仅包含政策规则、申报提示和通用企业出海维权场景，不嵌入任何特定公司名称、客户名单、项目编号、销售数据等业务资料信息。
+文案会结合可配置的公司业务资料（行业、产品、海外市场、知识产权资产和维权场景）生成；默认资料为示例化业务信息，不包含真实客户名单、项目编号、销售数据等敏感信息。
 """
 from __future__ import annotations
 
@@ -59,6 +59,31 @@ STYLES = [
     ("用政策资金放大企业海外维权价值", "成果转化型", "一次维权，不止解决一个案件"),
 ]
 
+
+@dataclass(frozen=True)
+class CompanyProfile:
+    """用于把政策推广文案与公司业务资料结合。"""
+
+    name: str
+    industry: str
+    products: str
+    overseas_markets: str
+    ip_assets: str
+    rights_scenario: str
+    compliance_basis: str
+
+
+DEFAULT_COMPANY_PROFILE = CompanyProfile(
+    name="深圳出海创新企业",
+    industry="智能硬件、消费电子与跨境数字服务",
+    products="自主品牌终端设备、配套软件平台、外观设计产品和海外电商运营服务",
+    overseas_markets="东南亚、欧洲、中东和拉美等重点市场",
+    ip_assets="境内外商标、发明及实用新型专利、外观设计专利、软件著作权和品牌素材版权",
+    rights_scenario="海外平台仿冒链接、商标抢注、专利侵权警告、经销渠道混淆和跨境纠纷应对",
+    compliance_basis="已建立知识产权台账、人员分工、合同合规审查、侵权预警和证据留存机制",
+)
+
+
 @dataclass(frozen=True)
 class Article:
     index: int
@@ -67,12 +92,20 @@ class Article:
     body: str
 
 
-def _paragraphs(style_name: str, hook: str, index: int) -> List[str]:
+def _paragraphs(style_name: str, hook: str, index: int, company: CompanyProfile) -> List[str]:
+    business_intro = (
+        f"以{company.name}为例，其业务覆盖{company.industry}，主要产品和服务包括{company.products}，"
+        f"海外布局聚焦{company.overseas_markets}，核心知识产权资产涵盖{company.ip_assets}。"
+    )
+    business_risk = (
+        f"企业在出海过程中常见的维权场景包括{company.rights_scenario}，"
+        f"内部管理基础则体现为{company.compliance_basis}。"
+    )
     angles = [
-        "深圳企业加速进入全球市场，专利、商标、著作权和商业秘密的保护半径也随之延伸。海外市场一旦发生侵权、抢注、诉讼或仲裁，企业往往需要投入律师费、调查费、公证认证费、翻译费和差旅协调成本。2026年度知识产权海外维权能力提升资助项目，正是面向这些真实出海场景推出的专项支持。",
+        "深圳企业加速进入全球市场，专利、商标、著作权和商业秘密的保护半径也随之延伸。" + business_intro + "海外市场一旦发生侵权、抢注、诉讼或仲裁，企业往往需要投入律师费、调查费、公证认证费、翻译费和差旅协调成本。2026年度知识产权海外维权能力提升资助项目，正是面向这些真实出海场景推出的专项支持。",
         "本项目的核心信号很明确：鼓励企业敢维权、会维权、善复盘。政策依据为《深圳市市场监督管理局知识产权领域专项资金操作规程》（深市监规〔2024〕5号），支持企业“走出去”，提升主动开展海外维权、积极应对海外纠纷的意识。对符合条件的海外知识产权维权项目，按实际支出成本给予资助，每个项目资助上限不超过200万元。",
         "需要特别注意的是，美国“337”调查案件不纳入本项目范围。项目获得的知识产权侵权相关保险赔付款、已经支付或承担的和解费用，应在核算时予以扣除。同一申请人每年度资助不超过1项，本项目年度资助总额不超过3000万元，因此企业既要重视材料质量，也要尽早梳理项目完整性。",
-        "哪些企业适合重点关注？首先，申请人应为依法登记注册的企业，在深圳市从事生产经营活动，并在深圳拥有稳定办公场所；其次，企业应建立较完善的知识产权保护制度，包括人员管理、合规管理、侵权预警或风险防控等机制。这意味着申报不只是提交一场纠纷的材料，更是在展示企业长期知识产权治理能力。",
+        "哪些企业适合重点关注？首先，申请人应为依法登记注册的企业，在深圳市从事生产经营活动，并在深圳拥有稳定办公场所；其次，企业应建立较完善的知识产权保护制度，包括人员管理、合规管理、侵权预警或风险防控等机制。" + business_risk + "这意味着申报不只是提交一场纠纷的材料，更是在展示企业长期知识产权治理能力。",
         "项目本身也有明确门槛：维权项目应当已经形成判决、仲裁裁决或和解协议，且相关文书没有载明申请人构成侵权；项目完成时间为上三年度1月1日起至申请截止日止，完成时间以判决、裁决或和解协议生效之日为准。企业在准备材料时，应优先核对生效日期、费用发生期间、付款凭证和项目对应关系。",
         "从传播价值看，政策鼓励具有示范意义的项目。项目应体现企业知识产权保护能力和海外维权水平的提升，对深圳相关产业具有借鉴作用，对深圳知识产权保护政策制定具有参考意义，或具备一定社会意义和影响。企业可以围绕案件背景、维权策略、证据组织、风险预警、团队协同和经验复盘来提炼亮点。",
         "申报时还需承诺，在不涉及商业秘密等敏感信息的前提下，同意将项目有关信息、研究成果、维权经验等向社会公开并供他人无偿使用。换句话说，优秀项目不仅能缓解企业成本压力，也可能成为行业样板，帮助更多深圳企业提升海外维权能力。",
@@ -89,11 +122,11 @@ def _paragraphs(style_name: str, hook: str, index: int) -> List[str]:
     return angles
 
 
-def build_ip_rights_article() -> List[Article]:
-    """生成 10 篇不同风格的知识产权海外维权资助宣传稿。"""
+def build_ip_rights_article(company: CompanyProfile = DEFAULT_COMPANY_PROFILE) -> List[Article]:
+    """生成 10 篇结合公司业务资料的知识产权海外维权资助宣传稿。"""
     articles: List[Article] = []
     for i, (title, style_name, hook) in enumerate(STYLES, start=1):
-        body = "\n\n".join(_paragraphs(style_name, hook, i))
+        body = "\n\n".join(_paragraphs(style_name, hook, i, company))
         articles.append(Article(i, title, style_name, body))
     return articles
 
@@ -131,9 +164,9 @@ def write_summary(articles: Iterable[Article], output_dir: Path, summary_path: P
     summary_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
-def generate(output_dir: Path = DEFAULT_OUTPUT_DIR, summary_path: Path = DEFAULT_SUMMARY) -> List[Path]:
+def generate(output_dir: Path = DEFAULT_OUTPUT_DIR, summary_path: Path = DEFAULT_SUMMARY, company: CompanyProfile = DEFAULT_COMPANY_PROFILE) -> List[Path]:
     output_dir.mkdir(parents=True, exist_ok=True)
-    articles = build_ip_rights_article()
+    articles = build_ip_rights_article(company)
     paths = []
     for article in articles:
         path = output_dir / f"{article.index:02d}_{_safe_filename(article.title)}.docx"
@@ -147,8 +180,24 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="批量生成知识产权海外维权资助推广 docx")
     parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR, help="docx 输出目录")
     parser.add_argument("--summary", type=Path, default=DEFAULT_SUMMARY, help="Markdown 汇总文件")
+    parser.add_argument("--company-name", default=DEFAULT_COMPANY_PROFILE.name, help="公司/主体名称，可用泛称")
+    parser.add_argument("--industry", default=DEFAULT_COMPANY_PROFILE.industry, help="公司行业与业务方向")
+    parser.add_argument("--products", default=DEFAULT_COMPANY_PROFILE.products, help="主要产品或服务")
+    parser.add_argument("--markets", default=DEFAULT_COMPANY_PROFILE.overseas_markets, help="海外市场布局")
+    parser.add_argument("--ip-assets", default=DEFAULT_COMPANY_PROFILE.ip_assets, help="知识产权资产")
+    parser.add_argument("--rights-scenario", default=DEFAULT_COMPANY_PROFILE.rights_scenario, help="海外维权业务场景")
+    parser.add_argument("--compliance-basis", default=DEFAULT_COMPANY_PROFILE.compliance_basis, help="知识产权管理制度基础")
     args = parser.parse_args()
-    paths = generate(args.output_dir, args.summary)
+    company = CompanyProfile(
+        name=args.company_name,
+        industry=args.industry,
+        products=args.products,
+        overseas_markets=args.markets,
+        ip_assets=args.ip_assets,
+        rights_scenario=args.rights_scenario,
+        compliance_basis=args.compliance_basis,
+    )
+    paths = generate(args.output_dir, args.summary, company)
     print(f"生成 {len(paths)} 个 docx 文件，汇总：{args.summary}")
 
 

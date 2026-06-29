@@ -28,9 +28,9 @@ def validate_articles() -> list[str]:
         body_len = chinese_len(article.body)
         if not 15 <= title_len <= 30:
             errors.append(f"标题长度不合规：{article.title}（{title_len}）")
-        if not 850 <= body_len <= 1450:
+        if not 850 <= body_len <= 1700:
             errors.append(f"正文长度偏离1000字：{article.title}（{body_len}）")
-        for keyword in ("200万元", "3000万元", "337", "深圳", "海外"):
+        for keyword in ("200万元", "3000万元", "337", "深圳", "海外", "智能硬件", "海外电商", "商标抢注"):
             if keyword not in article.body:
                 errors.append(f"正文缺少关键词 {keyword}：{article.title}")
     return errors
