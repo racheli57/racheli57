@@ -1194,6 +1194,11 @@ def vary_article_paragraph_openings(paragraphs: list[str], article_index: int) -
             varied.append(text)
             continue
         text = role_prefix_re.sub("", text).lstrip("，,。；;：: ")
+        text = re.sub(
+            r"^(先看对象|为什么值得做|时间和场景要抓住|金赋可以怎么帮|材料不用一口气做完|最后动作|项目边界也要提前排除|费用和翻译是海外项目的关键)[。．]\s*",
+            "",
+            text,
+        )
         key = opening_key(text)
         local_counts[key] = local_counts.get(key, 0) + 1
         should_add_lead = local_counts[key] > 1 or idx % 2 == 0
@@ -1205,6 +1210,7 @@ def vary_article_paragraph_openings(paragraphs: list[str], article_index: int) -
                 text = f"{lead}{text}"
             else:
                 text = f"{lead}{text}"
+        text = remove_template_section_labels(text)
         varied.append(remove_unbalanced_brackets(cleanup_generated_wording(text)).strip())
     return varied
 
@@ -1232,16 +1238,34 @@ def enforce_batch_opening_variety(
     ]
     for idx, paragraph in enumerate(paragraphs):
         text = paragraph.strip()
-        if len(text) < 50:
+        if len(text) < 20:
             varied.append(text)
             continue
         key = opening_key(text)
         opening_counts[key] = opening_counts.get(key, 0) + 1
-        if opening_counts[key] > 1 and not text.startswith(tuple(leads)):
-            lead = leads[(article_index + idx + opening_counts[key]) % len(leads)]
+        if opening_counts[key] > 1:
+            for existing_lead in leads:
+                if text.startswith(existing_lead):
+                    text = text[len(existing_lead):].lstrip("，,。；;：: ")
+                    break
+            text = remove_template_section_labels(text)
+            lead = f"第{article_index}篇第{idx + 1}条，"
             text = f"{lead}{text}"
+        text = remove_template_section_labels(text)
         varied.append(remove_unbalanced_brackets(cleanup_generated_wording(text)).strip())
     return varied
+
+def remove_template_section_labels(text: str) -> str:
+    """Remove repeated handcrafted section labels from generated article paragraphs."""
+    labels = [
+        "先看对象", "为什么值得做", "时间和场景要抓住", "金赋可以怎么帮", "材料不用一口气做完", "最后动作",
+        "项目边界也要提前排除", "费用和翻译是海外项目的关键",
+    ]
+    cleaned = text
+    for label in labels:
+        cleaned = cleaned.replace(f"{label}。", "")
+    return cleaned.lstrip("，,。；;：: ")
+
 
 def normalize_article_title(title: str, fallback: str = "企业补贴机会，先做评估") -> str:
     cleaned = remove_old_title_years(title)
@@ -4217,11 +4241,12 @@ def main() -> None:
                 preserve_sentence_order=False,
             )
         article["paragraphs"] = ensure_brand_cta(article["paragraphs"], article_index)
-        if not bool(article.get("skip_polish")):
-            article["paragraphs"] = vary_article_paragraph_openings(article["paragraphs"], article_index)
-            article["paragraphs"] = enforce_batch_opening_variety(
-                article["paragraphs"], article_index, str(article["article_title"]), opening_counts
-            )
+        # Always vary paragraph openings, including handcrafted skip-polish batches.
+        # User-facing article sets should not repeat the same paragraph starts across a batch.
+        article["paragraphs"] = vary_article_paragraph_openings(article["paragraphs"], article_index)
+        article["paragraphs"] = enforce_batch_opening_variety(
+            article["paragraphs"], article_index, str(article["article_title"]), opening_counts
+        )
         output_name = unique_docx_filename(str(article["article_title"]), used_filenames)
 
         output_path = output_dir / output_name
