@@ -3178,15 +3178,36 @@ def build_ip_system_article(url: str, variant: int) -> dict[str, object]:
     ]
     lead_index = (variant - 1) % 10
     cta = "可关注公众号「金赋补贴宝」进入补贴平台，先做企业资质评估和政策匹配，再决定是否进入正式申报准备。"
+    who_line = (
+        "谁适合看：依法登记注册、在深圳经营，有稳定工作场所、知识产权专职研究人员和较完整工作机制的企事业单位、社会组织或其他机构，都可以先判断匹配度。"
+    )
+    what_line = (
+        "看什么项目：本项目依据《深圳市市场监督管理局知识产权领域专项资金操作规程》（深市监规〔2024〕5号），支持知识产权保护规则研究、制度机制建设、典型案件数据分析、海外保护体系研究、大湾区规则融合等方向；每项按实际支出成本资助，最高20万元，年度总额不超过200万元。"
+    )
+    why_line = (
+        "为什么值得做：研究成果如果能填补规则空白、被采纳试点应用，或者对深圳知识产权保护体系建设有参考价值，就不只是内部资料，而可能成为企业能力、行业经验和政策项目的结合点。"
+    )
+    where_line = (
+        "在哪里办理和阅读：正式申报在广东政务服务网办理，审批进度和补正可到深圳市财政专项资金统一管理平台查看；企业前期想先判断机会，可以进入补贴平台做政策匹配。"
+    )
+    when_line = (
+        "什么时候做：本次申报时间为2026年6月22日9:00至2026年7月20日18:00；已完成项目的完成时间应为上年度1月1日起至申请截止日止，实施中项目要准备进展计划和费用支出计划。"
+    )
+    how_line = (
+        "怎么准备：申请表、项目进展或完成情况说明、原创声明、中国知网查重报告、可行性研究报告或成果报告、团队人员材料、投入经费说明和凭证、成果公开声明都要提前整理；已完成项目还要有绩效自评，投入、产出、效益等量化指标至少3个。"
+    )
+    compliance_line = (
+        "还要注意合规：项目名称不能直接照搬指南，申请材料要清晰可辨并加盖公章；申请人要正常经营，广东政务服务网账户需达到五级核验，资助申请主体、账户主体和银行开户名要一致，不接受中介代理申报。"
+    )
     paragraphs = [
         hooks[(variant - 1) % len(hooks)],
-        f"{fact_openers[lead_index]}{facts[(variant - 1) % len(facts)]}它看的不是一句口号，而是研究是否真实、费用是否清楚、成果是否能服务深圳知识产权保护。",
-        f"{audience_openers[lead_index]}{boss_lines[(variant + 1) % len(boss_lines)]}如果研究方向涉及算法、商业方法、数字技术、人工智能产出物、标准必要专利、海外商标或典型案件数据，就可以先做一次适配度评估。",
-        f"{material_openers[lead_index]}{materials[(variant + 1) % len(materials)]}建议企业把资料分成四类：主体和人员、研究过程、成果应用、费用凭证。四类资料能对上，后续写申报书会轻松很多。",
-        f"{company_openers[lead_index]}{company_lines[(variant - 1) % len(company_lines)]}尤其是研究类项目，补贴平台可以先把政策条件拆成问题清单，帮助老板、财务、项目负责人和知识产权同事对齐信息。",
-        f"{business_openers[lead_index]}{company_lines[(variant + 2) % len(company_lines)]}这和本项目很契合：政策要求有专职研究人员、工作机制、研究成果和公开价值，而企业往往缺的是把这些内容串起来的工具和方法。",
-        f"{risk_openers[lead_index]}{risks[(variant + 3) % len(risks)]}另外，同一事项不要重复申报，成果公开范围要提前确认，费用台账不要和其他项目混在一起。",
-        f"{action_openers[lead_index]}把{label}放进年度项目规划，同步盘点人员、制度、调研、案例、数据、成果和费用。研究类资助更看重逻辑闭环：为什么研究、怎么研究、形成什么成果、对深圳知识产权保护有什么参考作用。{cta}",
+        f"{audience_openers[lead_index]}{who_line}{boss_lines[(variant + 1) % len(boss_lines)]}",
+        f"{fact_openers[lead_index]}{what_line}重点方向包括算法、商业方法、数字技术、人工智能开源生态、人工智能产出物、标准必要专利、问题商标监测处置、企业海外商标注册保护链路等。",
+        f"{business_openers[lead_index]}{why_line}{company_lines[(variant + 2) % len(company_lines)]}",
+        f"{company_openers[lead_index]}{where_line}{company_lines[(variant - 1) % len(company_lines)]}尤其是研究类项目，补贴平台可以先把政策条件拆成问题清单，帮助老板、财务、项目负责人和知识产权同事对齐信息。",
+        f"{action_openers[lead_index]}{when_line}如果等到截止前才补材料，调研记录、查重报告、团队证明、费用凭证和盖章文件都容易卡住。",
+        f"{material_openers[lead_index]}{how_line}{compliance_line}",
+        f"{risk_openers[lead_index]}{risks[(variant + 3) % len(risks)]}另外，同一事项不要重复申报，成果公开范围要提前确认，费用台账不要和其他项目混在一起。{cta}",
     ]
     while sum(len(p) for p in paragraphs) < 980:
         paragraphs.insert(
