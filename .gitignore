@@ -1,0 +1,7 @@
+# Generated policy promotion artifacts
+/generated_policy_docs/
+/generated_documents.md
+
+# Python cache
+__pycache__/
+*.py[cod]
