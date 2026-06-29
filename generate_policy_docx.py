@@ -21,6 +21,10 @@ POLICY_NAME = "2026年度知识产权海外维权能力提升资助项目申报�
 DEFAULT_OUTPUT_DIR = Path("generated_policy_docs")
 DEFAULT_SUMMARY = Path("generated_documents.md")
 
+# 新增业务分支：深圳知识产权海外维权能力提升资助。
+# 保持原有批量推广文章生成入口不变，仅将本次政策作为一个业务分支挂载。
+IP_RIGHTS_BRANCH = "ip_rights_overseas_support_2026"
+
 POLICY_RULES = {
     "basis": "《深圳市市场监督管理局知识产权领域专项资金操作规程》（深市监规〔2024〕5号）",
     "support": "支持企业“走出去”，提升主动开展海外维权、积极应对海外纠纷的意识。",
@@ -164,9 +168,16 @@ def write_summary(articles: Iterable[Article], output_dir: Path, summary_path: P
     summary_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
+def build_articles_for_branch(branch: str = IP_RIGHTS_BRANCH, company: CompanyProfile = DEFAULT_COMPANY_PROFILE) -> List[Article]:
+    """按业务分支生成文章，便于在原批量生成框架中增量扩展新政策。"""
+    if branch != IP_RIGHTS_BRANCH:
+        raise ValueError(f"不支持的业务分支：{branch}")
+    return build_ip_rights_article(company)
+
+
 def generate(output_dir: Path = DEFAULT_OUTPUT_DIR, summary_path: Path = DEFAULT_SUMMARY, company: CompanyProfile = DEFAULT_COMPANY_PROFILE) -> List[Path]:
     output_dir.mkdir(parents=True, exist_ok=True)
-    articles = build_ip_rights_article(company)
+    articles = build_articles_for_branch(IP_RIGHTS_BRANCH, company)
     paths = []
     for article in articles:
         path = output_dir / f"{article.index:02d}_{_safe_filename(article.title)}.docx"
