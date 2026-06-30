@@ -1151,7 +1151,7 @@ OPENING_MOODS = [
     "项目负责人更该关注的是，",
     "说白了，",
     "有个容易被忽略的细节：",
-    "别急着翻下一条政策，",
+    "先把项目放进清单，",
     "从拿补贴的角度看，",
     "更接地气一点讲，",
     "这类项目最怕什么？",
@@ -3158,7 +3158,7 @@ def build_ip_overseas_article(url: str, variant: int) -> dict[str, object]:
         f"政策重点压缩成一句话：{who_lines[i]}{amount_service_lines[i]}",
         f"先看能不能搭上边：{what_lines[(i + 2) % 10]}{when_where_lines[i]}",
         f"老板只需要先抓三件事：项目结果、费用凭证、申报窗口。{amount_service_lines[i]}",
-        f"政策内容不用铺太长，核心是海外维权项目、最高200万元、2026年6月22日9:00至7月20日18:00窗口期。{what_lines[(i + 1) % 10]}",
+        f"核心信息先抓住：海外维权项目、最高200万元、2026年6月22日9:00至7月20日18:00窗口期。{what_lines[(i + 1) % 10]}",
         f"这项不是普惠补贴，项目要能证明真实维权、真实支出和能力提升。{when_where_lines[i]}",
         f"适合先看的企业很清楚：在深圳经营、已经完成海外维权、能拿出结果文书和费用材料。{amount_service_lines[i]}",
         f"别把政策读复杂了，先排除美国337调查，再看结果文书、费用扣减和材料完整度。{when_where_lines[i]}",
@@ -3167,7 +3167,7 @@ def build_ip_overseas_article(url: str, variant: int) -> dict[str, object]:
         f"政策窗口很短，受理机关是深圳市市场监督管理局，申报时间为2026年6月22日9:00至7月20日18:00。{amount_service_lines[i]}",
     ]
     business_pitch_lines = [
-        "深圳金赋更想帮企业做的是补贴机会管理，而不是只把政策原文转发给老板。补贴数据平台累计收录1100万条全国四级公开政策数据，企业录入基本信息后，可以先看到海外维权、外贸、知识产权、研发和品牌类政策之间的组合机会。",
+        "深圳金赋更想帮企业做的是补贴机会管理，而不是让企业停留在原文解读。补贴数据平台累计收录1100万条全国四级公开政策数据，企业录入基本信息后，可以先看到海外维权、外贸、知识产权、研发和品牌类政策之间的组合机会。",
         "很多出海企业真正缺的不是政策信息，而是把法务材料、财务凭证、海外业务过程和申报口径放到同一张表里的能力。金赋会先用补贴平台做体检，让企业知道哪些能直接用，哪些要补，哪些风险要提前排除。",
         "深圳金赋服务企业时，会把海外维权项目放进年度补贴地图里一起看。一个海外案件背后，可能还关联高企、专精特新、研发费用、外贸稳增长、品牌建设、知识产权保护等多条政策线索。",
         "对没有专职申报团队的中小企业来说，平台初筛很重要。老板不用先研究几十页指南，先把案件结果、费用台账、外文材料和制度文件放进系统，就能看到是否值得继续推进。",
@@ -3215,9 +3215,14 @@ def build_ip_overseas_article(url: str, variant: int) -> dict[str, object]:
         "老板只需要先做一个动作：把海外案卷和费用台账交给平台测一遍，能不能申、差什么材料、是否值得推进，很快就能看出方向。",
     ]
     time_notice = "受理机关是深圳市市场监督管理局，申报时间为2026年6月22日9:00至7月20日18:00，单个项目最高200万元。"
+    policy_brief = policy_brief_lines[i]
+    if "2026年6月22日" not in policy_brief or "受理机关" not in policy_brief:
+        policy_brief = f"{policy_brief}{time_notice}"
+    elif "200万元" not in policy_brief:
+        policy_brief = f"{policy_brief}单个项目最高200万元。"
     paragraphs = [
         hooks[i],
-        f"{policy_brief_lines[i]}{time_notice}",
+        policy_brief,
         f"从企业收益看，{why_lines[i]}{how_lines[(i + 3) % 10]}",
         business_pitch_lines[i],
         service_flow_lines[i],
