@@ -1143,27 +1143,27 @@ def ensure_brand_cta(paragraphs: list[str], article_index: int) -> list[str]:
 
 
 OPENING_MOODS = [
-    "先说个实在的判断：",
-    "如果把它放到企业经营里看，",
-    "这事别只交给资料员，",
-    "换成老板视角，",
-    "财务同事看到这里，可以先记一笔：",
-    "项目负责人更该关注的是，",
-    "说白了，",
-    "有个容易被忽略的细节：",
-    "材料先排个队，",
-    "从拿补贴的角度看，",
-    "更接地气一点讲，",
-    "这类项目最怕什么？",
-    "先别问能不能申，",
+    "先看企业最关心的点：",
+    "放到经营决策里看，",
+    "材料准备可以从清单开始：",
+    "企业可以先看三件事：",
+    "经办人可以先核对：",
+    "项目负责人要先确认：",
+    "换成企业能执行的动作，",
+    "容易被忽略的是，",
+    "材料先按清单排一遍，",
+    "从补贴测评角度看，",
+    "换成申报动作来看，",
+    "这类项目最怕材料散，",
+    "先别急着写申报书，",
     "重点可以这样看：",
-    "如果企业已经做过相关工作，",
-    "把时间线拉长一点看，",
-    "别小看这个动作，",
+    "如果企业已经有基础，",
+    "把准备周期拉长一点看，",
+    "这个动作值得提前做，",
     "对经办人来说，",
     "对管理层来说，",
     "如果想少走弯路，",
-    "这不是一句口号，",
+    "提交前要重点检查，",
     "把材料摊开来看，",
     "先给企业提个醒：",
     "这个机会值不值得追，",
@@ -1249,14 +1249,28 @@ def enforce_batch_opening_variety(
         key = opening_key(text)
         opening_counts[key] = opening_counts.get(key, 0) + 1
         if opening_counts[key] > 1:
-            for existing_lead in leads:
-                if text.startswith(existing_lead):
-                    text = text[len(existing_lead):].lstrip("，,。；;：: ")
-                    break
+            changed = True
+            while changed:
+                changed = False
+                for existing_lead in [*leads, *OPENING_MOODS]:
+                    if text.startswith(existing_lead):
+                        text = text[len(existing_lead):].lstrip("，,。；;：: ")
+                        changed = True
+                        break
             text = remove_template_section_labels(text)
-            article_topics = ["海外", "品牌", "费用", "材料", "窗口", "合规", "法务", "财务", "业务", "平台"]
-            paragraph_angles = ["提醒", "判断", "线索", "体检", "复盘", "清单", "核对", "规划", "建议", "动作"]
-            lead = f"{article_topics[(article_index - 1) % len(article_topics)]}{paragraph_angles[idx % len(paragraph_angles)]}，"
+            lead_options = [
+                "这一步建议先做判断：",
+                "材料可以这样理解：",
+                "企业要先看清楚：",
+                "准备时先抓重点：",
+                "深圳金赋建议先核对：",
+                "这类项目要先排清单：",
+                "申报前先把口径理顺：",
+                "内部协同时可以先明确：",
+                "窗口期前最好先确认：",
+                "从补贴平台测评看，",
+            ]
+            lead = lead_options[(article_index + idx) % len(lead_options)]
             text = f"{lead}{text}"
         text = remove_template_section_labels(text)
         varied.append(remove_unbalanced_brackets(cleanup_generated_wording(text)).strip())
@@ -3312,7 +3326,7 @@ def build_ip_overseas_article(url: str, variant: int) -> dict[str, object]:
         "从经营管理角度看，补贴申报不是孤立动作，而是把企业投入、成果和合规材料重新梳理一遍。深圳金赋希望帮企业把这些资料变成可复用资产，而不是每次政策来了都从零开始。",
     ]
     format_lines = [
-        "深圳金赋成立于2017年，总部在深圳，2021年通过国家高新技术企业认定。公司一直围绕‘让数据更好地服务客户’做产品，补贴平台的核心口号也很直接：智能匹配政策，助力企业成长。",
+        "深圳金赋成立于2017年，总部在深圳，2021年通过国家高新技术企业认定。公司一直围绕‘让数据更好地服务客户’做产品，补贴平台的产品广告语也很直接：智能匹配政策，助力企业成长。",
         "从数据底座看，深圳金赋补贴数据平台已累计收录1100万条国家、省、市、区县四级公开政策数据，并按产业、区域、企业阶段做标签整理，适合企业先做一次政策机会体检。",
         "从技术能力看，深圳金赋用大数据搜索、AI推荐、NLP政策解读和可信数据追溯能力，把冗长政策拆成企业能执行的清单，让老板不用先啃完整指南。",
         "从知识产权能力看，深圳金赋拥有7项授权发明专利、32项以上软件著作权、107份数据知识产权登记证书，更理解专利、商标、软件产品和政策材料之间的关系。",
