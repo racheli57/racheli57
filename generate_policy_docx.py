@@ -1126,6 +1126,8 @@ def ensure_brand_cta(paragraphs: list[str], article_index: int) -> list[str]:
     """Ensure every generated article keeps the brand CTA without repeating the same closing wording."""
     if any("补贴平台" in p for p in paragraphs) and any("金赋补贴宝" in p for p in paragraphs):
         return paragraphs
+    if any(("点赞" in p or "评论" in p) for p in paragraphs):
+        return paragraphs
     cta_options = [
         "企业也可以关注「金赋补贴宝」，进入补贴平台先做一次资质评估，把外资金额、主体口径和材料缺口放进同一张清单里看。",
         "如果想更快判断机会大小，可可关注公众号「金赋补贴宝」进入补贴平台，先看自身条件与政策门槛是否匹配。",
@@ -1191,7 +1193,10 @@ def vary_article_paragraph_openings(paragraphs: list[str], article_index: int) -
     for idx, paragraph in enumerate(paragraphs):
         text = paragraph.strip()
         if idx == 0 or len(text) < 90:
-            varied.append(text)
+            varied.append(remove_template_section_labels(text) if idx == len(paragraphs) - 1 else text)
+            continue
+        if idx == len(paragraphs) - 1:
+            varied.append(remove_template_section_labels(text))
             continue
         text = role_prefix_re.sub("", text).lstrip("，,。；;：: ")
         text = re.sub(
@@ -1238,7 +1243,7 @@ def enforce_batch_opening_variety(
     ]
     for idx, paragraph in enumerate(paragraphs):
         text = paragraph.strip()
-        if len(text) < 20:
+        if idx == len(paragraphs) - 1 or len(text) < 20:
             varied.append(text)
             continue
         key = opening_key(text)
@@ -1249,7 +1254,9 @@ def enforce_batch_opening_variety(
                     text = text[len(existing_lead):].lstrip("，,。；;：: ")
                     break
             text = remove_template_section_labels(text)
-            lead = f"第{article_index}篇第{idx + 1}条，"
+            article_topics = ["海外", "品牌", "费用", "材料", "窗口", "合规", "法务", "财务", "业务", "平台"]
+            paragraph_angles = ["提醒", "判断", "线索", "体检", "复盘", "清单", "核对", "规划", "建议", "动作"]
+            lead = f"{article_topics[(article_index - 1) % len(article_topics)]}{paragraph_angles[idx % len(paragraph_angles)]}，"
             text = f"{lead}{text}"
         text = remove_template_section_labels(text)
         varied.append(remove_unbalanced_brackets(cleanup_generated_wording(text)).strip())
@@ -2882,7 +2889,7 @@ def build_ip_rights_article(url: str, variant: int) -> dict[str, object]:
         "想把维权经验转成补贴机会，可关注公众号「金赋补贴宝」进入补贴平台；评论区留下案件类型，也可先做初步判断。",
         "可关注公众号「金赋补贴宝」进入补贴平台，先看政策适配度；如果内容有用，点个赞或评论咨询即可。",
         "企业老板想少走弯路，可关注公众号「金赋补贴宝」进入补贴平台，先拿一份维权补贴匹配清单。",
-        "可关注公众号「金赋补贴宝」进入补贴平台，系统先帮企业筛政策、看材料缺口；评论区留言也可以咨询。",
+        "想先做材料体检，可关注公众号「金赋补贴宝」进入补贴平台，系统先帮企业筛政策、看材料缺口。",
         "如果这篇正好说到你们的案件，可关注公众号「金赋补贴宝」进入补贴平台；点赞收藏后评论案件类型，方便进一步判断。",
     ]
     openers = [
@@ -3124,15 +3131,15 @@ def build_ip_overseas_article(url: str, variant: int) -> dict[str, object]:
         "最终动作很简单：先筛项目，再补材料，再决定是否正式申报，不要一开始就把所有流程压给企业。",
     ]
     ctas = [
-        "可关注公众号「金赋补贴宝」进入补贴平台，先测海外维权项目是否匹配；觉得有用可以点赞、收藏，评论区留言即可咨询。",
-        "想知道海外案件能不能申，可关注公众号「金赋补贴宝」进入补贴平台先做评估，也欢迎评论‘海外维权’获取初步建议。",
+        "企业可关注公众号「金赋补贴宝」进入补贴平台，先测海外维权项目是否匹配。",
+        "想知道海外案件能不能申，可以点赞或评论‘海外维权’，先获取初步建议。",
         "如果企业已经有海外判决、仲裁或和解协议，可关注公众号「金赋补贴宝」进入补贴平台，先看材料缺口和资助空间。",
-        "不确定美国337、保险赔付、和解费用怎么处理的，可关注公众号「金赋补贴宝」进入补贴平台，评论项目类型即可咨询。",
-        "可关注公众号「金赋补贴宝」进入补贴平台，把文书、费用、制度和翻译件先做一次体检；欢迎点赞评论咨询。",
+        "不确定美国337、保险赔付、和解费用怎么处理的，可以评论项目类型，先判断方向。",
+        "申报前可关注公众号「金赋补贴宝」进入补贴平台，把文书、费用、制度和翻译件先做一次体检。",
         "想把海外维权经验转成补贴机会，可关注公众号「金赋补贴宝」进入补贴平台，先拿一份材料清单。",
-        "可关注公众号「金赋补贴宝」进入补贴平台，系统先帮企业筛政策、看材料缺口；评论区留言也可以咨询。",
+        "想先做材料体检，可关注公众号「金赋补贴宝」进入补贴平台，系统先帮企业筛政策、看材料缺口。",
         "企业老板想少走弯路，可关注公众号「金赋补贴宝」进入补贴平台，先做海外维权补贴匹配。",
-        "如果这篇正好说到你们的海外案件，可关注公众号「金赋补贴宝」进入补贴平台，点赞收藏后评论案件类型。",
+        "如果这篇正好说到你们的海外案件，可以点赞收藏，也可以评论案件类型。",
         "出海企业别等截止前才找材料，可关注公众号「金赋补贴宝」进入补贴平台，先测再决定是否推进。",
     ]
     amount_service_lines = [
@@ -3350,7 +3357,7 @@ def build_ip_system_article(url: str, variant: int) -> dict[str, object]:
         "想把研究成果转成补贴机会，可关注公众号「金赋补贴宝」进入补贴平台；评论区留下行业方向，也可先做初步判断。",
         "可关注公众号「金赋补贴宝」进入补贴平台，先看政策适配度；如果内容有用，点个赞或评论咨询即可。",
         "企业老板想少走弯路，可关注公众号「金赋补贴宝」进入补贴平台，先拿一份政策匹配清单；欢迎点赞收藏后留言。",
-        "可关注公众号「金赋补贴宝」进入补贴平台，系统先帮企业筛政策、看材料缺口；评论区留言也可以咨询。",
+        "想先做材料体检，可关注公众号「金赋补贴宝」进入补贴平台，系统先帮企业筛政策、看材料缺口。",
         "如果这篇正好说到你们的项目，可关注公众号「金赋补贴宝」进入补贴平台；点赞收藏后评论项目类型，方便进一步判断。",
     ]
     cta = cta_options[lead_index]
