@@ -2656,12 +2656,12 @@ def build_foreign_investment_article(url: str, variant: int) -> dict[str, object
     ]
     policy_core = (
         f"{label}先看奖励空间：上年度实际使用外资不少于1000万美元，是这项奖励的第一道线；"
-        f"符合后按年度实际使用外资金额1%测算，单个企业或项目最高1000万元。"
+        f"申报时间为2026年6月16日开始；符合后按年度实际使用外资金额1%测算，单个企业或项目最高1000万元。"
         f"{fact_lines[(variant - 1) % len(fact_lines)]}"
     )
     scenario_lines = [
         f"不少企业外资到账后，注意力都放在经营扩张、团队搭建和市场开拓上，反而忘了把南山区域奖励一起算进年度资金盘。{label}如果已经有商务统计口径，先测奖励空间，比等通知临近再回头翻资料更省心。",
-        f"从企业负责人角度看，这项奖励最吸引人的地方不是条款多，而是数字清楚：1000万美元门槛、1%测算、最高1000万元封顶。{label}只要先把金额、主体和南山经营情况看清，就能判断有没有继续推进的价值。",
+        f"这项奖励最吸引人的地方不是条款多，而是数字清楚：1000万美元门槛、1%测算、最高1000万元封顶。{label}只要先把金额、主体和南山经营情况看清，就能判断有没有继续推进的价值。",
         f"外资企业常见的情况是财务、法务、商务各管一段信息，老板只知道‘外资到了’，却不知道还能不能对应区域奖励。{label}适合先做一次轻量测评，把机会大小、时间节奏和风险边界看明白。",
         f"如果企业今年还有研发投入、办公扩张、人才招聘或贷款成本，外资奖励不该单独看。{label}可以和研发补贴、贴息、设备补贴、人才政策一起排，资金规划会更接近真实经营。",
         f"很多项目不是没有机会，而是没有人把‘外资实缴、南山经营、商务统计、5年承诺’放到同一张图里。{label}先把这些关键点串起来，后面才知道该不该投入精力。",
@@ -2690,9 +2690,9 @@ def build_foreign_investment_article(url: str, variant: int) -> dict[str, object
     cta_lines = [
         f"如果想先知道{label}有没有机会，可关注公众号「金赋补贴宝」进入补贴平台，做一次外资奖励测评。先看奖励空间，再决定要不要继续推进，节奏会轻松很多。",
         f"{label}已经接近1000万美元门槛的企业，可以关注公众号「金赋补贴宝」进入补贴平台。把企业情况先测一遍，奖励、贴息和其他补贴机会一起看，更不容易漏项。",
-        f"不确定是否符合条件，也可以先关注公众号「金赋补贴宝」进入补贴平台做初筛。适合做的尽快排期，暂时不适合的也能留下后续规划方向。",
+        f"如果你身边也有南山外资企业，欢迎点赞或评论交流。先把奖励空间聊清楚，再看是否需要进一步测评。",
         f"想少走弯路，建议关注公众号「金赋补贴宝」进入补贴平台。深圳金赋会从政策匹配、奖励测算、申报节奏和风险提醒几个角度，帮企业先把方向看清。",
-        f"{label}想持续了解补贴机会，可关注公众号「金赋补贴宝」进入补贴平台。先做测评，再看是否推进，企业会更容易找到适合自己的资金路线。",
+        f"觉得这类外资奖励信息有用，也可以点赞或评论交流。{label}先看奖励空间，再决定是否推进，企业会更容易找到适合自己的资金路线。",
     ]
     style = (variant - 1) % 4
     if style == 0:
@@ -2718,7 +2718,7 @@ def build_foreign_investment_article(url: str, variant: int) -> dict[str, object
     elif style == 2:
         paragraphs = [
             hooks[(variant + 2) % len(hooks)],
-            f"先把数字看明白：1000万美元、1%、最高1000万元，这三组信息决定了{label}有没有继续测算的必要。{fact_lines[(variant + 1) % len(fact_lines)]}",
+            f"先把数字看明白：申报时间为2026年6月16日开始，1000万美元、1%、最高1000万元这三组信息，决定了{label}有没有继续测算的必要。{fact_lines[(variant + 1) % len(fact_lines)]}",
             plan_lines[(variant - 1) % len(plan_lines)],
             jinfu_lines[(variant + 2) % len(jinfu_lines)],
             scenario_lines[(variant + 3) % len(scenario_lines)],
@@ -2760,7 +2760,7 @@ def build_foreign_investment_article(url: str, variant: int) -> dict[str, object
     return {
         "title": "南山区外资项目奖励操作规程",
         "source": source,
-        "valid_period": "2026年度，具体以申报通知和主管部门要求为准",
+        "valid_period": "2026年度，申报时间自2026年6月16日开始，具体以申报通知和主管部门要求为准",
         "max_amount": "实际使用外资不少于1000万美元，按1%奖励，最高1000万元",
         "from_url": url,
         "article_title": remove_unbalanced_brackets(article_title),
