@@ -24,7 +24,7 @@ OLD_TITLE_YEAR_RE = re.compile(r"20(?:0\d|1\d|2[0-4])年?")
 POLICY_URLS = [
     'https://local.policy/content/post_11918698.html',
 ]
-DEFAULT_VARIANTS_PER_URL = 10
+DEFAULT_VARIANTS_PER_URL = 20
 
 SOURCE_BY_HOST = {
     "www.szlh.gov.cn": "深圳市罗湖区相关部门",
