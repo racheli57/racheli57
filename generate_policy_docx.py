@@ -2655,26 +2655,29 @@ def build_service_trade_article(url: str, variant: int) -> dict[str, object]:
     secondary = items[(variant + 3) % len(items)]
     tertiary = items[(variant + 6) % len(items)]
     hooks = [
-        f"{primary[0]}如果已经有海外客户和真实收汇，这次服务贸易奖励值得认真看一眼。",
-        f"做服务出口的企业，最怕订单做完了、收汇入账了，却没把补贴机会同步排进年度计划。",
-        f"深圳服务贸易企业今年有个很直接的机会，达标、排名靠前，就有机会拿到一次性奖励。",
-        f"不少企业盯着海外订单和回款，却忽略了服务出口额本身也可能对应专项资金奖励。",
-        f"如果企业正在做数字贸易、服务外包或检验检测出海，不妨先把2025年收汇数据翻出来看看。",
-        f"对于服务型出海企业来说，合同、收汇和系统填报不是简单资料，它们可能直接关系到奖励能不能申。",
+        f"企业在做{primary[0]}，又有海外客户和真实收汇，千万别把这次服务贸易奖励当成普通通知划走。",
+        f"订单签了、服务交付了、外汇也进账了，下一步就该看看这笔服务贸易奖励能不能接上。",
+        f"深圳服务贸易企业今年有个很直接的机会：达标、排名靠前，就有机会拿到一次性奖励。",
+        f"海外客户带来的不只是营收，也可能带来专项奖励入口，关键看服务出口额和资料链能不能对上。",
+        f"数字贸易、服务外包、检验检测出海企业注意了，2025年收汇数据现在就值得翻出来算一遍。",
+        f"服务型出海企业别只盯回款，合同、收汇和系统填报串起来，可能就是申报奖励的底气。",
     ]
     company_lines = [
-        "深圳金赋成立于2017年，总部在深圳，是国家高新技术企业，长期为企业提供政策数据服务和补贴申报辅导。补贴平台沉淀了1100万条全国四级公开政策数据，适合先帮企业做一轮政策匹配。",
-        "深圳金赋更擅长把企业看不懂的政策条件拆成可执行清单：业务属于哪一类、服务出口额够不够、收汇凭证齐不齐、系统填报有没有遗漏、同一事项会不会重复申报。",
-        "对服务贸易企业来说，深圳金赋补贴平台的价值不是简单提醒‘有政策’，而是把合同、银行入账、涉外收入申报单、审计报告和业务类型放在一起判断，先看机会，再看缺口。",
+        "深圳金赋成立于2017年，总部在深圳，是国家高新技术企业，长期做政策数据服务和补贴申报辅导。补贴平台沉淀了1100万条全国四级公开政策数据，企业把项目情况录进去，就能先看到更接近自身条件的机会清单。",
+        "深圳金赋更擅长把企业看不懂的政策条件拆成可执行动作：业务属于哪一类、服务出口额够不够、收汇凭证齐不齐、系统填报有没有遗漏、同一事项会不会重复申报。",
+        "对服务贸易企业来说，深圳金赋补贴平台不是简单转发政策，而是把合同、银行入账、涉外收入申报单、审计报告和业务类型放在一起判断，先看机会，再看缺口。",
         "补贴平台会把企业经营数据转成匹配字段，像行业类别、服务出口额、年度收汇、合同主体、是否关联交易、是否已在商务部系统填报，这些都能影响申报判断。",
+        "深圳金赋的优势在于数据和服务一起走：前端用补贴平台做政策匹配，后端围绕资料清单、文书说明和申报节奏做辅导，让企业不用自己埋头翻条文。",
     ]
     marketing_lines = [
         "老板关心的不是条文有多长，而是这笔奖励和企业手里的海外订单有没有关系。深圳金赋会先用数据测一遍，达标就尽快排节奏，接近门槛就先补关键资料。",
-        "这类机会适合先轻量测算，不用一上来就做成厚厚一册。企业先判断自己属于数字贸易、保险服务、检验检测、ITO还是KPO，再决定往哪个方向推进。",
+        "别一上来就被表格和附件劝退。先把企业属于数字贸易、保险服务、检验检测、ITO还是KPO判断清楚，再看服务出口额和收汇凭证，方向对了才不会白忙。",
         "服务出口项目最怕资料散在财务、业务、商务和法务手里。深圳金赋会把合同、收汇、系统填报和业务说明合成一张机会表，让企业一眼看到差在哪里。",
         "有海外客户、有跨境收入、有系统填报记录的企业，别把补贴当成离自己很远的事。越早把业务类型和收汇凭证对上，后面越容易少走弯路。",
         "深圳金赋常说一句话：政策不用硬啃，先看企业数据能不能对上。只要业务真实、收汇清楚、资料能闭环，就值得做一次补贴体检。",
         "服务贸易奖励不是只给大公司看的，很多成长型企业只差一次系统梳理。把客户、合同、回款、系统填报串起来，机会就会变得更清楚。",
+        "平台可以先做智能匹配，服务团队再帮企业看资料缺口。哪些合同能用、哪些收汇要标注、哪些说明要补，提前理清会省下很多沟通成本。",
+        "企业不用安排专人深挖政策条文，先让深圳金赋补贴平台做一次匹配，再决定要不要进入申报准备，会更省心也更稳。",
     ]
     risk_lines = [
         "要注意，政策按2025年1月1日至2025年12月31日实际服务出口额排名，每个支持内容最多不超过10家，且受年度预算控制；同一年度每个支持方向只能申报一个项目。",
@@ -2683,7 +2686,7 @@ def build_service_trade_article(url: str, variant: int) -> dict[str, object]:
         "申报不是只看一个最高金额，还要看信用状态、是否重复申报、收汇是否在规定年度、纸质资料和系统信息是否一致。任何一个环节散掉，都可能影响审核。",
     ]
     ctas = [
-        f"如果你们公司正在做{primary[0]}，可以关注「金赋补贴宝」进入补贴平台，先做一次服务贸易奖励匹配。深圳金赋会帮企业把业务方向、收汇门槛、资料缺口和申报节奏梳理清楚，再决定是否推进。",
+        f"如果你们公司正在做{primary[0]}，可以关注「金赋补贴宝」进入补贴平台，先录入服务出口和收汇信息做一次奖励匹配。深圳金赋会帮企业把业务方向、收汇门槛、资料缺口和申报节奏梳理清楚，再决定是否推进。",
         f"想知道{primary[0]}能不能申，可关注「金赋补贴宝」进入补贴平台做企业资质评估。把服务出口额、合同、涉外收入申报单和银行入账单先放进清单里，机会和短板会更直观。",
         f"如果这篇对你判断{primary[0]}有帮助，欢迎点赞或在评论区留下企业所属行业。深圳金赋后续会继续用更通俗的方式拆解服务贸易、外贸和跨境服务相关补贴。",
         f"做服务出口的企业可以先收藏，也欢迎评论区说说你们属于数字贸易、ITO、KPO还是检验检测。深圳金赋会继续整理企业看得懂、用得上的补贴内容。",
@@ -2719,6 +2722,7 @@ def build_service_trade_article(url: str, variant: int) -> dict[str, object]:
         "article_title": remove_unbalanced_brackets(article_title),
         "paragraphs": [remove_unbalanced_brackets(cleanup_generated_wording(p)).strip() for p in paragraphs],
         "skip_polish": True,
+        "skip_opening_variation": True,
     }
 
 
@@ -4696,12 +4700,13 @@ def main() -> None:
                 preserve_sentence_order=False,
             )
         article["paragraphs"] = ensure_brand_cta(article["paragraphs"], article_index)
-        # Always vary paragraph openings, including handcrafted skip-polish batches.
-        # User-facing article sets should not repeat the same paragraph starts across a batch.
-        article["paragraphs"] = vary_article_paragraph_openings(article["paragraphs"], article_index)
-        article["paragraphs"] = enforce_batch_opening_variety(
-            article["paragraphs"], article_index, str(article["article_title"]), opening_counts
-        )
+        # Always vary paragraph openings, including handcrafted skip-polish batches,
+        # unless a specialized builder already controls its own lead rhythm.
+        if not bool(article.get("skip_opening_variation")):
+            article["paragraphs"] = vary_article_paragraph_openings(article["paragraphs"], article_index)
+            article["paragraphs"] = enforce_batch_opening_variety(
+                article["paragraphs"], article_index, str(article["article_title"]), opening_counts
+            )
         output_name = unique_docx_filename(str(article["article_title"]), used_filenames)
 
         output_path = output_dir / output_name
