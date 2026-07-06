@@ -2722,11 +2722,11 @@ def build_service_trade_article(url: str, variant: int) -> dict[str, object]:
         "深圳市商务局受理本项目，网络填报时间为2026年7月3日至7月30日18:00，纸质资料提交时间为2026年7月6日至8月3日17:30。",
     ]
     threshold_lines = [
-        f"{primary[0]}重点看{primary[1]}，排名靠前可争取{primary[2]}。如果企业还涉及{secondary[0]}，也可以顺手测一下，那个方向要求是{secondary[1]}，对应{secondary[2]}。",
-        f"{primary[0]}对应{primary[1]}，达标且排名靠前可争取{primary[2]}。{secondary[0]}也别漏，门槛是{secondary[1]}，对应{secondary[2]}。",
-        f"这项奖励不能只凭感觉判断，{primary[0]}要先对照{primary[1]}，再看企业排名；同时可顺手评估{secondary[0]}是否达到{secondary[1]}。",
-        f"金额很直观，{primary[0]}方向符合条件可争取{primary[2]}，关键看{primary[1]}是否达标。业务线更复杂的企业，{secondary[0]}也可以一起测算。",
-        f"企业不用先背条文，先把{primary[0]}对应的{primary[1]}核清楚，再看{secondary[0]}是否也满足{secondary[1]}，判断会快很多。",
+        f"{primary[0]}重点看{primary[1]}，排名靠前可争取{primary[2]}。如果企业还有其他服务出口业务，可以放到同一轮测评里一起判断。",
+        f"{primary[0]}对应{primary[1]}，达标且排名靠前可争取{primary[2]}。业务线比较多的企业，建议先分清主方向，别一开始就把口径混在一起。",
+        f"这项奖励不能只凭感觉判断，{primary[0]}要先对照{primary[1]}，再看企业排名和年度收汇情况。",
+        f"金额很直观，{primary[0]}方向符合条件可争取{primary[2]}，关键看{primary[1]}是否达标。",
+        f"企业不用先背条文，先把{primary[0]}对应的{primary[1]}核清楚，判断会快很多。",
     ]
     proof_lines = [
         "合同、收汇和业务方向不用写得很复杂，但要能讲清企业确实在做服务出口。",
@@ -2746,19 +2746,23 @@ def build_service_trade_article(url: str, variant: int) -> dict[str, object]:
         f"{hooks[(variant - 1) % len(hooks)]}{marketing_lines[(variant + 1) % len(marketing_lines)]}",
         f"{audience_lines[(variant - 1) % len(audience_lines)]}{time_lines[(variant + 1) % len(time_lines)]}这篇主要写给老板、财务和外贸负责人看，先判断业务类型、收汇金额和申报窗口，后面再安排具体申报准备。",
         f"{threshold_lines[(variant - 1) % len(threshold_lines)]}不用把政策背下来，先看2025年服务出口额、商务部系统填报和重复申报风险三个关键点就够了。",
-        f"{style_openers[variant % len(style_openers)]}{company_lines[(variant - 1) % len(company_lines)]}{marketing_lines[(variant + 2) % len(marketing_lines)]}",
-        f"{style_openers[(variant + 2) % len(style_openers)]}{risk_lines[(variant - 1) % len(risk_lines)]}{proof_lines[(variant + 3) % len(proof_lines)]}",
+        f"{style_openers[variant % len(style_openers)]}{company_lines[(variant - 1) % len(company_lines)]}",
+        f"{marketing_lines[(variant + 2) % len(marketing_lines)]}",
+        f"{style_openers[(variant + 2) % len(style_openers)]}{risk_lines[(variant - 1) % len(risk_lines)]}",
+        f"{proof_lines[(variant + 3) % len(proof_lines)]}",
         f"{example_lines[(variant - 1) % len(example_lines)]}",
         f"{ctas[(variant - 1) % len(ctas)]}",
     ]
     expanders = [
-        f"另外，{tertiary[0]}也可以一并测算，门槛是{tertiary[1]}，对应{tertiary[2]}。服务出口业务越多，越需要把业务线分清楚，别把不同方向混在一张表里。",
+        f"另外，{tertiary[0]}也可以一并测算。服务出口业务越多，越需要把业务线分清楚，别把不同方向混在一张表里。",
         "深圳金赋补贴平台会先把可申方向排成优先级，金额空间大、基础条件更清楚的先推进，暂时不成熟的先放进培育清单。",
         "这样做的好处很直接，企业不用反复猜政策口径，先看匹配结果，再决定投入多少精力。",
+        "如果企业同时做多个海外项目，建议先把核心收入方向挑出来，不要让申报判断变得又长又散。",
     ]
     expand_index = 0
     while sum(len(p) for p in paragraphs) < MIN_ARTICLE_CHARS:
-        paragraphs[3] += expanders[expand_index % len(expanders)]
+        target = 3 + (expand_index % 4)
+        paragraphs[target] += expanders[expand_index % len(expanders)]
         expand_index += 1
     return {
         "title": "深圳市商务局2026年服务贸易发展扶持计划（服务贸易创新发展扶持项目）申报指南",
