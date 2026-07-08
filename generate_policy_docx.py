@@ -403,25 +403,25 @@ SUBJECT_BY_POST_ID.update({
 
 TITLE_VARIANTS_BY_POST_ID.update({
     "20260007": [
-        "AI算力服务机构入库机会来了别错过这轮窗口",
-        "深圳训力券服务机构现在可以申报了别错过",
+        "AI算力服务机构入库窗口已打开别错过",
+        "深圳训力券服务机构现在可以申报入库了",
         "有300P算力的机构先看这项入库机会",
-        "算力服务平台别漏深圳训力券窗口机会来了",
+        "算力服务平台别只停在自用阶段要转化出来",
         "AI算力服务商今年可冲入库资格通道开启",
         "训力券入库窗口7月24日截止别拖到最后",
-        "深圳智能算力机构先做一次入库测评更稳",
-        "有IDC资质的算力机构重点关注这次机会",
-        "AI训练算力服务机构机会请收好别错过",
+        "深圳智能算力机构先做入库测评更稳妥一点",
+        "有IDC资质的机构重点看训力券入口机会",
+        "AI训练算力服务能力可以变成新入口机会",
         "科技企业算力服务能力别只自用要转化出来",
-        "训力券服务事项新增也要抓紧看窗口期",
-        "深圳AI算力资源可转成服务入口机会来了",
-        "智能算力平台入库先做资格判断更稳妥",
-        "算力服务机构别等截止前才准备入库事项",
-        "300P以上算力机构可先测机会窗口期",
+        "新增训力券服务事项也要抓紧看窗口期提醒",
+        "深圳AI算力资源可接入服务生态入口机会",
+        "智能算力平台入库先判断资格更稳妥一点",
+        "算力机构别等截止前才想起来入库评估呀",
+        "300P以上算力机构先测入库机会窗口",
         "深圳AI产业服务入口又有新窗口开放了",
-        "训力券服务机构入库怎么判断更稳一点",
-        "算力服务收费标准清楚更好推进入库事项",
-        "科技创新局训力券入库窗口已经开启了",
+        "训力券服务机构入库稳不稳先判断清楚点",
+        "收费标准清楚的算力服务更好推进入库事项",
+        "科技创新局训力券入库窗口已正式开启了",
         "深圳算力服务机构这次机会很实在别漏掉",
     ],
 })
@@ -2793,7 +2793,7 @@ def build_service_trade_article(url: str, variant: int) -> dict[str, object]:
     ]
     paragraphs = [
         f"{hooks[(variant - 1) % len(hooks)]}{marketing_lines[(variant + 1) % len(marketing_lines)]}",
-        f"{audience_lines[(variant - 1) % len(audience_lines)]}{time_lines[(variant + 1) % len(time_lines)]}这篇主要写给老板、财务和外贸负责人看，先判断业务类型、收汇金额和申报窗口，后面再安排具体申报准备。",
+        f"{audience_lines[(variant - 1) % len(audience_lines)]}{time_lines[(variant + 1) % len(time_lines)]}老板、财务和外贸负责人可以先把业务类型、收汇金额和申报窗口核清楚，后面再安排具体申报准备。",
         f"{threshold_lines[(variant - 1) % len(threshold_lines)]}不用把政策背下来，先看2025年服务出口额、商务部系统填报和重复申报风险三个关键点就够了。",
         f"{style_openers[variant % len(style_openers)]}{company_lines[(variant - 1) % len(company_lines)]}",
         f"{marketing_lines[(variant + 2) % len(marketing_lines)]}",
@@ -2897,7 +2897,7 @@ def build_training_power_article(url: str, variant: int) -> dict[str, object]:
     non_time_benefits = [benefit_lines[i] for i in (0, 1, 3, 4)]
     paragraphs = [
         f"{hooks[(variant - 1) % len(hooks)]}{non_time_benefits[(variant - 1) % len(non_time_benefits)]}",
-        f"{time_lines[(variant - 1) % len(time_lines)]}这篇主要写给算力机构负责人、科技项目负责人和平台运营团队看，先判断适不适合入库，再看怎么把服务能力讲清楚。",
+        f"{time_lines[(variant - 1) % len(time_lines)]}算力机构负责人、科技项目负责人和平台运营团队可以先判断适不适合入库，再看怎么把服务能力讲清楚。",
         f"{non_time_benefits[(variant + 1) % len(non_time_benefits)]}简单说，企业要把算力能力、服务平台和服务对象对上，别一开始就陷入资料细节。",
         f"{company_lines[(variant - 1) % len(company_lines)]}",
         f"{company_lines[(variant + 2) % len(company_lines)]}{risk_lines[(variant - 1) % len(risk_lines)]}",
