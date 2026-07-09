@@ -22,9 +22,12 @@ OLD_TITLE_YEAR_RE = re.compile(r"20(?:0\d|1\d|2[0-4])年?")
 
 # 默认只输出当前用户本轮提供的政策链接。
 POLICY_URLS = [
-    'https://local.policy/content/post_20260007.html',
+    'https://gdstc.gd.gov.cn/zwgk_n/tzgg/content/post_4891688.html',
 ]
 DEFAULT_VARIANTS_PER_URL = 20
+VARIANTS_BY_POST_ID = {
+    "4891688": 10,
+}
 
 SOURCE_BY_HOST = {
     "www.szlh.gov.cn": "深圳市罗湖区相关部门",
@@ -430,6 +433,45 @@ FALLBACK_POLICY_BY_POST_ID.update({
     "20260007": (
         "深圳市科技创新局2026年度深圳市训力券服务机构入库项目申请指南",
         "本项目面向在深圳市含深汕特别合作区依法经营、具有独立法人资格的智能算力服务机构，或具备较强服务能力并在深圳设立分支机构的相关机构，支持其进入深圳市训力券服务机构库，接受和兑现训力券，或已入库服务机构新增服务事项。申请单位需具备智能算力服务资质，包括工信部颁发的增值电信业务经营许可证IDC/ISP，具备在深圳开展智能算力服务的基础，能提供300P FLOPS（FP16）（含）以上智能算力规模，服务平台具备智能算力使用计量日志功能，并有明确服务内容、服务规范及收费标准。入库数量无数量限制，有效期自认定之日起至2026年12月31日。申请单位不能同时申请训力券服务机构入库和申领训力券，不得委托中介机构申报，不存在被限制申请财政性资金项目惩戒情形。受理机关和决定机关为深圳市科技创新局，受理时间为2026年6月25日至2026年7月24日18:00，申请单位通过深圳市科技业务管理系统在线填报。"
+    ),
+})
+
+PLAN_BY_POST_ID.update({
+    "4891688": (
+        "广东省基础与应用基础研究基金项目",
+        "广东省基金依托单位、科研团队、青年科研人员以及有基础研究布局的高校、科研院所和企业研发机构",
+        "省自然科学基金、省市联合基金、企业联合基金、行业联合基金、青年基金、重点项目、基础研究、科研诚信",
+        "依托单位资格、项目申请书、科研基础、合作研究协议、伦理审查意见、经费管理制度和科研诚信承诺",
+    ),
+})
+
+SOURCE_BY_POST_ID.update({
+    "4891688": "广东省科学技术厅",
+})
+
+SUBJECT_BY_POST_ID.update({
+    "4891688": "广东省基础与应用基础研究基金项目",
+})
+
+TITLE_VARIANTS_BY_POST_ID.update({
+    "4891688": [
+        "广东科研项目申报别只盯通知先规划",
+        "省基金机会科研团队先看方向匹配",
+        "基础研究团队今年项目储备要做足",
+        "青年科研人员别漏广东省基金机会",
+        "企业研发机构也能关注基础研究项目",
+        "科研项目别只写申请书更要提前规划",
+        "广东省基金申报可以用经营思路看",
+        "有科研基础的单位先做项目诊断清单",
+        "省市联合基金适合哪些科研团队关注",
+        "科研团队项目储备现在就该系统梳理",
+    ],
+})
+
+FALLBACK_POLICY_BY_POST_ID.update({
+    "4891688": (
+        "广东省基础与应用基础研究基金委员会关于组织申报2026年广东省基础与应用基础研究基金项目的通知",
+        "本通知由广东省基础与应用基础研究基金委员会发布，围绕2026年广东省基础与应用基础研究基金项目组织申报工作，分批推进省自然科学基金、省市联合基金、企业联合基金和行业联合基金等项目申报。项目面向已注册具备省基金项目申报资格的依托单位，申请人2026年只限提交1项省基金项目申请，申请和在研主持的省基金项目总数限2项；申请人在研主持省科技计划项目达到3项及以上，或逾期一年未验收的省科技计划项目达到1项及以上，不得申报。项目须通过广东省政务服务网或广东省科技业务管理阳光政务平台网上无纸化申报，申请人所在单位须先注册为省基金依托单位。申报强调科研诚信、科技伦理、科技安全、经费管理、依托单位审核责任和合作研究协议等要求。部分批次申报时间已结束，青年基金项目等批次按通知另有时间安排，具体以阳光政务平台当前开放窗口和对应指南为准。"
     ),
 })
 
@@ -2932,6 +2974,104 @@ def build_training_power_article(url: str, variant: int) -> dict[str, object]:
     }
 
 
+def build_guangdong_foundation_article(url: str, variant: int) -> dict[str, object]:
+    """Promotional articles for Guangdong basic and applied basic research fund notices."""
+    source = SOURCE_BY_POST_ID["4891688"]
+    titles = TITLE_VARIANTS_BY_POST_ID["4891688"]
+    article_title = titles[(variant - 1) % len(titles)]
+    labels = [
+        "省基金依托单位",
+        "高校科研团队",
+        "企业研发机构",
+        "青年科研人员",
+        "医药健康研究团队",
+        "人工智能科研团队",
+        "地质水利气象研究团队",
+        "粤港澳合作研究团队",
+        "有基础研究储备的单位",
+        "准备联合基金的团队",
+    ]
+    label = labels[(variant - 1) % len(labels)]
+    hooks = [
+        f"做基础研究的{label}注意啦，省基金项目不是简单填一张申请书，而是一次科研方向、团队基础和项目储备的集中展示。",
+        f"科研团队最怕什么？方向有、积累有，却在申报时才发现项目口径、合作关系和成果指标没提前梳理。",
+        f"广东省基金项目看起来离企业补贴很远，其实对有研发团队的单位来说，它关系到科研布局、项目储备和长期创新能力。",
+        f"如果单位已经有论文、专利、实验数据或前期课题，别让这些成果只躺在文件夹里，省基金项目值得提前做一次匹配。",
+        f"基础研究不是只适合高校，企业研发机构同样可以关注省市联合基金、企业联合基金和行业联合基金这些入口。",
+    ]
+    company_lines = [
+        "深圳金赋成立于2017年，总部在深圳，是国家高新技术企业，长期围绕政策数据服务和补贴申报辅导做深耕。补贴平台沉淀了1100万条全国四级公开政策数据，适合帮助单位先建立项目机会清单。",
+        "深圳金赋补贴平台更擅长把政策要求拆成可执行动作，先看依托单位资格、项目方向、团队基础和科研诚信要求，再判断要不要推进。",
+        "对科研团队来说，政策不是越长越难，而是要先找到和自身研究方向最贴近的入口。深圳金赋可以把基金类别、项目条件和申报节奏放在一起看。",
+        "补贴平台不只是查政策，也能帮助企业和科研单位沉淀项目台账。前期成果、合作单位、经费制度和伦理要求先梳理好，后续遇到窗口会更主动。",
+        "深圳金赋会把项目事实翻译成申报语言，让负责人更快看懂自身优势在哪里、短板在哪里、是否适合继续投入准备。",
+    ]
+    policy_lines = [
+        "广东省科学技术厅发布的这次通知覆盖省自然科学基金、省市联合基金、企业联合基金和行业联合基金等方向，重点还是支持基础与应用基础研究。",
+        "总体限制要先看清，项目面向已具备省基金申报资格的依托单位，申请人同一年省基金项目申请数量有限，且在研项目数量也会影响申报资格。",
+        "通知对科研诚信、科技伦理、科技安全和经费管理要求很明确。涉及生物安全、信息安全等内容时，最好提前判断是否需要伦理审查或安全说明。",
+        "部分批次窗口已过，仍需关注的团队要把项目储备、依托单位资格和申报方向先梳理清楚，等待当前可申窗口或下一批次。",
+        "如果项目涉及合作研究，任务分工、资金分配和成果归属要提前讲清楚。越早把合作关系理顺，越不容易在系统提交时返工。",
+    ]
+    marketing_lines = [
+        "对负责人来说，先别急着写大段技术内容，先判断这个项目属于自然科学基金、省市联合基金、企业联合基金还是行业联合基金，方向选错了，后面会很累。",
+        "很多团队不是没有科研实力，而是缺一张项目路线图。哪些成果适合申报，哪些还需要培育，哪些要等下一批窗口，都可以先放进补贴平台做一次判断。",
+        "省基金项目的价值不只是一笔经费，更是科研能力、团队方向和单位管理水平的展示。做得好，后面申报科技项目也更有底气。",
+        "企业研发机构如果有长期研发投入，也可以把基础研究成果纳入年度政策规划。别只盯产业化项目，前端研究同样可能形成政策入口。",
+        "深圳金赋更建议先做项目体检，看看研究主题、团队经历、前期成果和合规要求能不能连成一条线，再决定是否进入申报准备。",
+    ]
+    proof_lines = [
+        "申请书不是越厚越好，关键是研究问题清楚、技术路线清楚、前期基础真实、预期成果不要虚高。",
+        "依托单位也不能只做盖章角色，资格审核、科研诚信承诺、经费制度和伦理安全机制都要提前跟上。",
+        "如果借助生成式人工智能整理文献或跟踪动态，也要人工核实真实性，并按要求做好使用说明，别让工具变成风险点。",
+        "项目储备最好平时就做，不要等申报系统打开才临时找论文、找合作协议、找伦理意见。",
+        "科研项目最怕相似内容重复申报。研究主题、已有资助和正在申报的项目之间，要提前说明区别和联系。",
+    ]
+    ctas = [
+        f"如果你们属于{label}，可以关注「金赋补贴宝」进入补贴平台，先把研究方向、团队基础和项目储备做一次政策匹配。深圳金赋会帮助单位判断适合冲哪类项目、哪些内容还需要继续打磨。",
+        f"想知道现有科研成果能不能匹配省基金项目，可关注「金赋补贴宝」进入补贴平台做初步测评。先看方向，再看基础，最后再决定是否投入申报准备。",
+        f"如果这篇对你判断省基金项目有帮助，欢迎点赞或评论研究方向。深圳金赋后续会继续整理科研项目、科技资金和企业研发政策的通俗解读。",
+        f"科研团队可以先收藏，也欢迎在评论区说说你们关注自然科学基金、联合基金还是行业基金。深圳金赋会继续用更容易看懂的方式拆解政策机会。",
+        f"如果单位已经有前期成果，却不确定适合哪类基金项目，欢迎点赞留言。深圳金赋会继续围绕科研项目申报规划和政策匹配整理实用提醒。",
+    ]
+    paragraphs = [
+        f"广东省科学技术厅这次发布的省基金申报信息，值得有科研基础的单位认真看一眼。{hooks[(variant - 1) % len(hooks)]}{policy_lines[(variant + 1) % len(policy_lines)]}",
+        f"{policy_lines[(variant + 2) % len(policy_lines)]}现在已经是2026年7月，部分批次窗口已结束；仍需关注的团队，建议以阳光政务平台当前开放窗口和后续批次通知为准。",
+        f"{marketing_lines[(variant - 1) % len(marketing_lines)]}",
+        f"{company_lines[(variant - 1) % len(company_lines)]}",
+        f"{company_lines[(variant + 2) % len(company_lines)]}{marketing_lines[(variant + 2) % len(marketing_lines)]}",
+        f"{proof_lines[(variant - 1) % len(proof_lines)]}",
+        f"{proof_lines[(variant + 2) % len(proof_lines)]}{policy_lines[(variant + 4) % len(policy_lines)]}",
+        f"{ctas[(variant - 1) % len(ctas)]}",
+    ]
+    expanders = [
+        "对有研发基础的单位来说，先把成果、团队和合作关系整理成项目画像，比临时赶申请书更稳，也更容易和后续科技项目衔接。",
+        "深圳金赋补贴平台可以先做机会筛选，把更适合当前阶段的项目放在前面，把暂时不成熟的方向放进培育清单，负责人不用自己在一堆通知里来回翻。",
+        "如果单位同时关注多类科技项目，更需要把省基金、产业专项和企业研发类政策分开管理，避免申报口径混在一起，后面补证据也会轻松些。",
+        "有些项目现在不一定马上申报，但提前纳入年度规划，后续窗口打开时就不会从零开始，团队也能更从容地安排实验、合作和预算。",
+        "科研项目讲究连续性，平时把数据、论文、专利、合作基础和团队分工放进同一张项目表，关键节点到来时会少很多临时沟通。",
+        "深圳金赋更看重前期判断：项目值不值得做、适合哪条路径、还缺哪些证明，先把这几件事看清楚，申报动作才不会散。",
+        "对于企业研发机构来说，基础研究项目还能提升技术形象和长期创新储备，不只是当下的一项申报任务，也是在给未来项目打底。",
+        "如果团队内部人员少，建议先用平台把政策机会筛一轮，再把真正值得推进的项目交给负责人深挖，这样精力更集中。",
+    ]
+    expand_index = 0
+    while sum(len(p) for p in paragraphs) < MIN_ARTICLE_CHARS and expand_index < len(expanders):
+        target = 2 + (expand_index % 5)
+        paragraphs[target] += expanders[expand_index]
+        expand_index += 1
+    return {
+        "title": "广东省基础与应用基础研究基金委员会关于组织申报2026年广东省基础与应用基础研究基金项目的通知",
+        "source": source,
+        "valid_period": "部分批次已截止，具体以阳光政务平台当前开放窗口及后续批次通知为准",
+        "max_amount": "省自然科学基金、省市联合基金、企业联合基金、行业联合基金等，具体资助强度以各附件指南为准",
+        "from_url": url,
+        "article_title": remove_unbalanced_brackets(article_title),
+        "paragraphs": [remove_unbalanced_brackets(cleanup_generated_wording(p)).strip() for p in paragraphs],
+        "skip_polish": True,
+        "skip_opening_variation": True,
+    }
+
+
 def build_foreign_investment_article(url: str, variant: int) -> dict[str, object]:
     """Client-facing variants for Nanshan foreign investment reward policy."""
     source = SOURCE_BY_POST_ID["20260001"]
@@ -4083,6 +4223,8 @@ def build_article_from_url(url: str, index: int) -> dict[str, object]:
         return build_service_trade_article(url, index)
     if post_id == "20260007":
         return build_training_power_article(url, index)
+    if post_id == "4891688":
+        return build_guangdong_foundation_article(url, index)
     if post_id == "20260001":
         return build_foreign_investment_article(url, index)
     if post_id == "20260002":
@@ -4789,7 +4931,9 @@ def resolve_articles(from_db: bool, ids: str, limit: int, urls: str, variants_pe
     articles: list[dict[str, object]] = []
     index = 1
     for url in selected_urls:
-        for _ in range(variants_per_url):
+        post_id = post_id_from_url(url)
+        per_url_variants = min(variants_per_url, VARIANTS_BY_POST_ID.get(post_id, variants_per_url))
+        for _ in range(per_url_variants):
             articles.append(build_article_from_url(url, index))
             index += 1
     return articles
