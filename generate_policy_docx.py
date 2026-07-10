@@ -3222,7 +3222,12 @@ def build_guangdong_nsf_2027_article(url: str, variant: int) -> dict[str, object
         "如果单位正在做青年人才培养，这类项目也适合和人才梯队、研发方向、后续项目储备一起规划。",
         "申报不是只看某一个条件是否达标，而是看申请人、依托单位、研究方向和成果基础能不能形成完整闭环。",
     ]
-    # 2027省基金文章以短段落和六要素为主，避免为了凑字数重复堆叠同类句子。
+    expand_index = 0
+    while sum(len(p) for p in paragraphs) < MIN_ARTICLE_CHARS and expand_index < len(expanders):
+        expander = expanders[(idx + expand_index) % len(expanders)]
+        target = 2 + ((idx + expand_index) % 5)
+        paragraphs[target] += expander
+        expand_index += 1
     return {
         "title": "2027年度广东省基础与应用基础研究基金自然科学基金项目申报指南",
         "source": source,
